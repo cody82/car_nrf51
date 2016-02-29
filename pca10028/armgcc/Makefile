@@ -48,6 +48,7 @@ $(abspath ../../motors.c) \
 $(abspath ../../ultrasound.c) \
 $(abspath ../../lights.c) \
 $(abspath ../../battery.c) \
+$(abspath ../../car_esb.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/libraries/pwm/app_pwm.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/app_error.c) \
