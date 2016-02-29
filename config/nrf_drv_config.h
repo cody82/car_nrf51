@@ -50,7 +50,7 @@
 
 #define TIMER1_INSTANCE_INDEX      (TIMER0_ENABLED)
 #endif
- 
+
 #define TIMER2_ENABLED 0
 
 #if (TIMER2_ENABLED == 1)
@@ -65,7 +65,7 @@
 #define TIMER_COUNT (TIMER0_ENABLED + TIMER1_ENABLED + TIMER2_ENABLED)
 
 /* RTC */
-#define RTC0_ENABLED 0
+#define RTC0_ENABLED 1
 
 #if (RTC0_ENABLED == 1)
 #define RTC0_CONFIG_FREQUENCY    32678
@@ -75,7 +75,7 @@
 #define RTC0_INSTANCE_INDEX      0
 #endif
 
-#define RTC1_ENABLED 0
+#define RTC1_ENABLED 1
 
 #if (RTC1_ENABLED == 1)
 #define RTC1_CONFIG_FREQUENCY    32768
