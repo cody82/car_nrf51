@@ -53,7 +53,7 @@ void RightBlinkerOff()
 
 void SetFrontLights(uint8_t red, uint8_t green, uint8_t blue)
 {
-	SET_LIGHTS(front_lights, 0, 0, 0);
+	SET_LIGHTS(front_lights, red, green, blue);
 }
 
 void SetBackLight(int8_t on)

@@ -12,6 +12,7 @@
 #include "lights.h"
 #include "battery.h"
 #include "car_esb.h"
+#include "nrf_esb.h"
 
 const nrf_drv_rtc_t rtc = //NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
 {
@@ -89,9 +90,9 @@ void loop()
 
 	CalcLights();
 
-	//nrf_esb_disable();
+	nrf_esb_disable();
 	LightTick();
-	//nrf_esb_enable();
+	nrf_esb_enable();
 
 	if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
 	{
