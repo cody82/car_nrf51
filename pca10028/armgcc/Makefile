@@ -44,6 +44,10 @@ C_SOURCE_FILES += \
 $(abspath $(SDK_ROOT)/components/toolchain/system_nrf51.c) \
 $(abspath ../../main.c) \
 $(abspath ../../ws2812b-nrf51.c) \
+$(abspath ../../motors.c) \
+$(abspath ../../ultrasound.c) \
+$(abspath ../../lights.c) \
+$(abspath ../../battery.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/libraries/pwm/app_pwm.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/app_error.c) \
