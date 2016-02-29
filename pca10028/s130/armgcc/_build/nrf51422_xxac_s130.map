@@ -1,0 +1,1182 @@
+Archive member included because of file (symbol)
+
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+                              c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o (exit)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+                              c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o) (_global_impure_ptr)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+                              c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o (__libc_init_array)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+                              c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o (memset)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+                              c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o) (_exit)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o)
+                              _build/pstorage.o (__aeabi_uidiv)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_divsi3.o)
+                              _build/pstorage.o (__aeabi_idiv)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_dvmd_tls.o)
+                              c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o) (__aeabi_idiv0)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+                              _build/device_manager_peripheral.o (memcmp)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+                              _build/pstorage.o (memcpy)
+c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
+                              _build/main_ble.o (strlen)
+
+Allocating common symbols
+Common symbol       size              file
+
+__stdin             0x68              _build/retarget.o
+__stdout            0x68              _build/retarget.o
+
+Discarded input sections
+
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+ .text          0x00000000       0x60 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .data          0x00000000        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .bss           0x00000000       0x1c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .init_array    0x00000000        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .fini_array    0x00000000        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .eh_frame      0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .jcr           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .ARM.attributes
+                0x00000000       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .ARM.extab     0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ .data._impure_ptr
+                0x00000000        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+ .text          0x00000000        0x0 _build/app_button.o
+ .data          0x00000000        0x0 _build/app_button.o
+ .bss           0x00000000        0x0 _build/app_button.o
+ .text.app_button_disable
+                0x00000000       0x38 _build/app_button.o
+ .text.app_button_is_pushed
+                0x00000000       0x2c _build/app_button.o
+ .text          0x00000000        0x0 _build/app_error.o
+ .data          0x00000000        0x0 _build/app_error.o
+ .bss           0x00000000        0x0 _build/app_error.o
+ .text          0x00000000        0x0 _build/app_timer.o
+ .data          0x00000000        0x0 _build/app_timer.o
+ .bss           0x00000000        0x0 _build/app_timer.o
+ .text.app_timer_stop_all
+                0x00000000       0xc0 _build/app_timer.o
+ .text.app_timer_cnt_get
+                0x00000000       0x14 _build/app_timer.o
+ .text.app_timer_cnt_diff_compute
+                0x00000000        0xc _build/app_timer.o
+ .text          0x00000000        0x0 _build/app_trace.o
+ .data          0x00000000        0x0 _build/app_trace.o
+ .bss           0x00000000        0x0 _build/app_trace.o
+ .comment       0x00000000       0x71 _build/app_trace.o
+ .ARM.attributes
+                0x00000000       0x31 _build/app_trace.o
+ .text          0x00000000        0x0 _build/nrf_assert.o
+ .data          0x00000000        0x0 _build/nrf_assert.o
+ .bss           0x00000000        0x0 _build/nrf_assert.o
+ .comment       0x00000000       0x71 _build/nrf_assert.o
+ .ARM.attributes
+                0x00000000       0x31 _build/nrf_assert.o
+ .text          0x00000000        0x0 _build/retarget.o
+ .data          0x00000000        0x0 _build/retarget.o
+ .bss           0x00000000        0x0 _build/retarget.o
+ .text._write   0x00000000       0x1c _build/retarget.o
+ .text._read    0x00000000       0x14 _build/retarget.o
+ .comment       0x00000000       0x71 _build/retarget.o
+ .ARM.attributes
+                0x00000000       0x31 _build/retarget.o
+ COMMON         0x00000000       0xd0 _build/retarget.o
+ .text          0x00000000        0x0 _build/app_uart.o
+ .data          0x00000000        0x0 _build/app_uart.o
+ .bss           0x00000000        0x0 _build/app_uart.o
+ .text.gpiote_uart_event_handler
+                0x00000000       0x58 _build/app_uart.o
+ .text.action_tx_stop
+                0x00000000       0x2c _build/app_uart.o
+ .text.app_uart_init
+                0x00000000      0x240 _build/app_uart.o
+ .text.app_uart_get
+                0x00000000       0x24 _build/app_uart.o
+ .text.app_uart_put
+                0x00000000       0x44 _build/app_uart.o
+ .text.app_uart_flush
+                0x00000000        0x4 _build/app_uart.o
+ .text.app_uart_get_connection_state
+                0x00000000       0x14 _build/app_uart.o
+ .text.app_uart_close
+                0x00000000       0x30 _build/app_uart.o
+ .data.m_instance_counter
+                0x00000000        0x1 _build/app_uart.o
+ .bss.m_tx_byte
+                0x00000000        0x1 _build/app_uart.o
+ .text          0x00000000        0x0 _build/nrf_delay.o
+ .data          0x00000000        0x0 _build/nrf_delay.o
+ .bss           0x00000000        0x0 _build/nrf_delay.o
+ .text.nrf_delay_ms
+                0x00000000       0x3c _build/nrf_delay.o
+ .comment       0x00000000       0x71 _build/nrf_delay.o
+ .ARM.attributes
+                0x00000000       0x31 _build/nrf_delay.o
+ .text          0x00000000        0x0 _build/nrf_drv_common.o
+ .data          0x00000000        0x0 _build/nrf_drv_common.o
+ .bss           0x00000000        0x0 _build/nrf_drv_common.o
+ .text          0x00000000        0x0 _build/nrf_drv_gpiote.o
+ .data          0x00000000        0x0 _build/nrf_drv_gpiote.o
+ .bss           0x00000000        0x0 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_uninit
+                0x00000000       0xe8 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_init
+                0x00000000       0xd8 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_uninit
+                0x00000000       0x30 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_set
+                0x00000000       0x14 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_clear
+                0x00000000       0x14 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_toggle
+                0x00000000       0x2c _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_task_enable
+                0x00000000       0x3c _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_task_disable
+                0x00000000       0x28 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_task_addr_get
+                0x00000000       0x20 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_task_force
+                0x00000000       0x3c _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_out_task_trigger
+                0x00000000       0x24 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_in_event_disable
+                0x00000000       0x58 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_in_uninit
+                0x00000000       0xa0 _build/nrf_drv_gpiote.o
+ .text.nrf_drv_gpiote_in_event_addr_get
+                0x00000000       0x20 _build/nrf_drv_gpiote.o
+ .text          0x00000000        0x0 _build/pstorage.o
+ .data          0x00000000        0x0 _build/pstorage.o
+ .bss           0x00000000        0x0 _build/pstorage.o
+ .text          0x00000000        0x0 _build/bsp.o
+ .data          0x00000000        0x0 _build/bsp.o
+ .bss           0x00000000        0x0 _build/bsp.o
+ .text.bsp_buttons_state_get
+                0x00000000       0x40 _build/bsp.o
+ .text.bsp_indication_text_set
+                0x00000000      0x354 _build/bsp.o
+ .rodata.bsp_indication_text_set
+                0x00000000       0x60 _build/bsp.o
+ .text.bsp_buttons_enable
+                0x00000000        0x8 _build/bsp.o
+ .text.bsp_buttons_disable
+                0x00000000        0x8 _build/bsp.o
+ .text          0x00000000        0x0 _build/bsp_btn_ble.o
+ .data          0x00000000        0x0 _build/bsp_btn_ble.o
+ .bss           0x00000000        0x0 _build/bsp_btn_ble.o
+ .text          0x00000000        0x0 _build/main_ble.o
+ .data          0x00000000        0x0 _build/main_ble.o
+ .bss           0x00000000        0x0 _build/main_ble.o
+ .text          0x00000000        0x0 _build/ble_advdata.o
+ .data          0x00000000        0x0 _build/ble_advdata.o
+ .bss           0x00000000        0x0 _build/ble_advdata.o
+ .text          0x00000000        0x0 _build/ble_advertising.o
+ .data          0x00000000        0x0 _build/ble_advertising.o
+ .bss           0x00000000        0x0 _build/ble_advertising.o
+ .text.ble_advertising_peer_addr_reply
+                0x00000000       0x3c _build/ble_advertising.o
+ .text.ble_advertising_whitelist_reply
+                0x00000000       0xd8 _build/ble_advertising.o
+ .text          0x00000000        0x0 _build/ble_conn_params.o
+ .data          0x00000000        0x0 _build/ble_conn_params.o
+ .bss           0x00000000        0x0 _build/ble_conn_params.o
+ .text.ble_conn_params_stop
+                0x00000000       0x10 _build/ble_conn_params.o
+ .text.ble_conn_params_change_conn_params
+                0x00000000       0x70 _build/ble_conn_params.o
+ .text          0x00000000        0x0 _build/ble_srv_common.o
+ .data          0x00000000        0x0 _build/ble_srv_common.o
+ .bss           0x00000000        0x0 _build/ble_srv_common.o
+ .text.sd_ble_gatts_characteristic_add
+                0x00000000        0x4 _build/ble_srv_common.o
+ .text.ble_srv_report_ref_encode
+                0x00000000        0xc _build/ble_srv_common.o
+ .text.ble_srv_ascii_to_utf8
+                0x00000000       0x14 _build/ble_srv_common.o
+ .text.characteristic_add
+                0x00000000      0x138 _build/ble_srv_common.o
+ .rodata.CSWTCH.7
+                0x00000000        0x5 _build/ble_srv_common.o
+ .rodata.CSWTCH.8
+                0x00000000        0x5 _build/ble_srv_common.o
+ .comment       0x00000000       0x71 _build/ble_srv_common.o
+ .ARM.attributes
+                0x00000000       0x31 _build/ble_srv_common.o
+ .text          0x00000000        0x0 _build/device_manager_peripheral.o
+ .data          0x00000000        0x0 _build/device_manager_peripheral.o
+ .bss           0x00000000        0x0 _build/device_manager_peripheral.o
+ .text.sd_ble_gap_authenticate
+                0x00000000        0x4 _build/device_manager_peripheral.o
+ .text.dm_security_setup_req
+                0x00000000       0x5c _build/device_manager_peripheral.o
+ .text.dm_security_status_req
+                0x00000000       0x74 _build/device_manager_peripheral.o
+ .text.dm_whitelist_create
+                0x00000000       0xe0 _build/device_manager_peripheral.o
+ .text.dm_device_add
+                0x00000000        0x8 _build/device_manager_peripheral.o
+ .text.dm_device_delete
+                0x00000000       0xd4 _build/device_manager_peripheral.o
+ .text.dm_device_delete_all
+                0x00000000       0xcc _build/device_manager_peripheral.o
+ .text.dm_service_context_set
+                0x00000000       0xbc _build/device_manager_peripheral.o
+ .text.dm_service_context_get
+                0x00000000       0xd8 _build/device_manager_peripheral.o
+ .text.dm_service_context_delete
+                0x00000000       0x5c _build/device_manager_peripheral.o
+ .text.dm_application_context_set
+                0x00000000       0xec _build/device_manager_peripheral.o
+ .text.dm_application_context_get
+                0x00000000       0xc0 _build/device_manager_peripheral.o
+ .text.dm_application_context_delete
+                0x00000000       0xa4 _build/device_manager_peripheral.o
+ .text.dm_application_instance_set
+                0x00000000       0x3c _build/device_manager_peripheral.o
+ .text.dm_handle_initialize
+                0x00000000       0x1c _build/device_manager_peripheral.o
+ .text.dm_peer_addr_set
+                0x00000000       0xb8 _build/device_manager_peripheral.o
+ .text.dm_peer_addr_get
+                0x00000000       0x84 _build/device_manager_peripheral.o
+ .text.dm_distributed_keys_get
+                0x00000000       0xbc _build/device_manager_peripheral.o
+ .text.dm_handle_get
+                0x00000000       0x48 _build/device_manager_peripheral.o
+ .bss.m_local_id_info
+                0x00000000       0x17 _build/device_manager_peripheral.o
+ .text          0x00000000        0x0 _build/system_nrf51.o
+ .data          0x00000000        0x0 _build/system_nrf51.o
+ .bss           0x00000000        0x0 _build/system_nrf51.o
+ .text.SystemCoreClockUpdate
+                0x00000000       0x10 _build/system_nrf51.o
+ .data.SystemCoreClock
+                0x00000000        0x4 _build/system_nrf51.o
+ .text          0x00000000        0x0 _build/softdevice_handler.o
+ .data          0x00000000        0x0 _build/softdevice_handler.o
+ .bss           0x00000000        0x0 _build/softdevice_handler.o
+ .text.sd_softdevice_disable
+                0x00000000        0x4 _build/softdevice_handler.o
+ .text.intern_softdevice_events_execute
+                0x00000000       0x14 _build/softdevice_handler.o
+ .text.softdevice_handler_sd_disable
+                0x00000000       0x18 _build/softdevice_handler.o
+ .data          0x00000000        0x0 _build/gcc_startup_nrf51.o
+ .bss           0x00000000        0x0 _build/gcc_startup_nrf51.o
+ .ARM.extab     0x00000000        0x0 _build/gcc_startup_nrf51.o
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_divsi3.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_divsi3.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_dvmd_tls.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_dvmd_tls.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+ .eh_frame      0x00000000        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+ .jcr           0x00000000        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+ .ARM.attributes
+                0x00000000       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+ .text          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+ .data          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+ .bss           0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+FLASH            0x0001c000         0x00024000         xr
+RAM              0x20002800         0x00005800         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a
+LOAD _build/app_button.o
+LOAD _build/app_error.o
+LOAD _build/app_timer.o
+LOAD _build/app_trace.o
+LOAD _build/nrf_assert.o
+LOAD _build/retarget.o
+LOAD _build/app_uart.o
+LOAD _build/nrf_delay.o
+LOAD _build/nrf_drv_common.o
+LOAD _build/nrf_drv_gpiote.o
+LOAD _build/pstorage.o
+LOAD _build/bsp.o
+LOAD _build/bsp_btn_ble.o
+LOAD _build/main_ble.o
+LOAD _build/ble_advdata.o
+LOAD _build/ble_advertising.o
+LOAD _build/ble_conn_params.o
+LOAD _build/ble_srv_common.o
+LOAD _build/device_manager_peripheral.o
+LOAD _build/system_nrf51.o
+LOAD _build/softdevice_handler.o
+LOAD _build/gcc_startup_nrf51.o
+START GROUP
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a
+END GROUP
+START GROUP
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a
+END GROUP
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtend.o
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+START GROUP
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc.a
+LOAD c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a
+END GROUP
+
+.text           0x0001c000     0x65bc
+ *(.Vectors)
+ .Vectors       0x0001c000       0xc0 _build/gcc_startup_nrf51.o
+                0x0001c000                __Vectors
+ *(.text*)
+ .text          0x0001c0c0       0x78 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+                0x0001c0c0                _start
+                0x0001c0c0                _mainCRTStartup
+ .text.exit     0x0001c138       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+                0x0001c138                exit
+ .text.__libc_init_array
+                0x0001c164       0x4c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+                0x0001c164                __libc_init_array
+ .text.memset   0x0001c1b0       0x10 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+                0x0001c1b0                memset
+ .text._exit    0x0001c1c0        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+                0x0001c1c0                _exit
+ .text.detection_delay_timeout_handler
+                0x0001c1c4       0xa8 _build/app_button.o
+ .text.gpiote_event_handler
+                0x0001c26c       0x5c _build/app_button.o
+ .text.app_button_init
+                0x0001c2c8       0xb4 _build/app_button.o
+                0x0001c2c8                app_button_init
+ .text.app_button_enable
+                0x0001c37c       0x30 _build/app_button.o
+                0x0001c37c                app_button_enable
+ .text.app_error_handler
+                0x0001c3ac       0x18 _build/app_error.o
+                0x0001c3ac                app_error_handler
+ .text.rtc1_stop
+                0x0001c3c4       0x78 _build/app_timer.o
+ .text.RTC1_IRQHandler
+                0x0001c43c       0xe4 _build/app_timer.o
+                0x0001c43c                RTC1_IRQHandler
+ .text.SWI0_IRQHandler
+                0x0001c520      0x514 _build/app_timer.o
+                0x0001c520                SWI0_IRQHandler
+ .text.app_timer_init
+                0x0001ca34      0x108 _build/app_timer.o
+                0x0001ca34                app_timer_init
+ .text.app_timer_create
+                0x0001cb3c       0x68 _build/app_timer.o
+                0x0001cb3c                app_timer_create
+ .text.app_timer_start
+                0x0001cba4      0x11c _build/app_timer.o
+                0x0001cba4                app_timer_start
+ .text.app_timer_stop
+                0x0001ccc0       0xe8 _build/app_timer.o
+                0x0001ccc0                app_timer_stop
+ .text.UART0_IRQHandler
+                0x0001cda8       0xd8 _build/app_uart.o
+                0x0001cda8                UART0_IRQHandler
+ .text.nrf_drv_common_irq_enable
+                0x0001ce80       0x80 _build/nrf_drv_common.o
+                0x0001ce80                nrf_drv_common_irq_enable
+ .text.nrf_drv_gpiote_init
+                0x0001cf00       0x70 _build/nrf_drv_gpiote.o
+                0x0001cf00                nrf_drv_gpiote_init
+ .text.nrf_drv_gpiote_is_init
+                0x0001cf70       0x14 _build/nrf_drv_gpiote.o
+                0x0001cf70                nrf_drv_gpiote_is_init
+ .text.nrf_drv_gpiote_in_init
+                0x0001cf84      0x170 _build/nrf_drv_gpiote.o
+                0x0001cf84                nrf_drv_gpiote_in_init
+ .text.nrf_drv_gpiote_in_event_enable
+                0x0001d0f4       0xa8 _build/nrf_drv_gpiote.o
+                0x0001d0f4                nrf_drv_gpiote_in_event_enable
+ .text.nrf_drv_gpiote_in_is_set
+                0x0001d19c       0x14 _build/nrf_drv_gpiote.o
+                0x0001d19c                nrf_drv_gpiote_in_is_set
+ .text.GPIOTE_IRQHandler
+                0x0001d1b0      0x244 _build/nrf_drv_gpiote.o
+                0x0001d1b0                GPIOTE_IRQHandler
+ .text.sd_flash_write
+                0x0001d3f4        0x4 _build/pstorage.o
+ .text.sd_flash_page_erase
+                0x0001d3f8        0x4 _build/pstorage.o
+ .text.flash_api_err_code_process
+                0x0001d3fc       0x60 _build/pstorage.o
+ .text.state_entry_action_run
+                0x0001d45c      0x1b4 _build/pstorage.o
+ .text.clear_operation_execute
+                0x0001d610      0x194 _build/pstorage.o
+ .text.unlikely.cmd_queue_enqueue
+                0x0001d7a4       0x8c _build/pstorage.o
+ .text.tail_restore_state_run
+                0x0001d830       0xb4 _build/pstorage.o
+ .text.state_write_data_swap_entry_run
+                0x0001d8e4       0xb0 _build/pstorage.o
+ .text.state_restore_head_entry_run
+                0x0001d994       0xb0 _build/pstorage.o
+ .text.data_to_swap_write_state_run
+                0x0001da44       0xa0 _build/pstorage.o
+ .text.state_restore_tail_entry_run
+                0x0001dae4       0xc0 _build/pstorage.o
+ .text.state_erase_data_page_entry_run
+                0x0001dba4       0x70 _build/pstorage.o
+ .text.swap_erase_state_run
+                0x0001dc14       0xd4 _build/pstorage.o
+ .text.state_swap_erase_entry_run
+                0x0001dce8       0xa4 _build/pstorage.o
+ .text.store_cmd_flash_write_execute
+                0x0001dd8c      0x120 _build/pstorage.o
+ .text.head_restore_state_run
+                0x0001deac      0x21c _build/pstorage.o
+ .text.data_page_erase_state_run
+                0x0001e0c8      0x26c _build/pstorage.o
+ .text.command_end_procedure_run
+                0x0001e334       0xb8 _build/pstorage.o
+ .text.pstorage_sys_event_handler
+                0x0001e3ec      0x1d8 _build/pstorage.o
+                0x0001e3ec                pstorage_sys_event_handler
+ .text.pstorage_init
+                0x0001e5c4      0x154 _build/pstorage.o
+                0x0001e5c4                pstorage_init
+ .text.pstorage_register
+                0x0001e718       0xec _build/pstorage.o
+                0x0001e718                pstorage_register
+ .text.pstorage_block_identifier_get
+                0x0001e804       0x58 _build/pstorage.o
+                0x0001e804                pstorage_block_identifier_get
+ .text.pstorage_store
+                0x0001e85c       0x90 _build/pstorage.o
+                0x0001e85c                pstorage_store
+ .text.pstorage_update
+                0x0001e8ec       0x90 _build/pstorage.o
+                0x0001e8ec                pstorage_update
+ .text.pstorage_load
+                0x0001e97c       0xb4 _build/pstorage.o
+                0x0001e97c                pstorage_load
+ .text.pstorage_clear
+                0x0001ea30       0x9c _build/pstorage.o
+                0x0001ea30                pstorage_clear
+ .text.pstorage_access_status_get
+                0x0001eacc       0x28 _build/pstorage.o
+                0x0001eacc                pstorage_access_status_get
+ .text.alert_timer_handler
+                0x0001eaf4       0x28 _build/bsp.o
+ .text.bsp_button_event_handler
+                0x0001eb1c       0xd0 _build/bsp.o
+ .text.leds_timer_handler
+                0x0001ebec      0x2d4 _build/bsp.o
+ .text.button_timer_handler
+                0x0001eec0       0x48 _build/bsp.o
+ .text.bsp_button_is_pressed
+                0x0001ef08       0x2c _build/bsp.o
+                0x0001ef08                bsp_button_is_pressed
+ .text.bsp_indication_set
+                0x0001ef34      0x354 _build/bsp.o
+                0x0001ef34                bsp_indication_set
+ .text.bsp_init
+                0x0001f288       0xc0 _build/bsp.o
+                0x0001f288                bsp_init
+ .text.bsp_event_to_button_action_assign
+                0x0001f348       0x58 _build/bsp.o
+                0x0001f348                bsp_event_to_button_action_assign
+ .text.bsp_wakeup_buttons_set
+                0x0001f3a0       0x8c _build/bsp.o
+                0x0001f3a0                bsp_wakeup_buttons_set
+ .text.bsp_btn_ble_sleep_mode_prepare
+                0x0001f42c       0x18 _build/bsp_btn_ble.o
+                0x0001f42c                bsp_btn_ble_sleep_mode_prepare
+ .text.bsp_btn_ble_on_ble_evt
+                0x0001f444       0xbc _build/bsp_btn_ble.o
+                0x0001f444                bsp_btn_ble_on_ble_evt
+ .text.bsp_btn_ble_init
+                0x0001f500       0x9c _build/bsp_btn_ble.o
+                0x0001f500                bsp_btn_ble_init
+ .text.sd_ble_gap_disconnect
+                0x0001f59c        0x4 _build/main_ble.o
+ .text.sd_ble_gap_ppcp_set
+                0x0001f5a0        0x4 _build/main_ble.o
+ .text.sd_ble_gap_device_name_set
+                0x0001f5a4        0x4 _build/main_ble.o
+ .text.sd_ble_enable
+                0x0001f5a8        0x4 _build/main_ble.o
+ .text.sd_power_system_off
+                0x0001f5ac        0x4 _build/main_ble.o
+ .text.sd_app_evt_wait
+                0x0001f5b0        0x4 _build/main_ble.o
+ .text.conn_params_error_handler
+                0x0001f5b4        0xc _build/main_ble.o
+ .text.sys_evt_dispatch
+                0x0001f5c0       0x10 _build/main_ble.o
+ .text.device_manager_evt_handler
+                0x0001f5d0       0x14 _build/main_ble.o
+ .text.on_conn_params_evt
+                0x0001f5e4       0x28 _build/main_ble.o
+ .text.ble_evt_dispatch
+                0x0001f60c       0x4c _build/main_ble.o
+ .text.bsp_event_handler
+                0x0001f658       0x68 _build/main_ble.o
+                0x0001f658                bsp_event_handler
+ .text.on_adv_evt
+                0x0001f6c0       0x50 _build/main_ble.o
+ .text.assert_nrf_callback
+                0x0001f710       0x14 _build/main_ble.o
+                0x0001f710                assert_nrf_callback
+ .text.startup.main
+                0x0001f724      0x264 _build/main_ble.o
+                0x0001f724                main
+ .text.sd_ble_gap_adv_data_set
+                0x0001f988        0x4 _build/ble_advdata.o
+ .text.sd_ble_gap_appearance_get
+                0x0001f98c        0x4 _build/ble_advdata.o
+ .text.sd_ble_gap_device_name_get
+                0x0001f990        0x4 _build/ble_advdata.o
+ .text.sd_ble_uuid_encode
+                0x0001f994        0x4 _build/ble_advdata.o
+ .text.uuid_list_sized_encode
+                0x0001f998       0xdc _build/ble_advdata.o
+ .text.ble_advdata_set
+                0x0001fa74      0x77c _build/ble_advdata.o
+                0x0001fa74                ble_advdata_set
+ .text.sd_ble_gap_adv_start
+                0x000201f0        0x4 _build/ble_advertising.o
+ .text.sd_ble_gap_adv_stop
+                0x000201f4        0x4 _build/ble_advertising.o
+ .text.ble_advertising_init
+                0x000201f8      0x148 _build/ble_advertising.o
+                0x000201f8                ble_advertising_init
+ .text.ble_advertising_start
+                0x00020340      0x2c0 _build/ble_advertising.o
+                0x00020340                ble_advertising_start
+ .text.ble_advertising_on_ble_evt
+                0x00020600       0xb4 _build/ble_advertising.o
+                0x00020600                ble_advertising_on_ble_evt
+ .text.ble_advertising_on_sys_evt
+                0x000206b4      0x2e0 _build/ble_advertising.o
+                0x000206b4                ble_advertising_on_sys_evt
+ .text.ble_advertising_restart_without_whitelist
+                0x00020994      0x324 _build/ble_advertising.o
+                0x00020994                ble_advertising_restart_without_whitelist
+ .text.sd_ble_gap_conn_param_update
+                0x00020cb8        0x4 _build/ble_conn_params.o
+ .text.sd_ble_gap_disconnect
+                0x00020cbc        0x4 _build/ble_conn_params.o
+ .text.sd_ble_gap_ppcp_set
+                0x00020cc0        0x4 _build/ble_conn_params.o
+ .text.sd_ble_gap_ppcp_get
+                0x00020cc4        0x4 _build/ble_conn_params.o
+ .text.update_timeout_handler
+                0x00020cc8       0x78 _build/ble_conn_params.o
+ .text.conn_params_negotiation
+                0x00020d40       0x8c _build/ble_conn_params.o
+ .text.ble_conn_params_init
+                0x00020dcc       0x78 _build/ble_conn_params.o
+                0x00020dcc                ble_conn_params_init
+ .text.ble_conn_params_on_ble_evt
+                0x00020e44       0xb0 _build/ble_conn_params.o
+                0x00020e44                ble_conn_params_on_ble_evt
+ .text.sd_ble_gap_sec_params_reply
+                0x00020ef4        0x4 _build/device_manager_peripheral.o
+ .text.sd_ble_gap_sec_info_reply
+                0x00020ef8        0x4 _build/device_manager_peripheral.o
+ .text.sd_ble_gatts_service_changed
+                0x00020efc        0x4 _build/device_manager_peripheral.o
+ .text.sd_ble_gatts_sys_attr_set
+                0x00020f00        0x4 _build/device_manager_peripheral.o
+ .text.sd_ble_gatts_sys_attr_get
+                0x00020f04        0x4 _build/device_manager_peripheral.o
+ .text.storage_operation_dummy_handler
+                0x00020f08        0x4 _build/device_manager_peripheral.o
+ .text.no_service_context_store
+                0x00020f0c        0x4 _build/device_manager_peripheral.o
+ .text.gattc_context_store
+                0x00020f10        0x4 _build/device_manager_peripheral.o
+ .text.no_service_context_load
+                0x00020f14        0x4 _build/device_manager_peripheral.o
+ .text.gattc_context_load
+                0x00020f18        0x4 _build/device_manager_peripheral.o
+ .text.no_service_context_apply
+                0x00020f1c        0x4 _build/device_manager_peripheral.o
+ .text.gattc_context_apply
+                0x00020f20        0x4 _build/device_manager_peripheral.o
+ .text.gatts_context_apply
+                0x00020f24       0xec _build/device_manager_peripheral.o
+ .text.gatts_context_store
+                0x00021010       0xd4 _build/device_manager_peripheral.o
+ .text.gatts_context_load
+                0x000210e4       0x3c _build/device_manager_peripheral.o
+ .text.dm_pstorage_cb_handler
+                0x00021120      0x164 _build/device_manager_peripheral.o
+ .text.gattsc_context_load
+                0x00021284       0x3c _build/device_manager_peripheral.o
+ .text.gattsc_context_apply
+                0x000212c0       0xe4 _build/device_manager_peripheral.o
+ .text.gattsc_context_store
+                0x000213a4       0xd4 _build/device_manager_peripheral.o
+ .text.dm_init  0x00021478      0x14c _build/device_manager_peripheral.o
+                0x00021478                dm_init
+ .text.dm_register
+                0x000215c4       0x7c _build/device_manager_peripheral.o
+                0x000215c4                dm_register
+ .text.bond_data_load
+                0x00021640       0x50 _build/device_manager_peripheral.o
+                0x00021640                bond_data_load
+ .text.dm_ble_evt_handler
+                0x00021690      0x6d0 _build/device_manager_peripheral.o
+                0x00021690                dm_ble_evt_handler
+ .text.SystemInit
+                0x00021d60       0x9c _build/system_nrf51.o
+                0x00021d60                SystemInit
+ .text.sd_nvic_EnableIRQ
+                0x00021dfc        0x4 _build/softdevice_handler.o
+ .text.sd_evt_get
+                0x00021e00        0x4 _build/softdevice_handler.o
+ .text.sd_softdevice_enable
+                0x00021e04        0x4 _build/softdevice_handler.o
+ .text.sd_ble_evt_get
+                0x00021e08        0x4 _build/softdevice_handler.o
+ .text.softdevice_assertion_handler
+                0x00021e0c        0xc _build/softdevice_handler.o
+                0x00021e0c                softdevice_assertion_handler
+ .text.intern_softdevice_events_execute.part.0
+                0x00021e18       0xe0 _build/softdevice_handler.o
+ .text.softdevice_handler_init
+                0x00021ef8       0x4c _build/softdevice_handler.o
+                0x00021ef8                softdevice_handler_init
+ .text.softdevice_ble_evt_handler_set
+                0x00021f44       0x14 _build/softdevice_handler.o
+                0x00021f44                softdevice_ble_evt_handler_set
+ .text.softdevice_sys_evt_handler_set
+                0x00021f58       0x14 _build/softdevice_handler.o
+                0x00021f58                softdevice_sys_evt_handler_set
+ .text.SWI2_IRQHandler
+                0x00021f6c       0x34 _build/softdevice_handler.o
+                0x00021f6c                SWI2_IRQHandler
+ .text          0x00021fa0       0x54 _build/gcc_startup_nrf51.o
+                0x00021fa0                Reset_Handler
+                0x00021fe8                NMI_Handler
+                0x00021fea                HardFault_Handler
+                0x00021fec                SVC_Handler
+                0x00021fee                PendSV_Handler
+                0x00021ff0                SysTick_Handler
+                0x00021ff2                RTC0_IRQHandler
+                0x00021ff2                POWER_CLOCK_IRQHandler
+                0x00021ff2                SPI0_TWI0_IRQHandler
+                0x00021ff2                LPCOMP_IRQHandler
+                0x00021ff2                SWI4_IRQHandler
+                0x00021ff2                TEMP_IRQHandler
+                0x00021ff2                QDEC_IRQHandler
+                0x00021ff2                SWI5_IRQHandler
+                0x00021ff2                TIMER0_IRQHandler
+                0x00021ff2                RADIO_IRQHandler
+                0x00021ff2                TIMER1_IRQHandler
+                0x00021ff2                ECB_IRQHandler
+                0x00021ff2                Default_Handler
+                0x00021ff2                ADC_IRQHandler
+                0x00021ff2                SWI3_IRQHandler
+                0x00021ff2                CCM_AAR_IRQHandler
+                0x00021ff2                WDT_IRQHandler
+                0x00021ff2                TIMER2_IRQHandler
+                0x00021ff2                RNG_IRQHandler
+                0x00021ff2                SPI1_TWI1_IRQHandler
+                0x00021ff2                SWI1_IRQHandler
+ .text          0x00021ff4      0x120 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o)
+                0x00021ff4                __aeabi_uidiv
+                0x00021ff4                __udivsi3
+                0x00022100                __aeabi_uidivmod
+ .text          0x00022114      0x1e0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_divsi3.o)
+                0x00022114                __divsi3
+                0x00022114                __aeabi_idiv
+                0x000222e0                __aeabi_idivmod
+ .text          0x000222f4        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_dvmd_tls.o)
+                0x000222f4                __aeabi_idiv0
+                0x000222f4                __aeabi_ldiv0
+ .text.memcmp   0x000222f8       0x1e c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+                0x000222f8                memcmp
+ .text.memcpy   0x00022316       0x12 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+                0x00022316                memcpy
+ .text.strlen   0x00022328        0xe c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
+                0x00022328                strlen
+ *(.init)
+ *fill*         0x00022336        0x2 
+ .init          0x00022338        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+                0x00022338                _init
+ .init          0x0002233c        0x8 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+ *(.fini)
+ .fini          0x00022344        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+                0x00022344                _fini
+ .fini          0x00022348        0x8 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+ *crtbegin.o(.ctors)
+ *crtbegin?.o(.ctors)
+ *(EXCLUDE_FILE(*crtend.o *crtend?.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+ *crtbegin.o(.dtors)
+ *crtbegin?.o(.dtors)
+ *(EXCLUDE_FILE(*crtend.o *crtend?.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+ *(.rodata*)
+ .rodata.str1.1
+                0x00022350        0x2 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ *fill*         0x00022352        0x2 
+ .rodata._global_impure_ptr
+                0x00022354        0x4 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+                0x00022354                _global_impure_ptr
+ .rodata.swap_sub_state_sm_lut.5948
+                0x00022358       0x14 _build/pstorage.o
+ .rodata.swap_sub_state_sm_lut.5873
+                0x0002236c       0x14 _build/pstorage.o
+ .rodata.leds_timer_handler
+                0x00022380       0x60 _build/bsp.o
+ .rodata.bsp_indication_set
+                0x000223e0       0x60 _build/bsp.o
+ .rodata.m_buttons_list
+                0x00022440       0x10 _build/bsp.o
+ .rodata.app_buttons
+                0x00022450       0x20 _build/bsp.o
+ .rodata.str1.4
+                0x00022470       0x10 _build/main_ble.o
+ .rodata.dm_ble_evt_handler
+                0x00022480      0x108 _build/device_manager_peripheral.o
+ .rodata.m_service_context_store
+                0x00022588       0x10 _build/device_manager_peripheral.o
+                0x00022588                m_service_context_store
+ .rodata.m_service_context_load
+                0x00022598       0x10 _build/device_manager_peripheral.o
+                0x00022598                m_service_context_load
+ .rodata.m_service_context_apply
+                0x000225a8       0x10 _build/device_manager_peripheral.o
+                0x000225a8                m_service_context_apply
+ .rodata.m_context_init_len
+                0x000225b8        0x4 _build/device_manager_peripheral.o
+                0x000225b8                m_context_init_len
+ *(.eh_frame*)
+                0x000225bc                . = ALIGN (0x4)
+
+.glue_7         0x000225bc        0x0
+ .glue_7        0x00000000        0x0 linker stubs
+
+.glue_7t        0x000225bc        0x0
+ .glue_7t       0x00000000        0x0 linker stubs
+
+.vfp11_veneer   0x000225bc        0x0
+ .vfp11_veneer  0x00000000        0x0 linker stubs
+
+.v4_bx          0x000225bc        0x0
+ .v4_bx         0x00000000        0x0 linker stubs
+
+.iplt           0x000225bc        0x0
+ .iplt          0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+
+.ARM.extab      0x000225bc        0x0
+ *(.ARM.extab* .gnu.linkonce.armextab.*)
+                0x000225bc                . = ALIGN (0x4)
+                0x000225bc                __exidx_start = .
+
+.ARM.exidx      0x000225bc        0x8
+ *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+ .ARM.exidx     0x000225bc        0x8 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .ARM.exidx     0x000225c4        0x0 _build/gcc_startup_nrf51.o
+                                  0x8 (size before relaxing)
+                0x000225c4                . = ALIGN (0x4)
+                0x000225c4                __exidx_end = .
+                0x000225c4                __etext = .
+
+.rel.dyn        0x000225c4        0x0
+ .rel.iplt      0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+
+.data           0x20002800       0x6c load address 0x000225c4
+                0x20002800                __data_start__ = .
+ *(vtable)
+ *(.data*)
+ .data.impure_data
+                0x20002800       0x60 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ .data.m_rx_byte
+                0x20002860        0x2 _build/app_uart.o
+ *fill*         0x20002862        0x2 
+ .data.m_adv_uuids
+                0x20002864        0x4 _build/main_ble.o
+ .data.m_conn_handle
+                0x20002868        0x2 _build/main_ble.o
+ .data.current_slave_link_conn_handle.7151
+                0x2000286a        0x2 _build/ble_advertising.o
+                0x2000286c                . = ALIGN (0x4)
+                0x2000286c                PROVIDE (__preinit_array_start, .)
+ *(.preinit_array)
+                0x2000286c                PROVIDE (__preinit_array_end, .)
+                0x2000286c                . = ALIGN (0x4)
+                0x2000286c                PROVIDE (__init_array_start, .)
+ *(SORT(.init_array.*))
+ *(.init_array)
+                0x2000286c                PROVIDE (__init_array_end, .)
+                0x2000286c                . = ALIGN (0x4)
+                0x2000286c                PROVIDE (__fini_array_start, .)
+ *(SORT(.fini_array.*))
+ *(.fini_array)
+                0x2000286c                PROVIDE (__fini_array_end, .)
+ *(.jcr)
+                0x2000286c                . = ALIGN (0x4)
+                0x2000286c                __data_end__ = .
+
+.igot.plt       0x2000286c        0x0 load address 0x00022630
+ .igot.plt      0x00000000        0x0 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtbegin.o
+
+.bss            0x2000286c      0x80c load address 0x00022630
+                0x2000286c                . = ALIGN (0x4)
+                0x2000286c                __bss_start__ = .
+ *(.bss*)
+ .bss.m_detection_delay
+                0x2000286c        0x4 _build/app_button.o
+ .bss.mp_buttons
+                0x20002870        0x4 _build/app_button.o
+ .bss.m_button_count
+                0x20002874        0x1 _build/app_button.o
+ *fill*         0x20002875        0x3 
+ .bss.m_pin_state
+                0x20002878        0x4 _build/app_button.o
+ .bss.m_detection_delay_timer_id
+                0x2000287c        0x4 _build/app_button.o
+ .bss.m_pin_transition
+                0x20002880        0x4 _build/app_button.o
+ .bss.m_ticks_latest
+                0x20002884        0x4 _build/app_timer.o
+ .bss.m_evt_schedule_func
+                0x20002888        0x4 _build/app_timer.o
+ .bss.mp_nodes  0x2000288c        0x4 _build/app_timer.o
+ .bss.m_user_array_size
+                0x20002890        0x1 _build/app_timer.o
+ *fill*         0x20002891        0x3 
+ .bss.mp_users  0x20002894        0x4 _build/app_timer.o
+ .bss.m_ticks_elapsed_q_read_ind
+                0x20002898        0x1 _build/app_timer.o
+ .bss.m_ticks_elapsed_q_write_ind
+                0x20002899        0x1 _build/app_timer.o
+ .bss.m_node_array_size
+                0x2000289a        0x1 _build/app_timer.o
+ *fill*         0x2000289b        0x1 
+ .bss.m_timer_id_head
+                0x2000289c        0x4 _build/app_timer.o
+ .bss.m_rtc1_reset
+                0x200028a0        0x1 _build/app_timer.o
+ *fill*         0x200028a1        0x3 
+ .bss.m_ticks_elapsed
+                0x200028a4        0x8 _build/app_timer.o
+ .bss.m_rtc1_running
+                0x200028ac        0x1 _build/app_timer.o
+ *fill*         0x200028ad        0x3 
+ .bss.m_event_handler
+                0x200028b0        0x4 _build/app_uart.o
+ .bss.m_current_state
+                0x200028b4        0x1 _build/app_uart.o
+ *fill*         0x200028b5        0x3 
+ .bss.m_cb      0x200028b8       0x4c _build/nrf_drv_gpiote.o
+ .bss.m_cmd_queue
+                0x20002904       0xcc _build/pstorage.o
+ .bss.m_num_of_bytes_written
+                0x200029d0        0x4 _build/pstorage.o
+ .bss.m_tail_word_size
+                0x200029d4        0x4 _build/pstorage.o
+ .bss.m_app_table
+                0x200029d8       0x18 _build/pstorage.o
+ .bss.m_next_app_instance
+                0x200029f0        0x2 _build/pstorage.o
+ *fill*         0x200029f2        0x2 
+ .bss.m_flags   0x200029f4        0x4 _build/pstorage.o
+ .bss.m_swap_sub_state
+                0x200029f8        0x1 _build/pstorage.o
+ .bss.m_state   0x200029f9        0x1 _build/pstorage.o
+ *fill*         0x200029fa        0x2 
+ .bss.m_next_page_addr
+                0x200029fc        0x4 _build/pstorage.o
+ .bss.m_app_data_size
+                0x20002a00        0x4 _build/pstorage.o
+ .bss.m_num_of_command_retries
+                0x20002a04        0x4 _build/pstorage.o
+ .bss.m_head_word_size
+                0x20002a08        0x4 _build/pstorage.o
+ .bss.m_current_page_id
+                0x20002a0c        0x4 _build/pstorage.o
+ .bss.release_event_at_push.5913
+                0x20002a10        0x4 _build/bsp.o
+ .bss.m_indication_type
+                0x20002a14        0x4 _build/bsp.o
+ .bss.m_button_timer_id
+                0x20002a18        0x4 _build/bsp.o
+ .bss.m_app_ticks_per_100ms
+                0x20002a1c        0x4 _build/bsp.o
+ .bss.m_alert_timer_id
+                0x20002a20        0x4 _build/bsp.o
+ .bss.m_registered_callback
+                0x20002a24        0x4 _build/bsp.o
+ .bss.m_stable_state
+                0x20002a28        0x1 _build/bsp.o
+ .bss.current_long_push_pin_no.5912
+                0x20002a29        0x1 _build/bsp.o
+ *fill*         0x20002a2a        0x2 
+ .bss.m_leds_timer_id
+                0x20002a2c        0x4 _build/bsp.o
+ .bss.m_events_list
+                0x20002a30        0xc _build/bsp.o
+ .bss.m_error_handler
+                0x20002a3c        0x4 _build/bsp_btn_ble.o
+ .bss.m_num_connections
+                0x20002a40        0x4 _build/bsp_btn_ble.o
+ .bss.m_app_handle
+                0x20002a44        0x1 _build/main_ble.o
+ *fill*         0x20002a45        0x3 
+ .bss.APP_TIMER_BUF.8138
+                0x20002a48      0x330 _build/main_ble.o
+ .bss.BLE_EVT_BUFFER.8204
+                0x20002d78       0x48 _build/main_ble.o
+ .bss.m_advdata
+                0x20002dc0       0x30 _build/ble_advertising.o
+ .bss.m_manuf_specific_data
+                0x20002df0        0xc _build/ble_advertising.o
+ .bss.m_evt_handler
+                0x20002dfc        0x4 _build/ble_advertising.o
+ .bss.m_manuf_data_array
+                0x20002e00       0x1f _build/ble_advertising.o
+ .bss.m_whitelist_temporarily_disabled
+                0x20002e1f        0x1 _build/ble_advertising.o
+ .bss.m_error_handler
+                0x20002e20        0x4 _build/ble_advertising.o
+ .bss.m_peer_address
+                0x20002e24        0x7 _build/ble_advertising.o
+ *fill*         0x20002e2b        0x1 
+ .bss.m_adv_modes_config
+                0x20002e2c       0x24 _build/ble_advertising.o
+ .bss.mp_whitelist_addr
+                0x20002e50       0x20 _build/ble_advertising.o
+ .bss.m_tx_power_level
+                0x20002e70        0x1 _build/ble_advertising.o
+ *fill*         0x20002e71        0x3 
+ .bss.m_whitelist
+                0x20002e74       0x10 _build/ble_advertising.o
+ .bss.m_service_data_array
+                0x20002e84       0x1f _build/ble_advertising.o
+ .bss.m_peer_addr_reply_expected
+                0x20002ea3        0x1 _build/ble_advertising.o
+ .bss.m_whitelist_reply_expected
+                0x20002ea4        0x1 _build/ble_advertising.o
+ *fill*         0x20002ea5        0x3 
+ .bss.mp_whitelist_irk
+                0x20002ea8       0x20 _build/ble_advertising.o
+ .bss.m_adv_mode_current
+                0x20002ec8        0x1 _build/ble_advertising.o
+ .bss.m_advertising_start_pending
+                0x20002ec9        0x1 _build/ble_advertising.o
+ *fill*         0x20002eca        0x2 
+ .bss.m_slave_conn_int
+                0x20002ecc        0x4 _build/ble_advertising.o
+ .bss.m_service_data
+                0x20002ed0        0xc _build/ble_advertising.o
+ .bss.m_adv_evt
+                0x20002edc        0x1 _build/ble_advertising.o
+ .bss.m_change_param
+                0x20002edd        0x1 _build/ble_conn_params.o
+ *fill*         0x20002ede        0x2 
+ .bss.m_current_conn_params
+                0x20002ee0        0x8 _build/ble_conn_params.o
+ .bss.m_update_count
+                0x20002ee8        0x1 _build/ble_conn_params.o
+ *fill*         0x20002ee9        0x3 
+ .bss.m_conn_params_config
+                0x20002eec       0x1c _build/ble_conn_params.o
+ .bss.m_conn_params_timer_id
+                0x20002f08        0x4 _build/ble_conn_params.o
+ .bss.m_conn_handle
+                0x20002f0c        0x2 _build/ble_conn_params.o
+ *fill*         0x20002f0e        0x2 
+ .bss.m_preferred_conn_params
+                0x20002f10        0x8 _build/ble_conn_params.o
+ .bss.m_app_context_table
+                0x20002f18       0x1c _build/device_manager_peripheral.o
+ .bss.m_irk_index_table
+                0x20002f34        0x7 _build/device_manager_peripheral.o
+ .bss.m_module_initialized
+                0x20002f3b        0x1 _build/device_manager_peripheral.o
+ .bss.m_connection_table
+                0x20002f3c        0xc _build/device_manager_peripheral.o
+ .bss.m_peer_table
+                0x20002f48       0xc4 _build/device_manager_peripheral.o
+ .bss.m_storage_handle
+                0x2000300c        0x8 _build/device_manager_peripheral.o
+ .bss.m_bond_table
+                0x20003014       0x1c _build/device_manager_peripheral.o
+ .bss.m_gatts_table
+                0x20003030       0x24 _build/device_manager_peripheral.o
+ .bss.m_peer_addr_update
+                0x20003054        0x4 _build/device_manager_peripheral.o
+ .bss.m_application_table
+                0x20003058        0xc _build/device_manager_peripheral.o
+ .bss.m_softdevice_enabled
+                0x20003064        0x1 _build/softdevice_handler.o
+ *fill*         0x20003065        0x1 
+ .bss.m_ble_evt_buffer_size
+                0x20003066        0x2 _build/softdevice_handler.o
+ .bss.mp_ble_evt_buffer
+                0x20003068        0x4 _build/softdevice_handler.o
+ .bss.m_sys_evt_handler
+                0x2000306c        0x4 _build/softdevice_handler.o
+ .bss.m_ble_evt_handler
+                0x20003070        0x4 _build/softdevice_handler.o
+ .bss.m_evt_schedule_func
+                0x20003074        0x4 _build/softdevice_handler.o
+ *(COMMON)
+                0x20003078                . = ALIGN (0x4)
+                0x20003078                __bss_end__ = .
+
+.heap           0x20003078      0x800
+                0x20003078                __end__ = .
+                0x20003078                end = __end__
+ *(.heap*)
+ .heap          0x20003078      0x800 _build/gcc_startup_nrf51.o
+                0x20003078                __HeapBase
+                0x20003878                __HeapLimit = .
+
+.stack_dummy    0x20003078      0x800
+ *(.stack*)
+ .stack         0x20003078      0x800 _build/gcc_startup_nrf51.o
+                0x20008000                __StackTop = (ORIGIN (RAM) + 0x5800)
+                0x20007800                __StackLimit = (__StackTop - SIZEOF (.stack_dummy))
+                0x20008000                PROVIDE (__stack, __StackTop)
+                0x00000001                ASSERT ((__StackLimit >= __HeapLimit), region RAM overflowed with stack)
+OUTPUT(_build/nrf51422_xxac_s130.out elf32-littlearm)
+
+.ARM.attributes
+                0x00000000       0x28
+ .ARM.attributes
+                0x00000000       0x1e c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crti.o
+ .ARM.attributes
+                0x0000001e       0x1b c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m/crt0.o
+ .ARM.attributes
+                0x00000039       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+ .ARM.attributes
+                0x00000065       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-impure.o)
+ .ARM.attributes
+                0x00000091       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+ .ARM.attributes
+                0x000000bd       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+ .ARM.attributes
+                0x000000e9       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+ .ARM.attributes
+                0x00000115       0x31 _build/app_button.o
+ .ARM.attributes
+                0x00000146       0x31 _build/app_error.o
+ .ARM.attributes
+                0x00000177       0x31 _build/app_timer.o
+ .ARM.attributes
+                0x000001a8       0x31 _build/app_uart.o
+ .ARM.attributes
+                0x000001d9       0x31 _build/nrf_drv_common.o
+ .ARM.attributes
+                0x0000020a       0x31 _build/nrf_drv_gpiote.o
+ .ARM.attributes
+                0x0000023b       0x31 _build/pstorage.o
+ .ARM.attributes
+                0x0000026c       0x31 _build/bsp.o
+ .ARM.attributes
+                0x0000029d       0x31 _build/bsp_btn_ble.o
+ .ARM.attributes
+                0x000002ce       0x31 _build/main_ble.o
+ .ARM.attributes
+                0x000002ff       0x31 _build/ble_advdata.o
+ .ARM.attributes
+                0x00000330       0x31 _build/ble_advertising.o
+ .ARM.attributes
+                0x00000361       0x31 _build/ble_conn_params.o
+ .ARM.attributes
+                0x00000392       0x31 _build/device_manager_peripheral.o
+ .ARM.attributes
+                0x000003c3       0x31 _build/system_nrf51.o
+ .ARM.attributes
+                0x000003f4       0x31 _build/softdevice_handler.o
+ .ARM.attributes
+                0x00000425       0x1b _build/gcc_startup_nrf51.o
+ .ARM.attributes
+                0x00000440       0x1e c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o)
+ .ARM.attributes
+                0x0000045e       0x1e c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_divsi3.o)
+ .ARM.attributes
+                0x0000047c       0x1e c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_dvmd_tls.o)
+ .ARM.attributes
+                0x0000049a       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+ .ARM.attributes
+                0x000004c6       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+ .ARM.attributes
+                0x000004f2       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
+ .ARM.attributes
+                0x0000051e       0x1e c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m/crtn.o
+
+.comment        0x00000000       0x70
+ .comment       0x00000000       0x70 _build/app_button.o
+                                 0x71 (size before relaxing)
+ .comment       0x00000000       0x71 _build/app_error.o
+ .comment       0x00000000       0x71 _build/app_timer.o
+ .comment       0x00000000       0x71 _build/app_uart.o
+ .comment       0x00000000       0x71 _build/nrf_drv_common.o
+ .comment       0x00000000       0x71 _build/nrf_drv_gpiote.o
+ .comment       0x00000000       0x71 _build/pstorage.o
+ .comment       0x00000000       0x71 _build/bsp.o
+ .comment       0x00000000       0x71 _build/bsp_btn_ble.o
+ .comment       0x00000000       0x71 _build/main_ble.o
+ .comment       0x00000000       0x71 _build/ble_advdata.o
+ .comment       0x00000000       0x71 _build/ble_advertising.o
+ .comment       0x00000000       0x71 _build/ble_conn_params.o
+ .comment       0x00000000       0x71 _build/device_manager_peripheral.o
+ .comment       0x00000000       0x71 _build/system_nrf51.o
+ .comment       0x00000000       0x71 _build/softdevice_handler.o
+
+.debug_frame    0x00000000      0x148
+ .debug_frame   0x00000000       0x28 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-exit.o)
+ .debug_frame   0x00000028       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-init.o)
+ .debug_frame   0x00000054       0x20 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memset.o)
+ .debug_frame   0x00000074       0x20 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libnosys.a(_exit.o)
+ .debug_frame   0x00000094       0x20 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_udivsi3.o)
+ .debug_frame   0x000000b4       0x20 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/armv6-m\libgcc.a(_divsi3.o)
+ .debug_frame   0x000000d4       0x2c c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcmp.o)
+ .debug_frame   0x00000100       0x28 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-memcpy.o)
+ .debug_frame   0x00000128       0x20 c:/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/4.9.3/../../../../arm-none-eabi/lib/armv6-m\libc_nano.a(lib_a-strlen.o)
