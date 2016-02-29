@@ -4,7 +4,7 @@
 #include <math.h>
 #include "nrf.h"
 
-Color strip[21];
+static Color strip[21];
 const uint32_t Pin_LED = 21;
 
 static const uint8_t front_lights[] = { 1,2,4,5 };
@@ -53,7 +53,7 @@ void RightBlinkerOff()
 
 void SetFrontLights(uint8_t red, uint8_t green, uint8_t blue)
 {
-	SET_LIGHTS(right_blinkers, 0, 0, 0);
+	SET_LIGHTS(front_lights, 0, 0, 0);
 }
 
 void SetBackLight(int8_t on)
