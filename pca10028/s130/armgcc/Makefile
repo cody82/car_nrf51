@@ -3,9 +3,9 @@ PROJECT_NAME := ble_app_template_s130_pca10028
 export OUTPUT_FILENAME
 #MAKEFILE_NAME := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 MAKEFILE_NAME := $(MAKEFILE_LIST)
-MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) )
+MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) ) 
 
-SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_9.0.0_2e23562
+SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_10.0.0_dc26b5e/
 
 TEMPLATE_PATH = $(SDK_ROOT)/components/toolchain/gcc
 ifeq ($(OS),Windows_NT)
@@ -19,20 +19,20 @@ RM := rm -rf
 
 #echo suspend
 ifeq ("$(VERBOSE)","1")
-NO_ECHO :=
+NO_ECHO := 
 else
 NO_ECHO := @
 endif
 
 # Toolchain commands
-CC       		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-gcc"
-AS       		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-as"
-AR       		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-ar" -r
-LD       		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-ld"
-NM       		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-nm"
-OBJDUMP  		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-objdump"
-OBJCOPY  		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-objcopy"
-SIZE    		:= "$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-size"
+CC              := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-gcc'
+AS              := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-as'
+AR              := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-ar' -r
+LD              := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-ld'
+NM              := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-nm'
+OBJDUMP         := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-objdump'
+OBJCOPY         := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-objcopy'
+SIZE            := '$(GNU_INSTALL_ROOT)/bin/$(GNU_PREFIX)-size'
 
 #function for removing duplicates in a list
 remduplicates = $(strip $(if $1,$(firstword $1) $(call remduplicates,$(filter-out $(firstword $1),$1))))
@@ -45,10 +45,11 @@ $(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
 $(abspath $(SDK_ROOT)/components/libraries/trace/app_trace.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/nrf_assert.c) \
 $(abspath $(SDK_ROOT)/components/libraries/uart/retarget.c) \
-$(abspath $(SDK_ROOT)/components/drivers_nrf/uart/app_uart.c) \
-$(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_delay.c) \
+$(abspath $(SDK_ROOT)/components/libraries/uart/app_uart.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/delay/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/common/nrf_drv_common.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/uart/nrf_drv_uart.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/pstorage/pstorage.c) \
 $(abspath $(SDK_ROOT)/examples/bsp/bsp.c) \
 $(abspath $(SDK_ROOT)/examples/bsp/bsp_btn_ble.c) \
@@ -79,12 +80,14 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/trace)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/device_manager)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/uart)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/s130/headers)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/uart)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/common/softdevice_handler)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/delay)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/timer)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/hal)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/button)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/s130/headers)
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
@@ -95,14 +98,15 @@ BUILD_DIRECTORIES := $(sort $(OBJECT_DIRECTORY) $(OUTPUT_BINARY_DIRECTORY) $(LIS
 
 #flags common to all targets
 CFLAGS  = -DBOARD_PCA10028
-CFLAGS += -DSWI_DISABLE0
 CFLAGS += -DSOFTDEVICE_PRESENT
 CFLAGS += -DNRF51
 CFLAGS += -DS130
 CFLAGS += -DBLE_STACK_SUPPORT_REQD
+CFLAGS += -DSWI_DISABLE0
 CFLAGS += -mcpu=cortex-m0
 CFLAGS += -mthumb -mabi=aapcs --std=gnu99
-CFLAGS += -Wall -Werror -O3
+CFLAGS += -Wall -Werror -Og
+CFLAGS += -g
 CFLAGS += -mfloat-abi=soft
 # keep every function in separate section. This will allow linker to dump unused functions
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
@@ -120,11 +124,11 @@ LDFLAGS += --specs=nano.specs -lc -lnosys
 # Assembler flags
 ASMFLAGS += -x assembler-with-cpp
 ASMFLAGS += -DBOARD_PCA10028
-ASMFLAGS += -DSWI_DISABLE0
 ASMFLAGS += -DSOFTDEVICE_PRESENT
 ASMFLAGS += -DNRF51
 ASMFLAGS += -DS130
 ASMFLAGS += -DBLE_STACK_SUPPORT_REQD
+ASMFLAGS += -DSWI_DISABLE0
 #default target - first one defined
 default: clean nrf51422_xxac_s130
 
@@ -199,14 +203,14 @@ genbin:
 	$(NO_ECHO)$(OBJCOPY) -O binary $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).bin
 
 ## Create binary .hex file from the .out file
-genhex:
+genhex: 
 	@echo Preparing: $(OUTPUT_FILENAME).hex
 	$(NO_ECHO)$(OBJCOPY) -O ihex $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).hex
 
 echosize:
-	-@echo ""
+	-@echo ''
 	$(NO_ECHO)$(SIZE) $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out
-	-@echo ""
+	-@echo ''
 
 clean:
 	$(RM) $(BUILD_DIRECTORIES)
@@ -215,10 +219,14 @@ cleanobj:
 	$(RM) $(BUILD_DIRECTORIES)/*.o
 
 flash: $(MAKECMDGOALS)
-	@echo Flashing: $(OUTPUT_BINARY_DIRECTORY)/$<.hex
-	nrfjprog --reset --program $(OUTPUT_BINARY_DIRECTORY)/$<.hex
+	#@echo Flashing: $(OUTPUT_BINARY_DIRECTORY)/$<.hex
+	#nrfjprog --program $(OUTPUT_BINARY_DIRECTORY)/$<.hex -f nrf51  --sectorerase
+	@echo Flashing: $(OUTPUT_BINARY_DIRECTORY)/nrf51422_xxac_s130.hex
+	nrfjprog --program $(OUTPUT_BINARY_DIRECTORY)/nrf51422_xxac_s130.hex -f nrf51  --sectorerase
+	nrfjprog --reset
 
 ## Flash softdevice
 flash_softdevice:
-	@echo Flashing: s130_softdevice.hex
-	nrfjprog --reset --program $(SDK_ROOT)/components/softdevice/s130/hex/s130_softdevice.hex
+	@echo Flashing: s130_nrf51_1.0.0_softdevice.hex
+	nrfjprog --program $(SDK_ROOT)/components/softdevice/s130/hex/s130_nrf51_1.0.0_softdevice.hex -f nrf51 --chiperase
+	nrfjprog --reset

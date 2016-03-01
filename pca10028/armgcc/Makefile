@@ -5,8 +5,7 @@ export OUTPUT_FILENAME
 MAKEFILE_NAME := $(MAKEFILE_LIST)
 MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) )
 
-#SDK_ROOT := ../../../../../../
-SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_9.0.0_2e23562
+SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_10.0.0_dc26b5e/
 
 #TEMPLATE_PATH = ../../../../../../components/toolchain/gcc
 TEMPLATE_PATH = $(SDK_ROOT)/components/toolchain/gcc
@@ -49,7 +48,7 @@ $(abspath ../../ultrasound.c) \
 $(abspath ../../lights.c) \
 $(abspath ../../battery.c) \
 $(abspath ../../car_esb.c) \
-$(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_delay.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/delay/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/libraries/pwm/app_pwm.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/app_error.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/app_util_platform.c) \
@@ -73,11 +72,11 @@ LIBS  += -lm
 INC_PATHS  = -I$(abspath ../../config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/hal)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/delay)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/properitary_rf/esb)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/gcc)
 #INC_PATHS += -I$(abspath ../../../../../bsp)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain)
-
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/ppi)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/nrf_soc_nosd)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
