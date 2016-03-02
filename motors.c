@@ -14,7 +14,7 @@ const uint32_t Pin_PWMB = 8;
 const uint32_t Pin_Standby = 15;
 
 APP_PWM_INSTANCE(PWM1, 1);
-APP_PWM_INSTANCE(PWM2, 0);
+//APP_PWM_INSTANCE(PWM2, 0);
 
 static volatile bool ready_flag;
 static void pwm_ready_callback(uint32_t pwm_id)
