@@ -3,7 +3,7 @@ PROJECT_NAME := ble_app_template_s130_pca10028
 export OUTPUT_FILENAME
 #MAKEFILE_NAME := $(CURDIR)/$(word $(words $(MAKEFILE_LIST)),$(MAKEFILE_LIST))
 MAKEFILE_NAME := $(MAKEFILE_LIST)
-MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) ) 
+MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) )
 
 SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_10.0.0_dc26b5e/
 
@@ -19,7 +19,7 @@ RM := rm -rf
 
 #echo suspend
 ifeq ("$(VERBOSE)","1")
-NO_ECHO := 
+NO_ECHO :=
 else
 NO_ECHO := @
 endif
@@ -39,21 +39,27 @@ remduplicates = $(strip $(if $1,$(firstword $1) $(call remduplicates,$(filter-ou
 
 #source common to all targets
 C_SOURCE_FILES += \
-$(abspath $(SDK_ROOT)/components/libraries/button/app_button.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/app_error.c) \
-$(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
 $(abspath $(SDK_ROOT)/components/libraries/trace/app_trace.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/nrf_assert.c) \
 $(abspath $(SDK_ROOT)/components/libraries/uart/retarget.c) \
 $(abspath $(SDK_ROOT)/components/libraries/uart/app_uart.c) \
+$(abspath $(SDK_ROOT)/components/libraries/pwm/app_pwm.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/delay/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/common/nrf_drv_common.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_adc.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/uart/nrf_drv_uart.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/pstorage/pstorage.c) \
-$(abspath $(SDK_ROOT)/examples/bsp/bsp.c) \
-$(abspath $(SDK_ROOT)/examples/bsp/bsp_btn_ble.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/ppi/nrf_drv_ppi.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c) \
+$(abspath $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c) \
+$(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
 $(abspath ../../../main_ble.c) \
+$(abspath ../../../motors.c) \
+$(abspath ../../../battery.c) \
+$(abspath ../../../lights.c) \
+$(abspath ../../../ws2812b-nrf51.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_advdata.c) \
 $(abspath $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_conn_params.c) \
@@ -62,8 +68,13 @@ $(abspath $(SDK_ROOT)/components/ble/device_manager/device_manager_peripheral.c)
 $(abspath $(SDK_ROOT)/components/toolchain/system_nrf51.c) \
 $(abspath $(SDK_ROOT)/components/softdevice/common/softdevice_handler/softdevice_handler.c) \
 
+#$(abspath $(SDK_ROOT)/components/libraries/button/app_button.c)
+#$(abspath $(SDK_ROOT)/components/drivers_nrf/rtc/nrf_drv_rtc.c)
+
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf51.s)
+
+LIBS  = -lm
 
 #includes common to all targets
 INC_PATHS  = -I$(abspath ../../../config)
@@ -75,18 +86,22 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/ble_advertising)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/config)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/examples/bsp)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/trace)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/pwm)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/device_manager)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/uart)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/timer)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/ppi)
+#INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/rtc)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/clock)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/uart)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/common/softdevice_handler)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/delay)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/timer)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/hal)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/button)
+#INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/button)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/s130/headers)
 
 OBJECT_DIRECTORY = _build
@@ -203,7 +218,7 @@ genbin:
 	$(NO_ECHO)$(OBJCOPY) -O binary $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).bin
 
 ## Create binary .hex file from the .out file
-genhex: 
+genhex:
 	@echo Preparing: $(OUTPUT_FILENAME).hex
 	$(NO_ECHO)$(OBJCOPY) -O ihex $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).hex
 

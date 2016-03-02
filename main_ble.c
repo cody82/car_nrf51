@@ -35,19 +35,24 @@
 #include "ble_advdata.h"
 #include "ble_advertising.h"
 #include "ble_conn_params.h"
-#include "boards.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
 #include "device_manager.h"
 #include "pstorage.h"
 #include "app_trace.h"
-#include "bsp.h"
-#include "bsp_btn_ble.h"
+#include "nrf_drv_clock.h"
+#include "nrf_drv_gpiote.h"
+#include "nrf_gpio.h"
+#include "nrf_delay.h"
+
+#include "motors.h"
+#include "lights.h"
+#include "battery.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
-#define DEVICE_NAME                      "Nordic_Template"                               /**< Name of device. Will be included in the advertising data. */
-#define MANUFACTURER_NAME                "NordicSemiconductor"                      /**< Manufacturer. Will be passed to Device Information Service. */
+#define DEVICE_NAME                      "Car"                               /**< Name of device. Will be included in the advertising data. */
+#define MANUFACTURER_NAME                "Cody"                      /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL                 300                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
 #define APP_ADV_TIMEOUT_IN_SECONDS       180                                        /**< The advertising timeout in units of seconds. */
 
@@ -63,6 +68,9 @@
 #define NEXT_CONN_PARAMS_UPDATE_DELAY    APP_TIMER_TICKS(30000, APP_TIMER_PRESCALER)/**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
 #define MAX_CONN_PARAMS_UPDATE_COUNT     3                                          /**< Number of attempts before giving up the connection parameter negotiation. */
 
+#define TIMER_INTERVAL         APP_TIMER_TICKS(50, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). This value corresponds to 120 seconds. */
+
+
 #define SEC_PARAM_BOND                   1                                          /**< Perform bonding. */
 #define SEC_PARAM_MITM                   0                                          /**< Man In The Middle protection not required. */
 #define SEC_PARAM_IO_CAPABILITIES        BLE_GAP_IO_CAPS_NONE                       /**< No I/O capabilities. */
@@ -76,6 +84,103 @@ static dm_application_instance_t        m_app_handle;                           
 
 static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 
+
+APP_TIMER_DEF(m_app_timer_id);
+
+const uint32_t Pin_Servo = 13;
+const uint32_t Pin_Beep = 14;
+const uint32_t Pin_LED1 = 6;
+const uint32_t Pin_LED2 = 10;
+
+void SetServo(int16_t steering)
+{
+	steering /= 66;
+	nrf_gpio_pin_set(Pin_Servo);
+	nrf_delay_us(1500 + steering);
+	nrf_gpio_pin_clear(Pin_Servo);
+}
+
+bool RemoteFail()
+{
+  return true;
+}
+
+void CalcLights()
+{
+	if (RemoteFail())
+	{
+		TopLights(false);
+		SetFrontLights(0, 0, 0);
+		SetBackLight(0);
+	}
+	else
+	{
+		//TopLights(packet.top_light);
+		//SetFrontLights(packet.front_light, packet.front_light, packet.front_light);
+		//SetBackLight(packet.throttle < 0);
+	}
+}
+
+static uint32_t tick = 0;
+
+void loop()
+{
+	BatteryTick();
+
+	//rc_timeout++;
+
+	//bool blocked_front = (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 20);
+	//bool blocked_back = (UltraSoundBackDist >= 0) && (UltraSoundBackDist < 20);
+
+	CalcLights();
+
+	//nrf_esb_disable();
+	LightTick();
+	//nrf_esb_enable();
+
+	/*if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
+	{
+		SetMotor(packet.throttle);
+	}
+	else
+	{*/
+		SetMotor(0);
+	//}
+
+	if (RemoteFail())
+	{
+		BlinkWarner();
+	}
+	else
+	{
+		//BlinkRight(packet.blink_right);
+		//BlinkLeft(packet.blink_left);
+	}
+
+	/*if (!RemoteFail() && packet.beep)
+	{
+		nrf_gpio_pin_set(Pin_Beep);
+	}
+	else
+	{
+		nrf_gpio_pin_clear(Pin_Beep);
+	}
+
+	UltraSoundTick();*/
+SetServo(0);
+	if ((tick % 3) == 0)
+	{
+		//SetServo(RemoteFail() ? 0 : packet.steering);
+	}
+
+	BlinkerTick();
+
+
+	//nrf_delay_ms(10);
+	tick++;
+	nrf_gpio_pin_toggle(Pin_LED2);
+}
+
 /* YOUR_JOB: Declare all services structure your application is using
 static ble_xx_service_t                     m_xxs;
 static ble_yy_service_t                     m_yys;
@@ -84,7 +189,7 @@ static ble_yy_service_t                     m_yys;
 // YOUR_JOB: Use UUIDs for service(s) used in your application.
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}}; /**< Universally unique service identifiers. */
 
-                                   
+
 /**@brief Callback function for asserts in the SoftDevice.
  *
  * @details This function will be called in case of an assert in the SoftDevice.
@@ -101,6 +206,11 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
     app_error_handler(DEAD_BEEF, line_num, p_file_name);
 }
 
+static void timer_timeout_handler(void * p_context)
+{
+    UNUSED_PARAMETER(p_context);
+    loop();
+}
 
 /**@brief Function for the Timer initialization.
  *
@@ -117,10 +227,10 @@ static void timers_init(void)
     /* YOUR_JOB: Create any timers to be used by the application.
                  Below is an example of how to create a timer.
                  For every new timer needed, increase the value of the macro APP_TIMER_MAX_TIMERS by
-                 one.
+                 one.*/
     uint32_t err_code;
     err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
-    APP_ERROR_CHECK(err_code); */
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -158,7 +268,7 @@ static void gap_params_init(void)
 }
 
 
-/**@brief Function for handling the YYY Service events. 
+/**@brief Function for handling the YYY Service events.
  * YOUR_JOB implement a service handler function depending on the event the service you are using can generate
  *
  * @details This function will be called for all YY Service events which are passed to
@@ -168,7 +278,7 @@ static void gap_params_init(void)
  * @param[in]   p_evt          Event received from the YY Service.
  *
  *
-static void on_yys_evt(ble_yy_service_t     * p_yy_service, 
+static void on_yys_evt(ble_yy_service_t     * p_yy_service,
                        ble_yy_service_evt_t * p_evt)
 {
     switch (p_evt->evt_type)
@@ -176,7 +286,7 @@ static void on_yys_evt(ble_yy_service_t     * p_yy_service,
         case BLE_YY_NAME_EVT_WRITE:
             APPL_LOG("[APPL]: charact written with value %s. \r\n", p_evt->params.char_xx.value.p_str);
             break;
-        
+
         default:
             // No implementation needed.
             break;
@@ -197,8 +307,8 @@ static void services_init(void)
 
     xxs_init.evt_handler                = NULL;
     xxs_init.is_xxx_notify_supported    = true;
-    xxs_init.ble_xx_initial_value.level = 100; 
-    
+    xxs_init.ble_xx_initial_value.level = 100;
+
     err_code = ble_bas_init(&m_xxs, &xxs_init);
     APP_ERROR_CHECK(err_code);
 
@@ -272,30 +382,11 @@ static void conn_params_init(void)
 */
 static void application_timers_start(void)
 {
-    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.
+    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.*/
     uint32_t err_code;
     err_code = app_timer_start(m_app_timer_id, TIMER_INTERVAL, NULL);
-    APP_ERROR_CHECK(err_code); */
-   
-}
-
-
-/**@brief Function for putting the chip into sleep mode.
- *
- * @note This function will not return.
- */
-static void sleep_mode_enter(void)
-{
-    uint32_t err_code = bsp_indication_set(BSP_INDICATE_IDLE);
     APP_ERROR_CHECK(err_code);
 
-    // Prepare wakeup buttons.
-    err_code = bsp_btn_ble_sleep_mode_prepare();
-    APP_ERROR_CHECK(err_code);
-
-    // Go to system-off mode (this function will not return; wakeup will cause a reset).
-    err_code = sd_power_system_off();
-    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -307,16 +398,16 @@ static void sleep_mode_enter(void)
  */
 static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 {
-    uint32_t err_code;
+    //uint32_t err_code;
 
     switch (ble_adv_evt)
     {
         case BLE_ADV_EVT_FAST:
-            err_code = bsp_indication_set(BSP_INDICATE_ADVERTISING);
-            APP_ERROR_CHECK(err_code);
+            //err_code = bsp_indication_set(BSP_INDICATE_ADVERTISING);
+            //APP_ERROR_CHECK(err_code);
             break;
         case BLE_ADV_EVT_IDLE:
-            sleep_mode_enter();
+            //sleep_mode_enter();
             break;
         default:
             break;
@@ -330,13 +421,13 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
  */
 static void on_ble_evt(ble_evt_t * p_ble_evt)
 {
-    uint32_t err_code;
+    //uint32_t err_code;
 
     switch (p_ble_evt->header.evt_id)
             {
         case BLE_GAP_EVT_CONNECTED:
-            err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            APP_ERROR_CHECK(err_code);
+            //err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
+            //APP_ERROR_CHECK(err_code);
             m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
             break;
 
@@ -362,7 +453,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     dm_ble_evt_handler(p_ble_evt);
     ble_conn_params_on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);
+    //bsp_btn_ble_on_ble_evt(p_ble_evt);
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
     /*YOUR_JOB add calls to _on_ble_evt functions from each service your application is using
@@ -416,41 +507,6 @@ static void ble_stack_init(void)
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
     APP_ERROR_CHECK(err_code);
-}
-
-
-/**@brief Function for handling events from the BSP module.
- *
- * @param[in]   event   Event generated by button press.
- */
-void bsp_event_handler(bsp_event_t event)
-{
-    uint32_t err_code;
-    switch (event)
-    {
-        case BSP_EVENT_SLEEP:
-            sleep_mode_enter();
-            break;
-
-        case BSP_EVENT_DISCONNECT:
-            err_code = sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-            if (err_code != NRF_ERROR_INVALID_STATE)
-            {
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        case BSP_EVENT_WHITELIST_OFF:
-            err_code = ble_advertising_restart_without_whitelist();
-            if (err_code != NRF_ERROR_INVALID_STATE)
-            {
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        default:
-            break;
-    }
 }
 
 
@@ -534,27 +590,6 @@ static void advertising_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-
-/**@brief Function for initializing buttons and leds.
- *
- * @param[out] p_erase_bonds  Will be true if the clear bonding button was pressed to wake the application up.
- */
-static void buttons_leds_init(bool * p_erase_bonds)
-{
-    bsp_event_t startup_event;
-
-    uint32_t err_code = bsp_init(BSP_INIT_LED | BSP_INIT_BUTTONS,
-                                 APP_TIMER_TICKS(100, APP_TIMER_PRESCALER), 
-                                 bsp_event_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = bsp_btn_ble_init(NULL, &startup_event);
-    APP_ERROR_CHECK(err_code);
-
-    *p_erase_bonds = (startup_event == BSP_EVENT_CLEAR_BONDING_DATA);
-}
-
-
 /**@brief Function for the Power manager.
  */
 static void power_manage(void)
@@ -564,18 +599,49 @@ static void power_manage(void)
 }
 
 
+void car_init()
+{
+	ret_code_t err_code;
+
+	err_code = nrf_drv_gpiote_init();
+	APP_ERROR_CHECK(err_code);
+
+	InitBattery();
+
+	//init LEDs
+	nrf_gpio_cfg_output(Pin_LED1);
+	nrf_gpio_cfg_output(Pin_LED2);
+	nrf_gpio_pin_set(Pin_LED1);
+	nrf_gpio_pin_set(Pin_LED2);
+
+	//init lights
+	InitLights();
+
+	// init beeper
+	nrf_gpio_cfg_output(Pin_Beep);
+	nrf_gpio_pin_clear(Pin_Beep);
+
+	InitMotor();
+
+	// init servo
+	nrf_gpio_cfg_output(Pin_Servo);
+	nrf_gpio_pin_clear(Pin_Servo);
+
+	//InitUltraSound(&rtc);
+}
+
 /**@brief Function for application main entry.
  */
 int main(void)
 {
     uint32_t err_code;
-    bool erase_bonds;
+
+    car_init();
 
     // Initialize.
     timers_init();
-    buttons_leds_init(&erase_bonds);
     ble_stack_init();
-    device_manager_init(erase_bonds);
+    device_manager_init(false);
     gap_params_init();
     advertising_init();
     services_init();
@@ -590,6 +656,7 @@ int main(void)
     for (;;)
     {
         power_manage();
+        //loop();
     }
 }
 
