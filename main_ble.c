@@ -35,6 +35,7 @@
 #include "ble_advdata.h"
 #include "ble_advertising.h"
 #include "ble_conn_params.h"
+#include "ble_radio_notification.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
 #include "device_manager.h"
@@ -44,6 +45,8 @@
 #include "nrf_drv_gpiote.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
+
+#include "ble_car.h"
 
 #include "motors.h"
 #include "lights.h"
@@ -68,7 +71,7 @@
 #define NEXT_CONN_PARAMS_UPDATE_DELAY    APP_TIMER_TICKS(30000, APP_TIMER_PRESCALER)/**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
 #define MAX_CONN_PARAMS_UPDATE_COUNT     3                                          /**< Number of attempts before giving up the connection parameter negotiation. */
 
-#define TIMER_INTERVAL         APP_TIMER_TICKS(50, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). This value corresponds to 120 seconds. */
+#define TIMER_INTERVAL         APP_TIMER_TICKS(20, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). This value corresponds to 120 seconds. */
 
 
 #define SEC_PARAM_BOND                   1                                          /**< Perform bonding. */
@@ -84,6 +87,7 @@ static dm_application_instance_t        m_app_handle;                           
 
 static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 
+static ble_car_t                        m_nus;                                      /**< Structure to identify the Nordic UART Service. */
 
 APP_TIMER_DEF(m_app_timer_id);
 
@@ -109,7 +113,7 @@ void CalcLights()
 {
 	if (RemoteFail())
 	{
-		TopLights(false);
+		TopLights(true);
 		SetFrontLights(0, 0, 0);
 		SetBackLight(0);
 	}
@@ -135,7 +139,7 @@ void loop()
 	CalcLights();
 
 	//nrf_esb_disable();
-	LightTick();
+	//LightTick();
 	//nrf_esb_enable();
 
 	/*if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
@@ -293,6 +297,10 @@ static void on_yys_evt(ble_yy_service_t     * p_yy_service,
     }
 }*/
 
+void nus_data_handler(ble_car_t * p_nus, uint8_t * p_data, uint16_t length)
+{
+}
+
 /**@brief Function for initializing services that will be used by the application.
  */
 static void services_init(void)
@@ -320,6 +328,16 @@ static void services_init(void)
     err_code = ble_yy_service_init(&yys_init, &yy_init);
     APP_ERROR_CHECK(err_code);
     */
+
+    uint32_t         err_code;
+    ble_car_init_t   nus_init;
+
+    memset(&nus_init, 0, sizeof(nus_init));
+
+    nus_init.data_handler = nus_data_handler;
+
+    err_code = ble_car_init(&m_nus, &nus_init);
+    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -630,6 +648,14 @@ void car_init()
 	//InitUltraSound(&rtc);
 }
 
+void ble_on_radio_active_evt(bool radio_active)
+{
+  if(radio_active)
+  {
+	nrf_gpio_pin_toggle(Pin_LED1);
+    LightTick();
+  }
+}
 /**@brief Function for application main entry.
  */
 int main(void)
@@ -652,6 +678,10 @@ int main(void)
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
     APP_ERROR_CHECK(err_code);
 
+    err_code = ble_radio_notification_init(NRF_APP_PRIORITY_HIGH,
+                                           NRF_RADIO_NOTIFICATION_DISTANCE_2680US,
+                                           ble_on_radio_active_evt);
+    APP_ERROR_CHECK(err_code);
     // Enter main loop.
     for (;;)
     {
