@@ -12,7 +12,7 @@
 
 /**@file
  *
- * @defgroup ble_sdk_srv_nus Nordic UART Service
+ * @defgroup ble_sdk_srv_car Nordic UART Service
  * @{
  * @ingroup  ble_sdk_srv
  * @brief    Nordic UART Service implementation.
@@ -37,14 +37,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BLE_UUID_NUS_SERVICE 0x0001                      /**< The UUID of the Nordic UART Service. */
+#define BLE_UUID_CAR_SERVICE 0x0001                      /**< The UUID of the Nordic UART Service. */
 #define BLE_CAR_MAX_DATA_LEN (GATT_MTU_SIZE_DEFAULT - 3) /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
 
 /* Forward declaration of the ble_car_t type. */
 typedef struct ble_car_s ble_car_t;
 
 /**@brief Nordic UART Service event handler type. */
-typedef void (*ble_car_data_handler_t) (ble_car_t * p_nus, uint8_t * p_data, uint16_t length);
+typedef void (*ble_car_data_handler_t) (ble_car_t * p_car, uint8_t * p_data, uint16_t length);
 
 /**@brief Nordic UART Service initialization structure.
  *
@@ -67,22 +67,25 @@ struct ble_car_s
     uint16_t                 service_handle;          /**< Handle of Nordic UART Service (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t tx_handles;              /**< Handles related to the TX characteristic (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t rx_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
+    ble_gatts_char_handles_t control_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
+    ble_gatts_char_handles_t top_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     uint16_t                 conn_handle;             /**< Handle of the current connection (as provided by the S110 SoftDevice). BLE_CONN_HANDLE_INVALID if not in a connection. */
     bool                     is_notification_enabled; /**< Variable to indicate if the peer has enabled notification of the RX characteristic.*/
     ble_car_data_handler_t   data_handler;            /**< Event handler to be called for handling received data. */
+    uint8_t top_light;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
 };
 
 /**@brief Function for initializing the Nordic UART Service.
  *
- * @param[out] p_nus      Nordic UART Service structure. This structure must be supplied
+ * @param[out] p_car      Nordic UART Service structure. This structure must be supplied
  *                        by the application. It is initialized by this function and will
  *                        later be used to identify this particular service instance.
- * @param[in] p_nus_init  Information needed to initialize the service.
+ * @param[in] p_car_init  Information needed to initialize the service.
  *
  * @retval NRF_SUCCESS If the service was successfully initialized. Otherwise, an error code is returned.
- * @retval NRF_ERROR_NULL If either of the pointers p_nus or p_nus_init is NULL.
+ * @retval NRF_ERROR_NULL If either of the pointers p_car or p_car_init is NULL.
  */
-uint32_t ble_car_init(ble_car_t * p_nus, const ble_car_init_t * p_nus_init);
+uint32_t ble_car_init(ble_car_t * p_car, const ble_car_init_t * p_car_init);
 
 /**@brief Function for handling the Nordic UART Service's BLE events.
  *
@@ -91,23 +94,23 @@ uint32_t ble_car_init(ble_car_t * p_nus, const ble_car_init_t * p_nus_init);
  * is relevant and calls the Nordic UART Service event handler of the
  * application if necessary.
  *
- * @param[in] p_nus       Nordic UART Service structure.
+ * @param[in] p_car       Nordic UART Service structure.
  * @param[in] p_ble_evt   Event received from the S110 SoftDevice.
  */
-void ble_car_on_ble_evt(ble_car_t * p_nus, ble_evt_t * p_ble_evt);
+void ble_car_on_ble_evt(ble_car_t * p_car, ble_evt_t * p_ble_evt);
 
 /**@brief Function for sending a string to the peer.
  *
  * @details This function sends the input string as an RX characteristic notification to the
  *          peer.
  *
- * @param[in] p_nus       Pointer to the Nordic UART Service structure.
+ * @param[in] p_car       Pointer to the Nordic UART Service structure.
  * @param[in] p_string    String to be sent.
  * @param[in] length      Length of the string.
  *
  * @retval NRF_SUCCESS If the string was sent successfully. Otherwise, an error code is returned.
  */
-uint32_t ble_car_string_send(ble_car_t * p_nus, uint8_t * p_string, uint16_t length);
+uint32_t ble_car_string_send(ble_car_t * p_car, uint8_t * p_string, uint16_t length);
 
 #endif // BLE_CAR_H__
 
