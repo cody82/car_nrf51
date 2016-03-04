@@ -37,7 +37,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define BLE_UUID_CAR_SERVICE 0x0001                      /**< The UUID of the Nordic UART Service. */
+#define BLE_UUID_CAR_SERVICE 0xA000                      /**< The UUID of the Nordic UART Service. */
 #define BLE_CAR_MAX_DATA_LEN (GATT_MTU_SIZE_DEFAULT - 3) /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
 
 /* Forward declaration of the ble_car_t type. */
@@ -57,6 +57,17 @@ typedef struct
     ble_car_data_handler_t data_handler; /**< Event handler to be called for handling received data. */
 } ble_car_init_t;
 
+typedef struct
+{
+    int8_t steering;
+    int8_t throttle;
+    uint8_t front_light;
+    bool top_light;
+    bool blink_left;
+    bool blink_right;
+    bool beep;
+} Packet;
+
 /**@brief Nordic UART Service structure.
  *
  * @details This structure contains status information related to the service.
@@ -72,7 +83,7 @@ struct ble_car_s
     uint16_t                 conn_handle;             /**< Handle of the current connection (as provided by the S110 SoftDevice). BLE_CONN_HANDLE_INVALID if not in a connection. */
     bool                     is_notification_enabled; /**< Variable to indicate if the peer has enabled notification of the RX characteristic.*/
     ble_car_data_handler_t   data_handler;            /**< Event handler to be called for handling received data. */
-    uint8_t top_light;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
+    Packet packet;
 };
 
 /**@brief Function for initializing the Nordic UART Service.

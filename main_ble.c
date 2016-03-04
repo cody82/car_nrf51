@@ -106,22 +106,22 @@ void SetServo(int16_t steering)
 
 bool RemoteFail()
 {
-  return true;
+  return false;
 }
 
 void CalcLights()
 {
 	if (RemoteFail())
 	{
-		TopLights(m_nus.top_light);
+		TopLights(m_nus.packet.top_light);
 		SetFrontLights(0, 0, 0);
 		SetBackLight(0);
 	}
 	else
 	{
-		//TopLights(packet.top_light);
-		//SetFrontLights(packet.front_light, packet.front_light, packet.front_light);
-		//SetBackLight(packet.throttle < 0);
+		TopLights(m_nus.packet.top_light);
+		SetFrontLights(m_nus.packet.front_light, m_nus.packet.front_light, m_nus.packet.front_light);
+		SetBackLight(m_nus.packet.throttle < 0);
 	}
 }
 
@@ -135,6 +135,8 @@ void loop()
 
 	//bool blocked_front = (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 20);
 	//bool blocked_back = (UltraSoundBackDist >= 0) && (UltraSoundBackDist < 20);
+		bool blocked_front = false;
+		bool blocked_back = false;
 
 	CalcLights();
 
@@ -142,14 +144,14 @@ void loop()
 	//LightTick();
 	//nrf_esb_enable();
 
-	/*if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
+	if (!RemoteFail() && ((!blocked_front && m_nus.packet.throttle >= 0) || (!blocked_back && m_nus.packet.throttle <= 0)))
 	{
-		SetMotor(packet.throttle);
+		SetMotor(m_nus.packet.throttle * 256);
 	}
 	else
-	{*/
+	{
 		SetMotor(0);
-	//}
+	}
 
 	if (RemoteFail())
 	{
@@ -157,11 +159,11 @@ void loop()
 	}
 	else
 	{
-		//BlinkRight(packet.blink_right);
-		//BlinkLeft(packet.blink_left);
+		BlinkRight(m_nus.packet.blink_right);
+		BlinkLeft(m_nus.packet.blink_left);
 	}
 
-	/*if (!RemoteFail() && packet.beep)
+	if (!RemoteFail() && m_nus.packet.beep)
 	{
 		nrf_gpio_pin_set(Pin_Beep);
 	}
@@ -170,11 +172,11 @@ void loop()
 		nrf_gpio_pin_clear(Pin_Beep);
 	}
 
-	UltraSoundTick();*/
-SetServo(0);
-	if ((tick % 3) == 0)
+	//UltraSoundTick();
+//SetServo(0);
+	//if ((tick % 3) == 0)
 	{
-		//SetServo(RemoteFail() ? 0 : packet.steering);
+		SetServo(RemoteFail() ? 0 : (m_nus.packet.steering * 256));
 	}
 
 	BlinkerTick();
@@ -663,7 +665,6 @@ int main(void)
 {
     uint32_t err_code;
 
-    car_init();
 
     // Initialize.
     timers_init();
@@ -674,6 +675,7 @@ int main(void)
     services_init();
     conn_params_init();
 
+		    car_init();
     // Start execution.
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);

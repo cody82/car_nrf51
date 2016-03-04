@@ -22,7 +22,7 @@
 
 #define BLE_CAR_MAX_RX_CHAR_LEN        BLE_CAR_MAX_DATA_LEN        /**< Maximum length of the RX Characteristic (in bytes). */
 #define BLE_CAR_MAX_TX_CHAR_LEN        BLE_CAR_MAX_DATA_LEN        /**< Maximum length of the TX Characteristic (in bytes). */
-#define BLE_CAR_MAX_CONTROL_CHAR_LEN        10
+#define BLE_CAR_MAX_CONTROL_CHAR_LEN        (sizeof(Packet)) //7
 #define BLE_CAR_MAX_TOP_CHAR_LEN        1
 
 #define CAR_BASE_UUID                  {{0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}} /**< Used vendor specific UUID. */
@@ -86,12 +86,19 @@ static void on_write(ble_car_t * p_car, ble_evt_t * p_ble_evt)
              (p_evt_write->handle == p_car->control_handles.value_handle)
             )
     {
+      uint32_t len = p_evt_write->len;
+        uint8_t *data = p_evt_write->data;
+      if(len > sizeof(Packet))
+      {
+        len = sizeof(Packet);
+      }
+      memcpy(&p_car->packet, data, len);
     }
     else if (
              (p_evt_write->handle == p_car->top_handles.value_handle)
             )
     {
-      p_car->top_light = p_evt_write->data[0];
+      p_car->packet.top_light = p_evt_write->data[0];
     }
     else
     {
@@ -241,13 +248,13 @@ static uint32_t control_char_add(ble_car_t * p_car, const ble_car_init_t * p_car
    attr_md.vloc    = BLE_GATTS_VLOC_STACK;
    attr_md.rd_auth = 0;
    attr_md.wr_auth = 0;
-   attr_md.vlen    = 1;
+   attr_md.vlen    = 0;
 
    memset(&attr_char_value, 0, sizeof(attr_char_value));
 
    attr_char_value.p_uuid    = &ble_uuid;
    attr_char_value.p_attr_md = &attr_md;
-   attr_char_value.init_len  = 1;
+   attr_char_value.init_len  = 0;
    attr_char_value.init_offs = 0;
    attr_char_value.max_len   = BLE_CAR_MAX_CONTROL_CHAR_LEN;
 
