@@ -56,14 +56,14 @@
 
 #define DEVICE_NAME                      "Car"                               /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                "Cody"                      /**< Manufacturer. Will be passed to Device Information Service. */
-#define APP_ADV_INTERVAL                 300                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
+#define APP_ADV_INTERVAL                 1000                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
 #define APP_ADV_TIMEOUT_IN_SECONDS       180                                        /**< The advertising timeout in units of seconds. */
 
 #define APP_TIMER_PRESCALER              0                                          /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE          4                                          /**< Size of timer operation queues. */
 
-#define MIN_CONN_INTERVAL                MSEC_TO_UNITS(80, UNIT_1_25_MS)           /**< Minimum acceptable connection interval (0.1 seconds). */
-#define MAX_CONN_INTERVAL                MSEC_TO_UNITS(100, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (0.2 second). */
+#define MIN_CONN_INTERVAL                MSEC_TO_UNITS(50, UNIT_1_25_MS)           /**< Minimum acceptable connection interval (0.1 seconds). */
+#define MAX_CONN_INTERVAL                MSEC_TO_UNITS(50, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (0.2 second). */
 #define SLAVE_LATENCY                    0                                          /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                 MSEC_TO_UNITS(2000, UNIT_10_MS)            /**< Connection supervisory timeout (4 seconds). */
 
@@ -106,7 +106,7 @@ void SetServo(int16_t steering)
 
 bool RemoteFail()
 {
-  return false;
+  return (m_conn_handle == BLE_CONN_HANDLE_INVALID) || (LowVoltage > 100);
 }
 
 void CalcLights()
@@ -130,7 +130,7 @@ static uint32_t tick = 0;
 void loop()
 {
 	BatteryTick();
-
+ble_car_set_battery(&m_nus, BatteryVoltage);
 	//rc_timeout++;
 
 	//bool blocked_front = (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 20);

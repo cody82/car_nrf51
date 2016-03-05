@@ -80,11 +80,14 @@ struct ble_car_s
     ble_gatts_char_handles_t rx_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t control_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t top_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
+    ble_gatts_char_handles_t battery_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     uint16_t                 conn_handle;             /**< Handle of the current connection (as provided by the S110 SoftDevice). BLE_CONN_HANDLE_INVALID if not in a connection. */
     bool                     is_notification_enabled; /**< Variable to indicate if the peer has enabled notification of the RX characteristic.*/
     ble_car_data_handler_t   data_handler;            /**< Event handler to be called for handling received data. */
     Packet packet;
 };
+
+uint32_t ble_car_set_battery(ble_car_t * p_car, uint16_t mv);
 
 /**@brief Function for initializing the Nordic UART Service.
  *
