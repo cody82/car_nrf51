@@ -12,8 +12,6 @@
 #include "ble_radio_notification.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
-#include "device_manager.h"
-#include "pstorage.h"
 #include "app_trace.h"
 #include "nrf_drv_clock.h"
 #include "nrf_drv_gpiote.h"
@@ -58,8 +56,6 @@
 
 #define DEAD_BEEF                        0xDEADBEEF                                 /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-static dm_application_instance_t        m_app_handle;                               /**< Application identifier allocated by device manager */
-
 static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 
 static ble_car_t                        ble_car;                                      /**< Structure to identify the Nordic UART Service. */
@@ -70,6 +66,19 @@ const uint32_t Pin_Servo = 13;
 const uint32_t Pin_Beep = 14;
 const uint32_t Pin_LED1 = 6;
 const uint32_t Pin_LED2 = 10;
+
+void ble_start();
+void ble_stop();
+
+typedef enum
+{
+	BleWait,
+	EsbWait,
+	Ble,
+	Esb
+} CarRemoteMode;
+
+CarRemoteMode CurrentMode;
 
 void SetServo(int16_t steering)
 {
@@ -101,6 +110,7 @@ void CalcLights()
 }
 
 static uint32_t tick = 0;
+static uint32_t mode_tick = 0;
 
 bool blocked_front()
 {
@@ -114,6 +124,8 @@ bool blocked_back()
 
 void loop()
 {
+	mode_tick++;
+
 	BatteryTick();
 ble_car_set_battery(&ble_car, BatteryVoltage);
 	//rc_timeout++;
@@ -235,32 +247,6 @@ static void gap_params_init(void)
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
     APP_ERROR_CHECK(err_code);
 }
-
-
-/**@brief Function for handling the YYY Service events.
- * YOUR_JOB implement a service handler function depending on the event the service you are using can generate
- *
- * @details This function will be called for all YY Service events which are passed to
- *          the application.
- *
- * @param[in]   p_yy_service   YY Service structure.
- * @param[in]   p_evt          Event received from the YY Service.
- *
- *
-static void on_yys_evt(ble_yy_service_t     * p_yy_service,
-                       ble_yy_service_evt_t * p_evt)
-{
-    switch (p_evt->evt_type)
-    {
-        case BLE_YY_NAME_EVT_WRITE:
-            APPL_LOG("[APPL]: charact written with value %s. \r\n", p_evt->params.char_xx.value.p_str);
-            break;
-
-        default:
-            // No implementation needed.
-            break;
-    }
-}*/
 
 void nus_data_handler(ble_car_t * p_nus, uint8_t * p_data, uint16_t length)
 {
@@ -410,7 +396,6 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
  */
 static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
-    dm_ble_evt_handler(p_ble_evt);
     ble_conn_params_on_ble_evt(p_ble_evt);
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
@@ -427,7 +412,6 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
  */
 static void sys_evt_dispatch(uint32_t sys_evt)
 {
-    pstorage_sys_event_handler(sys_evt);
     ble_advertising_on_sys_evt(sys_evt);
 }
 
@@ -461,61 +445,6 @@ static void ble_stack_init(void)
 
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
-    APP_ERROR_CHECK(err_code);
-}
-
-
-/**@brief Function for handling the Device Manager events.
- *
- * @param[in] p_evt  Data associated to the device manager event.
- */
-static uint32_t device_manager_evt_handler(dm_handle_t const * p_handle,
-                                           dm_event_t const  * p_event,
-                                           ret_code_t        event_result)
-{
-    APP_ERROR_CHECK(event_result);
-
-#ifdef BLE_DFU_APP_SUPPORT
-    if (p_event->event_id == DM_EVT_LINK_SECURED)
-    {
-        app_context_load(p_handle);
-    }
-#endif // BLE_DFU_APP_SUPPORT
-
-    return NRF_SUCCESS;
-}
-
-
-/**@brief Function for the Device Manager initialization.
- *
- * @param[in] erase_bonds  Indicates whether bonding information should be cleared from
- *                         persistent storage during initialization of the Device Manager.
- */
-static void device_manager_init(bool erase_bonds)
-{
-    uint32_t               err_code;
-    dm_init_param_t        init_param = {.clear_persistent_data = erase_bonds};
-    dm_application_param_t register_param;
-
-    // Initialize persistent storage module.
-    err_code = pstorage_init();
-    APP_ERROR_CHECK(err_code);
-
-    err_code = dm_init(&init_param);
-    APP_ERROR_CHECK(err_code);
-
-    memset(&register_param.sec_param, 0, sizeof(ble_gap_sec_params_t));
-
-    register_param.sec_param.bond         = SEC_PARAM_BOND;
-    register_param.sec_param.mitm         = SEC_PARAM_MITM;
-    register_param.sec_param.io_caps      = SEC_PARAM_IO_CAPABILITIES;
-    register_param.sec_param.oob          = SEC_PARAM_OOB;
-    register_param.sec_param.min_key_size = SEC_PARAM_MIN_KEY_SIZE;
-    register_param.sec_param.max_key_size = SEC_PARAM_MAX_KEY_SIZE;
-    register_param.evt_handler            = device_manager_evt_handler;
-    register_param.service_type           = DM_PROTOCOL_CNTXT_GATT_SRVR_ID;
-
-    err_code = dm_register(&m_app_handle, &register_param);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -602,37 +531,70 @@ void ble_on_radio_active_evt(bool radio_active)
 				}
   }
 }
+
+void ble_start()
+{
+    uint32_t err_code;
+	ble_stack_init();
+	//device_manager_init(false);
+	gap_params_init();
+	advertising_init();
+	services_init();
+	conn_params_init();
+
+	err_code = ble_radio_notification_init(NRF_APP_PRIORITY_HIGH,
+																				 NRF_RADIO_NOTIFICATION_DISTANCE_4560US,
+																				 ble_on_radio_active_evt);
+
+																				 	 APP_ERROR_CHECK(err_code);
+
+err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+	 APP_ERROR_CHECK(err_code);
+
+}
+
+void ble_stop()
+{
+    uint32_t err_code;
+
+		if (m_conn_handle != BLE_CONN_HANDLE_INVALID)
+    {
+        err_code = sd_ble_gap_disconnect(m_conn_handle,  BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
+		    APP_ERROR_CHECK(err_code);
+    }
+
+		err_code = sd_softdevice_disable();
+    APP_ERROR_CHECK(err_code);
+
+		err_code = sd_ble_gap_adv_stop();
+    APP_ERROR_CHECK(err_code);
+
+    // Stop any impending connection parameters update.
+    err_code = ble_conn_params_stop();
+    APP_ERROR_CHECK(err_code);
+
+    err_code = softdevice_handler_sd_disable();
+    APP_ERROR_CHECK(err_code);
+}
+
 /**@brief Function for application main entry.
  */
 int main(void)
 {
-    uint32_t err_code;
-
-    // Initialize.
     timers_init();
-    ble_stack_init();
-    device_manager_init(false);
-    gap_params_init();
-    advertising_init();
-    services_init();
-    conn_params_init();
 
 		car_init();
 
+ble_start();
+
+CurrentMode = BleWait;
+
     // Start execution.
     application_timers_start();
-    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = ble_radio_notification_init(NRF_APP_PRIORITY_HIGH,
-                                           NRF_RADIO_NOTIFICATION_DISTANCE_4560US,
-                                           ble_on_radio_active_evt);
-    APP_ERROR_CHECK(err_code);
     // Enter main loop.
     for (;;)
     {
         power_manage();
-        //loop();
     }
 }
 
