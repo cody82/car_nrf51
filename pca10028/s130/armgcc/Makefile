@@ -67,7 +67,6 @@ $(abspath $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_conn_params.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_srv_common.c) \
 $(abspath $(SDK_ROOT)/components/ble/ble_radio_notification/ble_radio_notification.c) \
-$(abspath $(SDK_ROOT)/components/ble/device_manager/device_manager_peripheral.c) \
 $(abspath $(SDK_ROOT)/components/toolchain/system_nrf51.c) \
 $(abspath $(SDK_ROOT)/components/softdevice/common/softdevice_handler/softdevice_handler.c) \
 
@@ -93,7 +92,6 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/trace)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/pwm)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/device_manager)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/uart)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/timer)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/ppi)
