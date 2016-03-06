@@ -94,7 +94,7 @@ void BlinkerTick()
 {
 	tick++;
 
-	if (tick % 50 == 0)
+	if (tick % 25 == 0)
 	{
 		if (blink_left > 0)
 		{
