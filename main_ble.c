@@ -45,12 +45,14 @@
 #include "nrf_drv_gpiote.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
+#include "nrf_rtc.h"
 
 #include "ble_car.h"
 
 #include "motors.h"
 #include "lights.h"
 #include "battery.h"
+#include "ultrasound.h"
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
@@ -127,16 +129,30 @@ void CalcLights()
 
 static uint32_t tick = 0;
 
+uint32_t rtc0_counter;
+uint32_t rtc1_counter;
+
+bool blocked_front()
+{
+	return (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 15);
+}
+
+bool blocked_back()
+{
+	return (UltraSoundBackDist >= 0) && (UltraSoundBackDist < 15);
+}
+
 void loop()
 {
+	rtc0_counter = nrf_rtc_counter_get(NRF_RTC0);
+	rtc1_counter = nrf_rtc_counter_get(NRF_RTC1);
 	BatteryTick();
 ble_car_set_battery(&m_nus, BatteryVoltage);
 	//rc_timeout++;
 
-	//bool blocked_front = (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 20);
-	//bool blocked_back = (UltraSoundBackDist >= 0) && (UltraSoundBackDist < 20);
-		bool blocked_front = false;
-		bool blocked_back = false;
+	//bool blocked_front = ;
+		//bool blocked_front = false;
+	//	bool blocked_back = false;
 
 	CalcLights();
 
@@ -144,14 +160,6 @@ ble_car_set_battery(&m_nus, BatteryVoltage);
 	//LightTick();
 	//nrf_esb_enable();
 
-	if (!RemoteFail() && ((!blocked_front && m_nus.packet.throttle >= 0) || (!blocked_back && m_nus.packet.throttle <= 0)))
-	{
-		SetMotor(m_nus.packet.throttle * 256);
-	}
-	else
-	{
-		SetMotor(0);
-	}
 
 	if (RemoteFail())
 	{
@@ -172,7 +180,6 @@ ble_car_set_battery(&m_nus, BatteryVoltage);
 		nrf_gpio_pin_clear(Pin_Beep);
 	}
 
-	//UltraSoundTick();
 //SetServo(0);
 	//if ((tick % 3) == 0)
 	{
@@ -648,7 +655,7 @@ void car_init()
 	nrf_gpio_cfg_output(Pin_Servo);
 	nrf_gpio_pin_clear(Pin_Servo);
 
-	//InitUltraSound(&rtc);
+	InitUltraSound(NRF_RTC1);
 }
 
 void ble_on_radio_active_evt(bool radio_active)
@@ -657,6 +664,15 @@ void ble_on_radio_active_evt(bool radio_active)
   {
 	nrf_gpio_pin_toggle(Pin_LED1);
     LightTick();
+			UltraSoundTick();
+				if (!RemoteFail() && ((!blocked_front() && m_nus.packet.throttle >= 0) || (!blocked_back() && m_nus.packet.throttle <= 0)))
+				{
+					SetMotor(m_nus.packet.throttle * 256);
+				}
+				else
+				{
+					SetMotor(0);
+				}
   }
 }
 /**@brief Function for application main entry.
@@ -682,7 +698,7 @@ int main(void)
     APP_ERROR_CHECK(err_code);
 
     err_code = ble_radio_notification_init(NRF_APP_PRIORITY_HIGH,
-                                           NRF_RADIO_NOTIFICATION_DISTANCE_2680US,
+                                           NRF_RADIO_NOTIFICATION_DISTANCE_4560US,
                                            ble_on_radio_active_evt);
     APP_ERROR_CHECK(err_code);
     // Enter main loop.

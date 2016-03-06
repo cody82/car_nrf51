@@ -61,6 +61,7 @@ $(abspath ../../../battery.c) \
 $(abspath ../../../lights.c) \
 $(abspath ../../../ws2812b-nrf51.c) \
 $(abspath ../../../ble_car.c) \
+$(abspath ../../../ultrasound.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_advdata.c) \
 $(abspath $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_conn_params.c) \
