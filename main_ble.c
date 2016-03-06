@@ -1,29 +1,3 @@
-/* Copyright (c) 2014 Nordic Semiconductor. All Rights Reserved.
- *
- * The information contained herein is property of Nordic Semiconductor ASA.
- * Terms and conditions of usage are described in detail in NORDIC
- * SEMICONDUCTOR STANDARD SOFTWARE LICENSE AGREEMENT.
- *
- * Licensees are granted free, non-transferable use of the information. NO
- * WARRANTY of ANY KIND is provided. This heading must NOT be removed from
- * the file.
- *
- */
-
-/** @file
- *
- * @defgroup ble_sdk_app_template_main main.c
- * @{
- * @ingroup ble_sdk_app_template
- * @brief Template project main file.
- *
- * This file contains a template for creating a new application. It has the code necessary to wakeup
- * from button, advertise, get a connection restart advertising on disconnect and if no new
- * connection created go back to system-off mode.
- * It can easily be used as a starting point for creating a new application, the comments identified
- * with 'YOUR_JOB' indicates where and how you can customize.
- */
-
 #include <stdint.h>
 #include <string.h>
 #include "nordic_common.h"
@@ -75,7 +49,6 @@
 
 #define TIMER_INTERVAL         APP_TIMER_TICKS(20, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). This value corresponds to 120 seconds. */
 
-
 #define SEC_PARAM_BOND                   1                                          /**< Perform bonding. */
 #define SEC_PARAM_MITM                   0                                          /**< Man In The Middle protection not required. */
 #define SEC_PARAM_IO_CAPABILITIES        BLE_GAP_IO_CAPS_NONE                       /**< No I/O capabilities. */
@@ -89,7 +62,7 @@ static dm_application_instance_t        m_app_handle;                           
 
 static uint16_t                          m_conn_handle = BLE_CONN_HANDLE_INVALID;   /**< Handle of the current connection. */
 
-static ble_car_t                        m_nus;                                      /**< Structure to identify the Nordic UART Service. */
+static ble_car_t                        ble_car;                                      /**< Structure to identify the Nordic UART Service. */
 
 APP_TIMER_DEF(m_app_timer_id);
 
@@ -115,22 +88,19 @@ void CalcLights()
 {
 	if (RemoteFail())
 	{
-		TopLights(m_nus.packet.top_light);
+		TopLights(ble_car.packet.top_light);
 		SetFrontLights(0, 0, 0);
 		SetBackLight(0);
 	}
 	else
 	{
-		TopLights(m_nus.packet.top_light);
-		SetFrontLights(m_nus.packet.front_light, m_nus.packet.front_light, m_nus.packet.front_light);
-		SetBackLight(m_nus.packet.throttle < 0);
+		TopLights(ble_car.packet.top_light);
+		SetFrontLights(ble_car.packet.front_light, ble_car.packet.front_light, ble_car.packet.front_light);
+		SetBackLight(ble_car.packet.throttle < 0);
 	}
 }
 
 static uint32_t tick = 0;
-
-uint32_t rtc0_counter;
-uint32_t rtc1_counter;
 
 bool blocked_front()
 {
@@ -144,10 +114,8 @@ bool blocked_back()
 
 void loop()
 {
-	rtc0_counter = nrf_rtc_counter_get(NRF_RTC0);
-	rtc1_counter = nrf_rtc_counter_get(NRF_RTC1);
 	BatteryTick();
-ble_car_set_battery(&m_nus, BatteryVoltage);
+ble_car_set_battery(&ble_car, BatteryVoltage);
 	//rc_timeout++;
 
 	//bool blocked_front = ;
@@ -160,18 +128,17 @@ ble_car_set_battery(&m_nus, BatteryVoltage);
 	//LightTick();
 	//nrf_esb_enable();
 
-
 	if (RemoteFail())
 	{
 		BlinkWarner();
 	}
 	else
 	{
-		BlinkRight(m_nus.packet.blink_right);
-		BlinkLeft(m_nus.packet.blink_left);
+		BlinkRight(ble_car.packet.blink_right);
+		BlinkLeft(ble_car.packet.blink_left);
 	}
 
-	if (!RemoteFail() && m_nus.packet.beep)
+	if (!RemoteFail() && ble_car.packet.beep)
 	{
 		nrf_gpio_pin_set(Pin_Beep);
 	}
@@ -180,26 +147,15 @@ ble_car_set_battery(&m_nus, BatteryVoltage);
 		nrf_gpio_pin_clear(Pin_Beep);
 	}
 
-//SetServo(0);
-	//if ((tick % 3) == 0)
-	{
-		SetServo(RemoteFail() ? 0 : (m_nus.packet.steering * 256));
-	}
+	SetServo(RemoteFail() ? 0 : (ble_car.packet.steering * 256));
 
 	BlinkerTick();
-
 
 	//nrf_delay_ms(10);
 	tick++;
 	nrf_gpio_pin_toggle(Pin_LED2);
 }
 
-/* YOUR_JOB: Declare all services structure your application is using
-static ble_xx_service_t                     m_xxs;
-static ble_yy_service_t                     m_yys;
-*/
-
-// YOUR_JOB: Use UUIDs for service(s) used in your application.
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}}; /**< Universally unique service identifiers. */
 
 
@@ -314,30 +270,6 @@ void nus_data_handler(ble_car_t * p_nus, uint8_t * p_data, uint16_t length)
  */
 static void services_init(void)
 {
-    /* YOUR_JOB: Add code to initialize the services used by the application.
-    uint32_t                           err_code;
-    ble_xxs_init_t                     xxs_init;
-    ble_yys_init_t                     yys_init;
-
-    // Initialize XXX Service.
-    memset(&xxs_init, 0, sizeof(xxs_init));
-
-    xxs_init.evt_handler                = NULL;
-    xxs_init.is_xxx_notify_supported    = true;
-    xxs_init.ble_xx_initial_value.level = 100;
-
-    err_code = ble_bas_init(&m_xxs, &xxs_init);
-    APP_ERROR_CHECK(err_code);
-
-    // Initialize YYY Service.
-    memset(&yys_init, 0, sizeof(yys_init));
-    yys_init.evt_handler                  = on_yys_evt;
-    yys_init.ble_yy_initial_value.counter = 0;
-
-    err_code = ble_yy_service_init(&yys_init, &yy_init);
-    APP_ERROR_CHECK(err_code);
-    */
-
     uint32_t         err_code;
     ble_car_init_t   nus_init;
 
@@ -345,7 +277,7 @@ static void services_init(void)
 
     nus_init.data_handler = nus_data_handler;
 
-    err_code = ble_car_init(&m_nus, &nus_init);
+    err_code = ble_car_init(&ble_car, &nus_init);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -480,14 +412,9 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     dm_ble_evt_handler(p_ble_evt);
     ble_conn_params_on_ble_evt(p_ble_evt);
-    //bsp_btn_ble_on_ble_evt(p_ble_evt);
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
-		ble_car_on_ble_evt(&m_nus,p_ble_evt);
-    /*YOUR_JOB add calls to _on_ble_evt functions from each service your application is using
-    ble_xxs_on_ble_evt(&m_xxs, p_ble_evt);
-    ble_yys_on_ble_evt(&m_yys, p_ble_evt);
-    */
+		ble_car_on_ble_evt(&ble_car,p_ble_evt);
 }
 
 
@@ -665,9 +592,9 @@ void ble_on_radio_active_evt(bool radio_active)
 	nrf_gpio_pin_toggle(Pin_LED1);
     LightTick();
 			UltraSoundTick();
-				if (!RemoteFail() && ((!blocked_front() && m_nus.packet.throttle >= 0) || (!blocked_back() && m_nus.packet.throttle <= 0)))
+				if (!RemoteFail() && ((!blocked_front() && ble_car.packet.throttle >= 0) || (!blocked_back() && ble_car.packet.throttle <= 0)))
 				{
-					SetMotor(m_nus.packet.throttle * 256);
+					SetMotor(ble_car.packet.throttle * 256);
 				}
 				else
 				{
@@ -681,7 +608,6 @@ int main(void)
 {
     uint32_t err_code;
 
-
     // Initialize.
     timers_init();
     ble_stack_init();
@@ -691,7 +617,8 @@ int main(void)
     services_init();
     conn_params_init();
 
-		    car_init();
+		car_init();
+
     // Start execution.
     application_timers_start();
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
