@@ -92,7 +92,7 @@ void InitUltraSound(const NRF_RTC_Type *p_rtc)
 void UltraSoundTick()
 {
 	tick++;
-	if ((tick % 4) == 0)
+	if ((tick % 10) == 0)
 	{
 		if (!UltraSoundFront)
 		{
@@ -107,7 +107,7 @@ void UltraSoundTick()
 		}
 		UltraSoundFront = !UltraSoundFront;
 	}
-	else if ((tick % 4) == 2)
+	else if ((tick % 10) == 5)
 	{
 		if (!UltraSoundBack)
 		{

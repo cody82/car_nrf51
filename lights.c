@@ -67,15 +67,21 @@ void InitLights()
 }
 
 static float top_time = 0.0f;
+static int8_t last_top = 0;
 void TopLights(int8_t on)
 {
+	if(on && !last_top)
+	{
+		top_time = 0.0f;
+	}
+	last_top = on;
 	top_time += 0.2f;
 	for (int i = 7; i < 14; ++i)
 	{
 		Color *c = &strip[i];
 		c->Red = c->Green = 0;
 		if (on)
-			c->Blue = (unsigned char)((sinf(top_time + ((float)(i - 7) * 2.0f)) * 0.5f + 0.5f) * 255.0f);
+			c->Blue = (unsigned char)((sinf(top_time + ((float)(i - 7) * 2.0f)) * 0.5f + 0.5f) * 255.0f * (top_time < 3.0f ? (pow(top_time / 3.0f, 10)) : 1.0f));
 		else
 			c->Blue = 0;
 	}
