@@ -76,8 +76,6 @@ struct ble_car_s
 {
     uint8_t                  uuid_type;               /**< UUID type for Nordic UART Service Base UUID. */
     uint16_t                 service_handle;          /**< Handle of Nordic UART Service (as provided by the S110 SoftDevice). */
-    ble_gatts_char_handles_t tx_handles;              /**< Handles related to the TX characteristic (as provided by the S110 SoftDevice). */
-    ble_gatts_char_handles_t rx_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t control_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t top_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
     ble_gatts_char_handles_t battery_handles;              /**< Handles related to the RX characteristic (as provided by the S110 SoftDevice). */
@@ -113,18 +111,6 @@ uint32_t ble_car_init(ble_car_t * p_car, const ble_car_init_t * p_car_init);
  */
 void ble_car_on_ble_evt(ble_car_t * p_car, ble_evt_t * p_ble_evt);
 
-/**@brief Function for sending a string to the peer.
- *
- * @details This function sends the input string as an RX characteristic notification to the
- *          peer.
- *
- * @param[in] p_car       Pointer to the Nordic UART Service structure.
- * @param[in] p_string    String to be sent.
- * @param[in] length      Length of the string.
- *
- * @retval NRF_SUCCESS If the string was sent successfully. Otherwise, an error code is returned.
- */
-uint32_t ble_car_string_send(ble_car_t * p_car, uint8_t * p_string, uint16_t length);
 
 #endif // BLE_CAR_H__
 

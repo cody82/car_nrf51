@@ -88,9 +88,10 @@ void SetServo(int16_t steering)
 	nrf_gpio_pin_clear(Pin_Servo);
 }
 
+static volatile uint32_t rc_timeout = 0;
 bool RemoteFail()
 {
-  return (m_conn_handle == BLE_CONN_HANDLE_INVALID) || (LowVoltage > 100);
+  return (m_conn_handle == BLE_CONN_HANDLE_INVALID) || (LowVoltage > 100) || (rc_timeout > 100);
 }
 
 void CalcLights()
@@ -127,18 +128,16 @@ void loop()
 	mode_tick++;
 
 	BatteryTick();
-ble_car_set_battery(&ble_car, BatteryVoltage);
-	//rc_timeout++;
+	ble_car_set_battery(&ble_car, BatteryVoltage);
 
-	//bool blocked_front = ;
-		//bool blocked_front = false;
-	//	bool blocked_back = false;
+	rc_timeout++;
+
+	if(rc_timeout > 100 && m_conn_handle != BLE_CONN_HANDLE_INVALID)
+	{
+		sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
+	}
 
 	CalcLights();
-
-	//nrf_esb_disable();
-	//LightTick();
-	//nrf_esb_enable();
 
 	if (RemoteFail())
 	{
@@ -161,11 +160,8 @@ ble_car_set_battery(&ble_car, BatteryVoltage);
 		nrf_gpio_pin_clear(Pin_Beep);
 	}
 
-	//SetServo(RemoteFail() ? 0 : (ble_car.packet.steering * 256));
-
 	BlinkerTick();
 
-	//nrf_delay_ms(10);
 	tick++;
 	nrf_gpio_pin_toggle(Pin_LED2);
 }
@@ -250,8 +246,9 @@ static void gap_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-void nus_data_handler(ble_car_t * p_nus, uint8_t * p_data, uint16_t length)
+void car_data_handler(ble_car_t * p_car, uint8_t * p_data, uint16_t length)
 {
+	rc_timeout = 0;
 }
 
 /**@brief Function for initializing services that will be used by the application.
@@ -259,13 +256,13 @@ void nus_data_handler(ble_car_t * p_nus, uint8_t * p_data, uint16_t length)
 static void services_init(void)
 {
     uint32_t         err_code;
-    ble_car_init_t   nus_init;
+    ble_car_init_t   car_init;
 
-    memset(&nus_init, 0, sizeof(nus_init));
+    memset(&car_init, 0, sizeof(car_init));
 
-    nus_init.data_handler = nus_data_handler;
+    car_init.data_handler = car_data_handler;
 
-    err_code = ble_car_init(&ble_car, &nus_init);
+    err_code = ble_car_init(&ble_car, &car_init);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -627,7 +624,3 @@ CurrentMode = BleWait;
 
     }
 }
-
-/**
- * @}
- */
