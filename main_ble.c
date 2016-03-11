@@ -30,14 +30,14 @@
 
 #define DEVICE_NAME                      "Car"                               /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME                "Cody"                      /**< Manufacturer. Will be passed to Device Information Service. */
-#define APP_ADV_INTERVAL                 1000                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
+#define APP_ADV_INTERVAL                 300                                        /**< The advertising interval (in units of 0.625 ms. This value corresponds to 25 ms). */
 #define APP_ADV_TIMEOUT_IN_SECONDS       180                                        /**< The advertising timeout in units of seconds. */
 
 #define APP_TIMER_PRESCALER              0                                          /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE          4                                          /**< Size of timer operation queues. */
 
-#define MIN_CONN_INTERVAL                MSEC_TO_UNITS(50, UNIT_1_25_MS)           /**< Minimum acceptable connection interval (0.1 seconds). */
-#define MAX_CONN_INTERVAL                MSEC_TO_UNITS(50, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (0.2 second). */
+#define MIN_CONN_INTERVAL                MSEC_TO_UNITS(20, UNIT_1_25_MS)           /**< Minimum acceptable connection interval (0.1 seconds). */
+#define MAX_CONN_INTERVAL                MSEC_TO_UNITS(20, UNIT_1_25_MS)           /**< Maximum acceptable connection interval (0.2 second). */
 #define SLAVE_LATENCY                    0                                          /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                 MSEC_TO_UNITS(2000, UNIT_10_MS)            /**< Connection supervisory timeout (4 seconds). */
 
@@ -84,7 +84,7 @@ void SetServo(int16_t steering)
 {
 	steering /= 66;
 	nrf_gpio_pin_set(Pin_Servo);
-	nrf_delay_us(1500 + steering);
+	nrf_delay_us(1500 - steering);
 	nrf_gpio_pin_clear(Pin_Servo);
 }
 
@@ -143,11 +143,13 @@ ble_car_set_battery(&ble_car, BatteryVoltage);
 	if (RemoteFail())
 	{
 		BlinkWarner();
+		SetMotor(0);
 	}
 	else
 	{
 		BlinkRight(ble_car.packet.blink_right);
 		BlinkLeft(ble_car.packet.blink_left);
+		SetMotor(ble_car.packet.throttle * 256);
 	}
 
 	if (!RemoteFail() && ble_car.packet.beep)
@@ -159,7 +161,7 @@ ble_car_set_battery(&ble_car, BatteryVoltage);
 		nrf_gpio_pin_clear(Pin_Beep);
 	}
 
-	SetServo(RemoteFail() ? 0 : (ble_car.packet.steering * 256));
+	//SetServo(RemoteFail() ? 0 : (ble_car.packet.steering * 256));
 
 	BlinkerTick();
 
@@ -518,17 +520,17 @@ void ble_on_radio_active_evt(bool radio_active)
 {
   if(radio_active)
   {
-	nrf_gpio_pin_toggle(Pin_LED1);
+		nrf_gpio_pin_toggle(Pin_LED1);
     LightTick();
-			UltraSoundTick();
-				if (!RemoteFail() && ((!blocked_front() && ble_car.packet.throttle >= 0) || (!blocked_back() && ble_car.packet.throttle <= 0)))
-				{
-					SetMotor(ble_car.packet.throttle * 256);
-				}
-				else
-				{
-					SetMotor(0);
-				}
+		UltraSoundTick();
+		if (!RemoteFail() && ((!blocked_front() && ble_car.packet.throttle >= 0) || (!blocked_back() && ble_car.packet.throttle <= 0)))
+		{
+				SetServo(ble_car.packet.steering * 256);
+		}
+		else
+		{
+				SetServo(0);
+		}
   }
 }
 
@@ -595,6 +597,34 @@ CurrentMode = BleWait;
     for (;;)
     {
         power_manage();
+/*
+								if(CurrentMode == BleWait)
+								{
+									if(mode_tick > 10 * 50)
+									{
+										ble_stop();
+										CurrentMode = EsbWait;
+										mode_tick = 0;
+									}
+									else
+									{
+
+									}
+								}
+								else if(CurrentMode == EsbWait)
+								{
+									if(mode_tick > 10 * 50)
+									{
+										ble_start();
+										CurrentMode = BleWait;
+										mode_tick = 0;
+									}
+									else
+									{
+
+									}
+								}*/
+
     }
 }
 

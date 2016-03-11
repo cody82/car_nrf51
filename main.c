@@ -52,7 +52,7 @@ void SetServo(int16_t steering)
 {
 	steering /= 66;
 	nrf_gpio_pin_set(Pin_Servo);
-	nrf_delay_us(1500 + steering);
+	nrf_delay_us(1500 - steering);
 	nrf_gpio_pin_clear(Pin_Servo);
 }
 
@@ -91,7 +91,9 @@ void loop()
 	CalcLights();
 
 	nrf_esb_disable();
+  __disable_irq();
 	LightTick();
+	__enable_irq();
 	nrf_esb_enable();
 
 	if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
@@ -146,7 +148,7 @@ int main()
 
 	err_code = nrf_drv_gpiote_init();
 	APP_ERROR_CHECK(err_code);
-	
+
 	InitBattery();
 
 	//init LEDs

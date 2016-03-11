@@ -83,9 +83,9 @@ void TopLights(int8_t on)
 
 void LightTick()
 {
-	__disable_irq();
+	//__disable_irq();
 	ws2812b_write(Pin_LED, (uint8_t*)strip, sizeof(strip));
-	__enable_irq();
+	//__enable_irq();
 }
 
 static uint32_t tick;
