@@ -8,8 +8,8 @@ static Color strip[21];
 const uint32_t Pin_LED = 21;
 
 static const uint8_t front_lights[] = { 1,2,4,5 };
-static const uint8_t right_blinkers[] = { 0,14 };
-static const uint8_t left_blinkers[] = { 6,20 };
+static const uint8_t right_blinkers[] = { 6,20 };
+static const uint8_t left_blinkers[] = { 0,14 };
 static const uint8_t all_blinkers[] = { 0,6,14,20 };
 static const uint8_t break_lights[] = { 15,16,18,19 };
 static const uint8_t back_lights[] = { 17 };
