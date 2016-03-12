@@ -21,7 +21,7 @@
 
 #define BLE_CAR_MAX_CONTROL_CHAR_LEN        (sizeof(Packet)) //7
 #define BLE_CAR_MAX_TOP_CHAR_LEN        1
-#define BLE_CAR_MAX_BATTERY_CHAR_LEN        2
+#define BLE_CAR_MAX_BATTERY_CHAR_LEN        (sizeof(Telemetry))
 
 #define CAR_BASE_UUID                  {{0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}} /**< Used vendor specific UUID. */
 
@@ -120,16 +120,22 @@ static uint32_t control_char_add(ble_car_t * p_car, const ble_car_init_t * p_car
                                           &p_car->control_handles);
 }
 
-uint32_t ble_car_set_battery(ble_car_t * p_car, uint16_t mv)
+uint32_t ble_car_set_telemetry(ble_car_t * p_car, uint16_t mv, uint8_t front_dist, uint8_t back_dist)
 {
     ble_gatts_value_t gatts_value;
+    Telemetry tel;
 
     // Initialize value struct.
     memset(&gatts_value, 0, sizeof(gatts_value));
+    memset(&tel, 0, sizeof(tel));
 
-    gatts_value.len     = sizeof(uint16_t);
+    tel.voltage = mv;
+    tel.front_dist = front_dist;
+    tel.back_dist = back_dist;
+
+    gatts_value.len     = sizeof(tel);
     gatts_value.offset  = 0;
-    gatts_value.p_value = (uint8_t*)&mv;
+    gatts_value.p_value = (uint8_t*)&tel;
 
     // Update database.
     return sd_ble_gatts_value_set(p_car->conn_handle,

@@ -68,6 +68,12 @@ typedef struct
     bool beep;
 } Packet;
 
+typedef struct
+{
+  uint16_t voltage;
+  uint8_t front_dist;
+  uint8_t back_dist;
+} Telemetry;
 /**@brief Nordic UART Service structure.
  *
  * @details This structure contains status information related to the service.
@@ -85,7 +91,7 @@ struct ble_car_s
     Packet packet;
 };
 
-uint32_t ble_car_set_battery(ble_car_t * p_car, uint16_t mv);
+uint32_t ble_car_set_telemetry(ble_car_t * p_car, uint16_t mv, uint8_t front_dist, uint8_t back_dist);
 
 /**@brief Function for initializing the Nordic UART Service.
  *

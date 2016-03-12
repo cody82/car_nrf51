@@ -128,7 +128,7 @@ void loop()
 	mode_tick++;
 
 	BatteryTick();
-	ble_car_set_battery(&ble_car, BatteryVoltage);
+	ble_car_set_telemetry(&ble_car, BatteryVoltage, UltraSoundFrontDist, UltraSoundBackDist);
 
 	rc_timeout++;
 
@@ -148,7 +148,15 @@ void loop()
 	{
 		BlinkRight(ble_car.packet.blink_right);
 		BlinkLeft(ble_car.packet.blink_left);
-		SetMotor(ble_car.packet.throttle * 256);
+
+		if ((!blocked_front() && ble_car.packet.throttle >= 0) || (!blocked_back() && ble_car.packet.throttle <= 0))
+		{
+			SetMotor(ble_car.packet.throttle * 256);
+		}
+		else
+		{
+			SetMotor(0);
+		}
 	}
 
 	if (!RemoteFail() && ble_car.packet.beep)
@@ -520,7 +528,7 @@ void ble_on_radio_active_evt(bool radio_active)
 		nrf_gpio_pin_toggle(Pin_LED1);
     LightTick();
 		UltraSoundTick();
-		if (!RemoteFail() && ((!blocked_front() && ble_car.packet.throttle >= 0) || (!blocked_back() && ble_car.packet.throttle <= 0)))
+		if (!RemoteFail())
 		{
 				SetServo(ble_car.packet.steering * 256);
 		}
