@@ -9,10 +9,8 @@ const uint32_t Pin_FrontEcho = 17;
 const uint32_t Pin_BackTrig = 18;
 const uint32_t Pin_BackEcho = 19;
 
-int8_t UltraSoundFront = 0;
-int8_t UltraSoundBack = 0;
-uint32_t UltraSoundFrontTime = 0xFFFFFFFF;
-uint32_t UltraSoundBackTime = 0xFFFFFFFF;
+uint32_t UltraSoundFrontTime = 0;
+uint32_t UltraSoundBackTime = 0;
 volatile int32_t UltraSoundFrontDist = 0;
 volatile int32_t UltraSoundBackDist = 0;
 
@@ -21,6 +19,8 @@ static uint32_t tick = 0;
 int32_t UltraSoundCalcDistance(uint32_t now, uint32_t last)
 {
 	//uint32_t delta = now - last - (450 * 32768 / 1000000);
+	if(now < last)
+		now += 0xFFFFFF;
 	uint32_t delta = now - last;
 	/*if(delta > 14)
 		delta-=14;
@@ -42,23 +42,21 @@ static NRF_RTC_Type *rtc;
 
 void UltraSoundFrontHandler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
-	if(UltraSoundFrontTime ==  0xFFFFFFFF)
+	if(nrf_gpio_pin_read(Pin_FrontEcho))
 		UltraSoundFrontTime = nrf_rtc_counter_get(rtc);
 	else
 	{
 		UltraSoundFrontDist = UltraSoundCalcDistance(nrf_rtc_counter_get(rtc), UltraSoundFrontTime);
-		UltraSoundFrontTime = 0xFFFFFFFF;
 	}
 }
 
 void UltraSoundBackHandler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
-	if(UltraSoundBackTime ==  0xFFFFFFFF)
+	if(nrf_gpio_pin_read(Pin_BackEcho))
 		UltraSoundBackTime = nrf_rtc_counter_get(rtc);
 	else
 	{
 		UltraSoundBackDist = UltraSoundCalcDistance(nrf_rtc_counter_get(rtc), UltraSoundBackTime);
-		UltraSoundBackTime = 0xFFFFFFFF;
 	}
 }
 
@@ -92,34 +90,12 @@ void InitUltraSound(const NRF_RTC_Type *p_rtc)
 void UltraSoundTick()
 {
 	tick++;
-	if ((tick % 10) == 0)
+	if ((tick % 11) == 0)
 	{
-		if (!UltraSoundFront)
-		{
-			nrf_gpio_pin_set(Pin_FrontTrig);
-		}
-		else
-		{
-			nrf_gpio_pin_clear(Pin_FrontTrig);
-			//start timer
-			UltraSoundFrontTime = 0xFFFFFFFF;
-			//UltraSoundFrontTime = nrf_rtc_counter_get(rtc);
-		}
-		UltraSoundFront = !UltraSoundFront;
+		nrf_gpio_pin_toggle(Pin_FrontTrig);
 	}
-	else if ((tick % 10) == 5)
+	else if ((tick % 11) == 5)
 	{
-		if (!UltraSoundBack)
-		{
-			nrf_gpio_pin_set(Pin_BackTrig);
-		}
-		else
-		{
-			nrf_gpio_pin_clear(Pin_BackTrig);
-			//start timer
-			UltraSoundBackTime = 0xFFFFFFFF;
-			//UltraSoundBackTime = nrf_rtc_counter_get(rtc);
-		}
-		UltraSoundBack = !UltraSoundBack;
+		nrf_gpio_pin_toggle(Pin_BackTrig);
 	}
 }
