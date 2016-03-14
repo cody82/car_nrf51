@@ -170,7 +170,7 @@ int main()
 	nrf_gpio_cfg_output(Pin_Servo);
 	nrf_gpio_pin_clear(Pin_Servo);
 
-	InitUltraSound(&rtc);
+	InitUltraSound(NRF_RTC1);
 
 	InitEsb();
 
