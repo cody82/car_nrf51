@@ -3,6 +3,11 @@
 #include "nrf_gpio.h"
 #include "app_error.h"
 #include "nrf_drv_gpiote.h"
+#include "nrf_drv_timer.h"
+
+const nrf_drv_timer_t timer = NRF_DRV_TIMER_INSTANCE(2);
+
+//const nrf_drv_timer_co_t timer = NRF_DRV_TIMER_DEFAULT_CONFIG(2);
 
 const uint32_t Pin_FrontTrig = 16;
 const uint32_t Pin_FrontEcho = 17;
@@ -16,18 +21,24 @@ volatile int32_t UltraSoundBackDist = 0;
 
 static uint32_t tick = 0;
 
+static void handler(nrf_timer_event_t event_type, void *p_context)
+{
+}
+
+static uint16_t get_counter()
+{
+	NRF_TIMER2->TASKS_CAPTURE[0] = 1;
+	return (uint16_t)NRF_TIMER2->CC[0];
+}
+
 int32_t UltraSoundCalcDistance(uint32_t now, uint32_t last)
 {
-	//uint32_t delta = now - last - (450 * 32768 / 1000000);
 	if(now < last)
-		now += 0xFFFFFF;
+		now += 0xFFFF;
 	uint32_t delta = now - last;
-	/*if(delta > 14)
-		delta-=14;
-	else
-		delta = 0;
-*/
-	delta = delta * 17150 / 32768;//cm
+
+	//delta = delta * 17150 / 32768;//cm
+	delta = delta * 17150 / 125000;//cm
 	if (delta < 150)
 	{
 		return (int32_t)delta;
@@ -38,33 +49,30 @@ int32_t UltraSoundCalcDistance(uint32_t now, uint32_t last)
 	}
 }
 
-static NRF_RTC_Type *rtc;
-
 void UltraSoundFrontHandler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
 	if(nrf_gpio_pin_read(Pin_FrontEcho))
-		UltraSoundFrontTime = nrf_rtc_counter_get(rtc);
+		UltraSoundFrontTime = get_counter();
 	else
 	{
-		UltraSoundFrontDist = UltraSoundCalcDistance(nrf_rtc_counter_get(rtc), UltraSoundFrontTime);
+		UltraSoundFrontDist = UltraSoundCalcDistance(get_counter(), UltraSoundFrontTime);
 	}
 }
 
 void UltraSoundBackHandler(nrf_drv_gpiote_pin_t pin, nrf_gpiote_polarity_t action)
 {
 	if(nrf_gpio_pin_read(Pin_BackEcho))
-		UltraSoundBackTime = nrf_rtc_counter_get(rtc);
+		UltraSoundBackTime = get_counter();
 	else
 	{
-		UltraSoundBackDist = UltraSoundCalcDistance(nrf_rtc_counter_get(rtc), UltraSoundBackTime);
+		UltraSoundBackDist = UltraSoundCalcDistance(get_counter(), UltraSoundBackTime);
 	}
 }
 
 
-void InitUltraSound(const NRF_RTC_Type *p_rtc)
+void InitUltraSound()
 {
 	ret_code_t err_code;
-	rtc = (NRF_RTC_Type*)p_rtc;
 
 	nrf_gpio_cfg_output(Pin_FrontTrig);
 	nrf_gpio_pin_clear(Pin_FrontTrig);
@@ -85,6 +93,9 @@ void InitUltraSound(const NRF_RTC_Type *p_rtc)
 	APP_ERROR_CHECK(err_code);
 
 	nrf_drv_gpiote_in_event_enable(Pin_BackEcho, true);
+
+	nrf_drv_timer_init(&timer, NULL, handler);
+	nrf_drv_timer_enable(&timer);
 }
 
 void UltraSoundTick()
