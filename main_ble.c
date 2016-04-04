@@ -18,6 +18,7 @@
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "nrf_rtc.h"
+#include "nrf_drv_ppi.h"
 
 #include "ble_car.h"
 
@@ -115,12 +116,12 @@ static uint32_t mode_tick = 0;
 
 bool blocked_front()
 {
-	return (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 15);
+	return (UltraSoundFrontDist() >= 0) && (UltraSoundFrontDist() < 15);
 }
 
 bool blocked_back()
 {
-	return (UltraSoundBackDist >= 0) && (UltraSoundBackDist < 15);
+	return (UltraSoundBackDist() >= 0) && (UltraSoundBackDist() < 15);
 }
 
 void loop()
@@ -128,7 +129,7 @@ void loop()
 	mode_tick++;
 
 	BatteryTick();
-	ble_car_set_telemetry(&ble_car, BatteryVoltage, UltraSoundFrontDist, UltraSoundBackDist);
+	ble_car_set_telemetry(&ble_car, BatteryVoltage, UltraSoundFrontDist(), UltraSoundBackDist());
 
 	rc_timeout++;
 
@@ -497,6 +498,9 @@ void car_init()
 	err_code = nrf_drv_gpiote_init();
 	APP_ERROR_CHECK(err_code);
 
+    err_code = nrf_drv_ppi_init();
+	APP_ERROR_CHECK(err_code);
+
 	InitBattery();
 
 	//init LEDs
@@ -518,7 +522,7 @@ void car_init()
 	nrf_gpio_cfg_output(Pin_Servo);
 	nrf_gpio_pin_clear(Pin_Servo);
 
-	InitUltraSound(NRF_RTC1);
+	InitUltraSound();
 }
 
 void ble_on_radio_active_evt(bool radio_active)
