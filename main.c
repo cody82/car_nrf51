@@ -85,8 +85,8 @@ void loop()
 
 	rc_timeout++;
 
-	bool blocked_front = (UltraSoundFrontDist >= 0) && (UltraSoundFrontDist < 20);
-	bool blocked_back = (UltraSoundBackDist >= 0) && (UltraSoundBackDist < 20);
+	bool blocked_front = (UltraSoundFrontDist() >= 0) && (UltraSoundFrontDist() < 20);
+	bool blocked_back = (UltraSoundBackDist() >= 0) && (UltraSoundBackDist() < 20);
 
 	CalcLights();
 
