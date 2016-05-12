@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define ESB_ALTERNATIVE_RESOURCES
+
 typedef struct
 {
 	uint16_t crc16;

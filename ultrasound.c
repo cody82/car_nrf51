@@ -6,7 +6,7 @@
 #include "nrf_drv_timer.h"
 #include "nrf_drv_ppi.h"
 
-static const nrf_drv_timer_t timer = NRF_DRV_TIMER_INSTANCE(2);
+static const nrf_drv_timer_t timer = NRF_DRV_TIMER_INSTANCE(1);
 
 static nrf_ppi_channel_t ppi_front_raise, ppi_front_fall;
 static nrf_ppi_channel_t ppi_back_raise, ppi_back_fall;

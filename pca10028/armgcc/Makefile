@@ -65,7 +65,8 @@ $(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_adc.c) \
 ASM_SOURCE_FILES  = $(abspath $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf51.s)
 
 #properitary esb lib
-LIBS  = $(abspath $(SDK_ROOT)/components/properitary_rf/esb/gcc/esb_gcc.a)
+#LIBS  = $(abspath $(SDK_ROOT)/components/properitary_rf/esb/gcc/esb_gcc.a)
+LIBS  = $(abspath $(SDK_ROOT)/components/properitary_rf/esb/gcc/esb_sd_resources_gcc.a)
 LIBS  += -lm
 
 #includes common to all targets
