@@ -39,7 +39,7 @@
 #endif
 
 #define CENTRAL_LINK_COUNT              0                                 /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
-#define PERIPHERAL_LINK_COUNT           0                                 /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
+#define PERIPHERAL_LINK_COUNT           1                                 /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
@@ -61,13 +61,6 @@
 #define MAX_CONN_PARAMS_UPDATE_COUNT     3                                          /**< Number of attempts before giving up the connection parameter negotiation. */
 
 #define TIMER_INTERVAL         APP_TIMER_TICKS(20, APP_TIMER_PRESCALER) /**< Battery level measurement interval (ticks). This value corresponds to 120 seconds. */
-
-#define SEC_PARAM_BOND                   1                                          /**< Perform bonding. */
-#define SEC_PARAM_MITM                   0                                          /**< Man In The Middle protection not required. */
-#define SEC_PARAM_IO_CAPABILITIES        BLE_GAP_IO_CAPS_NONE                       /**< No I/O capabilities. */
-#define SEC_PARAM_OOB                    0                                          /**< Out Of Band data not available. */
-#define SEC_PARAM_MIN_KEY_SIZE           7                                          /**< Minimum encryption key size. */
-#define SEC_PARAM_MAX_KEY_SIZE           16                                         /**< Maximum encryption key size. */
 
 #define DEAD_BEEF                        0xDEADBEEF                                 /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
@@ -106,7 +99,7 @@ void SetServo(int16_t steering)
 static volatile uint32_t rc_timeout = 0;
 bool RemoteFail()
 {
-  return (m_conn_handle == BLE_CONN_HANDLE_INVALID) || (LowVoltage > 100) || (rc_timeout > 100);
+    return (m_conn_handle == BLE_CONN_HANDLE_INVALID) || (LowVoltage > 100) || (rc_timeout > 100);
 }
 
 void CalcLights()
@@ -249,9 +242,7 @@ static void gap_params_init(void)
 
     BLE_GAP_CONN_SEC_MODE_SET_OPEN(&sec_mode);
 
-    err_code = sd_ble_gap_device_name_set(&sec_mode,
-                                          (const uint8_t *)DEVICE_NAME,
-                                          strlen(DEVICE_NAME));
+    err_code = sd_ble_gap_device_name_set(&sec_mode, (const uint8_t *)DEVICE_NAME, strlen(DEVICE_NAME));
     APP_ERROR_CHECK(err_code);
 
     /* YOUR_JOB: Use an appearance value matching the application's use case.
@@ -353,7 +344,6 @@ static void application_timers_start(void)
     uint32_t err_code;
     err_code = app_timer_start(m_app_timer_id, TIMER_INTERVAL, NULL);
     APP_ERROR_CHECK(err_code);
-
 }
 
 
@@ -369,15 +359,15 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 
     switch (ble_adv_evt)
     {
-        case BLE_ADV_EVT_FAST:
-            //err_code = bsp_indication_set(BSP_INDICATE_ADVERTISING);
-            //APP_ERROR_CHECK(err_code);
-            break;
-        case BLE_ADV_EVT_IDLE:
-            //sleep_mode_enter();
-            break;
-        default:
-            break;
+    case BLE_ADV_EVT_FAST:
+        //err_code = bsp_indication_set(BSP_INDICATE_ADVERTISING);
+        //APP_ERROR_CHECK(err_code);
+        break;
+    case BLE_ADV_EVT_IDLE:
+        //sleep_mode_enter();
+        break;
+    default:
+        break;
     }
 }
 
@@ -391,20 +381,20 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
     //uint32_t err_code;
 
     switch (p_ble_evt->header.evt_id)
-            {
-        case BLE_GAP_EVT_CONNECTED:
-            //err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            //APP_ERROR_CHECK(err_code);
-            m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
-            break;
+    {
+    case BLE_GAP_EVT_CONNECTED:
+        //err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
+        //APP_ERROR_CHECK(err_code);
+        m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+        break;
 
-        case BLE_GAP_EVT_DISCONNECTED:
-            m_conn_handle = BLE_CONN_HANDLE_INVALID;
-            break;
+    case BLE_GAP_EVT_DISCONNECTED:
+        m_conn_handle = BLE_CONN_HANDLE_INVALID;
+        break;
 
-        default:
-            // No implementation needed.
-            break;
+    default:
+        // No implementation needed.
+        break;
     }
 }
 
@@ -421,7 +411,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
     ble_conn_params_on_ble_evt(p_ble_evt);
     on_ble_evt(p_ble_evt);
     ble_advertising_on_ble_evt(p_ble_evt);
-		ble_car_on_ble_evt(&ble_car,p_ble_evt);
+	ble_car_on_ble_evt(&ble_car,p_ble_evt);
 }
 
 
@@ -452,15 +442,16 @@ static void ble_stack_init(void)
     // Initialize the SoftDevice handler module.
     SOFTDEVICE_HANDLER_INIT(&clock_lf_cfg, NULL);
 
-
     ble_enable_params_t ble_enable_params;
-    err_code = softdevice_enable_get_default_config(CENTRAL_LINK_COUNT,
-                                                    PERIPHERAL_LINK_COUNT,
-                                                    &ble_enable_params);
+    err_code = softdevice_enable_get_default_config(CENTRAL_LINK_COUNT, PERIPHERAL_LINK_COUNT, &ble_enable_params);
     APP_ERROR_CHECK(err_code);
 
     //Check the ram settings against the used number of links
     CHECK_RAM_START_ADDR(CENTRAL_LINK_COUNT,PERIPHERAL_LINK_COUNT);
+    
+    // Enable BLE stack.
+    err_code = softdevice_enable(&ble_enable_params);
+    APP_ERROR_CHECK(err_code);
     
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
@@ -468,10 +459,6 @@ static void ble_stack_init(void)
 
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
-    APP_ERROR_CHECK(err_code);
-    
-    // Enable BLE stack.
-    err_code = softdevice_enable(&ble_enable_params);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -514,52 +501,52 @@ void car_init()
 {
 	ret_code_t err_code;
 
-	err_code = nrf_drv_gpiote_init();
-	APP_ERROR_CHECK(err_code);
+    err_code = nrf_drv_gpiote_init();
+    APP_ERROR_CHECK(err_code);
 
     err_code = nrf_drv_ppi_init();
 	APP_ERROR_CHECK(err_code);
 
 	InitBattery();
 
-	//init LEDs
-	nrf_gpio_cfg_output(Pin_LED1);
-	nrf_gpio_cfg_output(Pin_LED2);
-	nrf_gpio_pin_set(Pin_LED1);
-	nrf_gpio_pin_set(Pin_LED2);
+    //init LEDs
+    nrf_gpio_cfg_output(Pin_LED1);
+    nrf_gpio_cfg_output(Pin_LED2);
+    nrf_gpio_pin_set(Pin_LED1);
+    nrf_gpio_pin_set(Pin_LED2);
 
-	//init lights
-	InitLights();
+    //init lights
+    InitLights();
 
-	// init beeper
-	nrf_gpio_cfg_output(Pin_Beep);
-	nrf_gpio_pin_clear(Pin_Beep);
+    // init beeper
+    nrf_gpio_cfg_output(Pin_Beep);
+    nrf_gpio_pin_clear(Pin_Beep);
 
-	InitMotor();
+    InitMotor();
 
-	// init servo
-	nrf_gpio_cfg_output(Pin_Servo);
-	nrf_gpio_pin_clear(Pin_Servo);
+    // init servo
+    nrf_gpio_cfg_output(Pin_Servo);
+    nrf_gpio_pin_clear(Pin_Servo);
 
-	InitUltraSound();
+    InitUltraSound();
 }
 
 void ble_on_radio_active_evt(bool radio_active)
 {
-  if(radio_active)
-  {
-		nrf_gpio_pin_toggle(Pin_LED1);
-    LightTick();
-		UltraSoundTick();
-		if (!RemoteFail())
-		{
-				SetServo(ble_car.packet.steering * 256);
-		}
-		else
-		{
-				SetServo(0);
-		}
-  }
+    if(radio_active)
+    {
+        nrf_gpio_pin_toggle(Pin_LED1);
+        LightTick();
+        UltraSoundTick();
+        if (!RemoteFail())
+        {
+            SetServo(ble_car.packet.steering * 256);
+        }
+        else
+        {
+            SetServo(0);
+        }
+    }
 }
 
 void ble_start()
@@ -572,31 +559,27 @@ void ble_start()
 	services_init();
 	conn_params_init();
 
-	err_code = ble_radio_notification_init(APP_IRQ_PRIORITY_HIGH,
-																				 NRF_RADIO_NOTIFICATION_DISTANCE_4560US,
-																				 ble_on_radio_active_evt);
-
-																				 	 APP_ERROR_CHECK(err_code);
-
-err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
-	 APP_ERROR_CHECK(err_code);
-
+	err_code = ble_radio_notification_init(APP_IRQ_PRIORITY_HIGH, NRF_RADIO_NOTIFICATION_DISTANCE_4560US, ble_on_radio_active_evt);
+    APP_ERROR_CHECK(err_code);
+    
+    err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
+	APP_ERROR_CHECK(err_code);
 }
 
 void ble_stop()
 {
     uint32_t err_code;
 
-		if (m_conn_handle != BLE_CONN_HANDLE_INVALID)
+    if (m_conn_handle != BLE_CONN_HANDLE_INVALID)
     {
         err_code = sd_ble_gap_disconnect(m_conn_handle,  BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-		    APP_ERROR_CHECK(err_code);
+        APP_ERROR_CHECK(err_code);
     }
 
-		err_code = sd_softdevice_disable();
+    err_code = sd_softdevice_disable();
     APP_ERROR_CHECK(err_code);
 
-		err_code = sd_ble_gap_adv_stop();
+    err_code = sd_ble_gap_adv_stop();
     APP_ERROR_CHECK(err_code);
 
     // Stop any impending connection parameters update.
@@ -613,14 +596,16 @@ int main(void)
 {
     timers_init();
 
-		car_init();
+    car_init();
 
-ble_start();
+    ble_start();
 
-CurrentMode = BleWait;
+    CurrentMode = BleWait;
 
     // Start execution.
     application_timers_start();
+    
+    
     // Enter main loop.
     for (;;)
     {

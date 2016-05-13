@@ -72,8 +72,6 @@ $(abspath $(SDK_ROOT)/components/ble/ble_radio_notification/ble_radio_notificati
 $(abspath $(SDK_ROOT)/components/toolchain/system_nrf51.c) \
 $(abspath $(SDK_ROOT)/components/softdevice/common/softdevice_handler/softdevice_handler.c) \
 
-#$(abspath $(SDK_ROOT)/components/libraries/button/app_button.c)
-#$(abspath $(SDK_ROOT)/components/drivers_nrf/rtc/nrf_drv_rtc.c)
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf51.s)
@@ -110,6 +108,7 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/timer)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/hal)
 #INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/button)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/s130/headers)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/softdevice/s130/headers/nrf51)
 
 OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
