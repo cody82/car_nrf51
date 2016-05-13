@@ -19,6 +19,7 @@
 #include "nrf_delay.h"
 #include "nrf_rtc.h"
 #include "nrf_drv_ppi.h"
+#include "app_util_platform.h"
 
 #include "ble_car.h"
 
@@ -26,6 +27,19 @@
 #include "lights.h"
 #include "battery.h"
 #include "ultrasound.h"
+
+// Low frequency clock source to be used by the SoftDevice
+#ifdef S210
+#define NRF_CLOCK_LFCLKSRC      NRF_CLOCK_LFCLKSRC_XTAL_20_PPM
+#else
+#define NRF_CLOCK_LFCLKSRC      {.source        = NRF_CLOCK_LF_SRC_XTAL,            \
+                                 .rc_ctiv       = 0,                                \
+                                 .rc_temp_ctiv  = 0,                                \
+                                 .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM}
+#endif
+
+#define CENTRAL_LINK_COUNT              0                                 /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
+#define PERIPHERAL_LINK_COUNT           0                                 /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
 
 #define IS_SRVC_CHANGED_CHARACT_PRESENT  1                                          /**< Include or not the service_changed characteristic. if not enabled, the server's database cannot be changed for the lifetime of the device*/
 
@@ -433,26 +447,31 @@ static void ble_stack_init(void)
     uint32_t err_code;
 
     // Initialize the SoftDevice handler module.
-    SOFTDEVICE_HANDLER_INIT(NRF_CLOCK_LFCLKSRC_XTAL_20_PPM, NULL);
+    nrf_clock_lf_cfg_t clock_lf_cfg = NRF_CLOCK_LFCLKSRC;
+    
+    // Initialize the SoftDevice handler module.
+    SOFTDEVICE_HANDLER_INIT(&clock_lf_cfg, NULL);
 
-#if defined(S110) || defined(S130) || defined(S132)
-    // Enable BLE stack.
+
     ble_enable_params_t ble_enable_params;
-    memset(&ble_enable_params, 0, sizeof(ble_enable_params));
-#if (defined(S130) || defined(S132))
-    ble_enable_params.gatts_enable_params.attr_tab_size   = BLE_GATTS_ATTR_TAB_SIZE_DEFAULT;
-#endif
-    ble_enable_params.gatts_enable_params.service_changed = IS_SRVC_CHANGED_CHARACT_PRESENT;
-    err_code = sd_ble_enable(&ble_enable_params);
+    err_code = softdevice_enable_get_default_config(CENTRAL_LINK_COUNT,
+                                                    PERIPHERAL_LINK_COUNT,
+                                                    &ble_enable_params);
     APP_ERROR_CHECK(err_code);
-#endif
 
+    //Check the ram settings against the used number of links
+    CHECK_RAM_START_ADDR(CENTRAL_LINK_COUNT,PERIPHERAL_LINK_COUNT);
+    
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_ble_evt_handler_set(ble_evt_dispatch);
     APP_ERROR_CHECK(err_code);
 
     // Register with the SoftDevice handler module for BLE events.
     err_code = softdevice_sys_evt_handler_set(sys_evt_dispatch);
+    APP_ERROR_CHECK(err_code);
+    
+    // Enable BLE stack.
+    err_code = softdevice_enable(&ble_enable_params);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -553,7 +572,7 @@ void ble_start()
 	services_init();
 	conn_params_init();
 
-	err_code = ble_radio_notification_init(NRF_APP_PRIORITY_HIGH,
+	err_code = ble_radio_notification_init(APP_IRQ_PRIORITY_HIGH,
 																				 NRF_RADIO_NOTIFICATION_DISTANCE_4560US,
 																				 ble_on_radio_active_evt);
 

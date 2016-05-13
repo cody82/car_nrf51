@@ -5,7 +5,7 @@ export OUTPUT_FILENAME
 MAKEFILE_NAME := $(MAKEFILE_LIST)
 MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) )
 
-SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_10.0.0_dc26b5e/
+SDK_ROOT := /c/Users/cody/Documents/nRF5_SDK_11.0.0_89a8197/
 
 TEMPLATE_PATH = $(SDK_ROOT)/components/toolchain/gcc
 ifeq ($(OS),Windows_NT)
@@ -42,9 +42,11 @@ C_SOURCE_FILES += \
 $(abspath $(SDK_ROOT)/components/libraries/util/app_error.c) \
 $(abspath $(SDK_ROOT)/components/libraries/trace/app_trace.c) \
 $(abspath $(SDK_ROOT)/components/libraries/util/nrf_assert.c) \
+$(abspath $(SDK_ROOT)/components/libraries/util/app_util_platform.c) \
 $(abspath $(SDK_ROOT)/components/libraries/uart/retarget.c) \
 $(abspath $(SDK_ROOT)/components/libraries/uart/app_uart.c) \
 $(abspath $(SDK_ROOT)/components/libraries/pwm/app_pwm.c) \
+$(abspath $(SDK_ROOT)/components/libraries/fstorage/fstorage.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/delay/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/common/nrf_drv_common.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c) \
@@ -84,6 +86,7 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/util)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/pstorage)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/gcc)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/CMSIS/Include)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/ble_advertising)
@@ -91,6 +94,8 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/ble_radio_notification)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/trace)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/pwm)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/fstorage)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/experimental_section_vars)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/uart)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/timer)
