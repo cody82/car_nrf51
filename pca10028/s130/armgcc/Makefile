@@ -68,7 +68,7 @@ $(abspath $(SDK_ROOT)/components/ble/common/ble_advdata.c) \
 $(abspath $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_conn_params.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_srv_common.c) \
-$(abspath $(SDK_ROOT)/components/ble/ble_radio_notification/ble_radio_notification.c) \
+$(abspath ../../../components/ble/ble_radio_notification/ble_radio_notification.c) \
 $(abspath $(SDK_ROOT)/components/toolchain/system_nrf51.c) \
 $(abspath $(SDK_ROOT)/components/softdevice/common/softdevice_handler/softdevice_handler.c) \
 
@@ -88,7 +88,7 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/CMSIS/Include)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/ble_advertising)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/ble_radio_notification)
+INC_PATHS += -I$(abspath ../../../components/ble/ble_radio_notification)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/trace)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/pwm)
