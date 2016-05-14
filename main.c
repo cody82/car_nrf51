@@ -59,9 +59,11 @@ const uint32_t Pin_LED2 = 10;
 void SetServo(int16_t steering)
 {
 	steering /= 66;
+    __disable_irq();
 	nrf_gpio_pin_set(Pin_Servo);
 	nrf_delay_us(1500 - steering);
 	nrf_gpio_pin_clear(Pin_Servo);
+	__enable_irq();
 }
 
 bool RemoteFail()
