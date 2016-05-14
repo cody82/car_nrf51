@@ -5,7 +5,7 @@ export OUTPUT_FILENAME
 MAKEFILE_NAME := $(MAKEFILE_LIST)
 MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) )
 
-SDK_ROOT := /c/Users/cody/Documents/nRF51_SDK_10.0.0_dc26b5e/
+SDK_ROOT := /c/Users/cody/Documents/nRF5_SDK_11.0.0_89a8197/
 
 #TEMPLATE_PATH = ../../../../../../components/toolchain/gcc
 TEMPLATE_PATH = $(SDK_ROOT)/components/toolchain/gcc
@@ -60,21 +60,21 @@ $(abspath $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/rtc/nrf_drv_rtc.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_adc.c) \
+$(abspath ../../components/properitary_rf/esb/nrf_esb.c) \
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf51.s)
 
-#properitary esb lib
-LIBS  = $(abspath $(SDK_ROOT)/components/properitary_rf/esb/gcc/esb_gcc.a)
-LIBS  += -lm
+LIBS  = -lm
 
 #includes common to all targets
 INC_PATHS  = -I$(abspath ../../config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/hal)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/delay)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/properitary_rf/esb)
+INC_PATHS += -I$(abspath ../../components/properitary_rf/esb)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/gcc)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/CMSIS/Include)
 #INC_PATHS += -I$(abspath ../../../../../bsp)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/ppi)

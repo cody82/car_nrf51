@@ -23,10 +23,18 @@ const nrf_drv_rtc_t rtc = //NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance 
 
 static void lfclk_config(void)
 {
-	ret_code_t err_code = nrf_drv_clock_init(NULL);
+	ret_code_t err_code = nrf_drv_clock_init();
 	APP_ERROR_CHECK(err_code);
 
-	nrf_drv_clock_lfclk_request();
+	nrf_drv_clock_lfclk_request(NULL);
+}
+
+void clocks_start( void )
+{
+    NRF_CLOCK->EVENTS_HFCLKSTARTED = 0;
+    NRF_CLOCK->TASKS_HFCLKSTART = 1;
+
+    while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
 }
 
 static void rtc_handler(nrf_drv_rtc_int_type_t int_type)
@@ -51,9 +59,11 @@ const uint32_t Pin_LED2 = 10;
 void SetServo(int16_t steering)
 {
 	steering /= 66;
+    __disable_irq();
 	nrf_gpio_pin_set(Pin_Servo);
 	nrf_delay_us(1500 - steering);
 	nrf_gpio_pin_clear(Pin_Servo);
+	__enable_irq();
 }
 
 bool RemoteFail()
@@ -90,11 +100,11 @@ void loop()
 
 	CalcLights();
 
-	nrf_esb_disable();
-  __disable_irq();
+	//nrf_esb_disable();
+    __disable_irq();
 	LightTick();
 	__enable_irq();
-	nrf_esb_enable();
+	//nrf_esb_enable();
 
 	if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
 	{
@@ -142,6 +152,7 @@ int main()
 {
 	ret_code_t err_code;
 
+	clocks_start();
 	lfclk_config();
 
 	rtc_config();
