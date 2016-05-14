@@ -53,8 +53,8 @@
 // 252 is the largest possible payload size according to the nRF5x architecture.
 STATIC_ASSERT(NRF_ESB_MAX_PAYLOAD_LENGTH <= 252);
 
-#define     NRF_ESB_SYS_TIMER                   NRF_TIMER2          /**< The timer which will be used by the module. */
-#define     NRF_ESB_SYS_TIMER_IRQ_Handler       TIMER2_IRQHandler   /**< The handler which will be used by NRF_ESB_SYS_TIMER. */
+#define     NRF_ESB_SYS_TIMER                   NRF_TIMER0          /**< The timer which will be used by the module. */
+#define     NRF_ESB_SYS_TIMER_IRQ_Handler       TIMER0_IRQHandler   /**< The handler which will be used by NRF_ESB_SYS_TIMER. */
 
 #define     NRF_ESB_PPI_TIMER_START             10                  /**< The PPI channel used for timer start. */
 #define     NRF_ESB_PPI_TIMER_STOP              11                  /**< The PPI channel used for timer stop. */
@@ -78,8 +78,8 @@ STATIC_ASSERT(NRF_ESB_MAX_PAYLOAD_LENGTH <= 252);
 #define ESB_EVT_IRQHandler SWI0_EGU0_IRQHandler                     /**< The handler for ESB_EVT_IRQ when running on a nRF52 device. */
 #endif /* NRF51 */
 
-#define     NRF_ESB_SYS_TIMER                   NRF_TIMER2          /**< System timer used by nrf_esb */
-#define     NRF_ESB_SYS_TIMER_IRQ_Handler       TIMER2_IRQHandler   /**< Timer IRQ handler used by nrf_esb */
+#define     NRF_ESB_SYS_TIMER                   NRF_TIMER0          /**< System timer used by nrf_esb */
+#define     NRF_ESB_SYS_TIMER_IRQ_Handler       TIMER0_IRQHandler   /**< Timer IRQ handler used by nrf_esb */
 
 #define     NRF_ESB_PPI_TIMER_START             10                  /**< PPI channel for timer start. */
 #define     NRF_ESB_PPI_TIMER_STOP              11                  /**< PPI Channel for timer stop. */

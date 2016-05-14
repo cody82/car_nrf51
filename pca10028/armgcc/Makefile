@@ -60,7 +60,7 @@ $(abspath $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/rtc/nrf_drv_rtc.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/hal/nrf_adc.c) \
-$(abspath $(SDK_ROOT)/components/properitary_rf/esb/nrf_esb.c) \
+$(abspath ../../components/properitary_rf/esb/nrf_esb.c) \
 
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf51.s)
@@ -72,7 +72,7 @@ INC_PATHS  = -I$(abspath ../../config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/device)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/hal)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/delay)
-INC_PATHS += -I$(abspath $(SDK_ROOT)/components/properitary_rf/esb)
+INC_PATHS += -I$(abspath ../../components/properitary_rf/esb)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/gcc)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/CMSIS/Include)
 #INC_PATHS += -I$(abspath ../../../../../bsp)
