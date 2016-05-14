@@ -7,13 +7,6 @@
 #include "nrf_esb_error_codes.h"
 #include "app_error.h"
 
-// Define pipe
-#define PIPE_NUMBER 0 ///< We use pipe 0 in this example
-
-// Define payload length
-//#define TX_PAYLOAD_LENGTH 1 ///< We use 1 byte payload length when transmitting
-
-
 nrf_esb_payload_t rx_payload;
 
 volatile Packet packet;
@@ -26,30 +19,19 @@ void Car_Receive(const Packet *p)
 	packet = *p;
 
 }
+
+
 void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
 {
     switch (p_event->evt_id)
     {
         case NRF_ESB_EVENT_TX_SUCCESS:
-            //NRF_LOG("TX SUCCESS EVENT\r\n");
             break;
         case NRF_ESB_EVENT_TX_FAILED:
-            //NRF_LOG("TX FAILED EVENT\r\n");
             break;
         case NRF_ESB_EVENT_RX_RECEIVED:
-            //NRF_LOG("RX RECEIVED EVENT\r\n");
             if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)
             {
-                // Set LEDs identical to the ones on the PTX.
-                //nrf_gpio_pin_write(LED_1, !(rx_payload.data[1]%8>0 && rx_payload.data[1]%8<=4));
-                //nrf_gpio_pin_write(LED_2, !(rx_payload.data[1]%8>1 && rx_payload.data[1]%8<=5));
-                //nrf_gpio_pin_write(LED_3, !(rx_payload.data[1]%8>2 && rx_payload.data[1]%8<=6));
-                //nrf_gpio_pin_write(LED_4, !(rx_payload.data[1]%8>3));
-
-                //NRF_LOG("Receiving packet: ");
-                //NRF_LOG_HEX_CHAR(rx_payload.data[1]);
-                //NRF_LOG("\r\n");
-				
 				if (rx_payload.length > 0)
 				{
 					if (rx_payload.length == sizeof(Packet))
@@ -93,9 +75,11 @@ uint32_t InitEsb()
     err_code = nrf_esb_set_prefixes(addr_prefix, 8);
     VERIFY_SUCCESS(err_code);
 
+    err_code = nrf_esb_set_rf_channel(2);
+    VERIFY_SUCCESS(err_code);
 
     err_code = nrf_esb_start_rx();
     APP_ERROR_CHECK(err_code);
-	//(void)nrf_esb_enable();
+    
 	return err_code;
 }
