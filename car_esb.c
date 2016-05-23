@@ -1,6 +1,5 @@
 #include "car_esb.h"
 #include "sdk_common.h"
-#include "nrf_esb.h"
 
 #include "nrf_error.h"
 #include "nrf.h"
@@ -20,16 +19,8 @@ void Car_Receive(const Packet *p)
 
 }
 
-
-void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
+void Car_EsbReceive()
 {
-    switch (p_event->evt_id)
-    {
-        case NRF_ESB_EVENT_TX_SUCCESS:
-            break;
-        case NRF_ESB_EVENT_TX_FAILED:
-            break;
-        case NRF_ESB_EVENT_RX_RECEIVED:
             if (nrf_esb_read_rx_payload(&rx_payload) == NRF_SUCCESS)
             {
 				if (rx_payload.length > 0)
@@ -41,6 +32,18 @@ void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
 					}
 				}
             }
+}
+
+void nrf_esb_event_handler(nrf_esb_evt_t const * p_event)
+{
+    switch (p_event->evt_id)
+    {
+        case NRF_ESB_EVENT_TX_SUCCESS:
+            break;
+        case NRF_ESB_EVENT_TX_FAILED:
+            break;
+        case NRF_ESB_EVENT_RX_RECEIVED:
+        Car_EsbReceive();
             break;
     }
 }
@@ -82,4 +85,9 @@ uint32_t InitEsb()
     APP_ERROR_CHECK(err_code);
     
 	return err_code;
+}
+
+uint32_t ShutdownEsb()
+{
+    return nrf_esb_disable();
 }

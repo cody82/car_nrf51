@@ -2,8 +2,7 @@
 #define __CAR_ESB_H
 
 #include <stdint.h>
-
-#define ESB_ALTERNATIVE_RESOURCES
+#include "nrf_esb.h"
 
 typedef struct
 {
@@ -23,6 +22,8 @@ extern volatile Packet packet;
 extern volatile int32_t rc_timeout;
 
 uint32_t InitEsb();
+uint32_t ShutdownEsb();
 
+void Car_EsbReceive();
 
 #endif

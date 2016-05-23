@@ -67,6 +67,8 @@ int32_t UltraSoundBackDist()
 
 void InitUltraSound()
 {
+    return;
+    
 	ret_code_t err_code;
 
 	nrf_drv_timer_init(&timer, NULL, handler);

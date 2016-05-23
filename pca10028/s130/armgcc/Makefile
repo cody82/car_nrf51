@@ -57,6 +57,7 @@ $(abspath $(SDK_ROOT)/components/drivers_nrf/ppi/nrf_drv_ppi.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c) \
 $(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
+$(abspath ../../../components/properitary_rf/esb/nrf_esb.c) \
 $(abspath ../../../main_ble.c) \
 $(abspath ../../../motors.c) \
 $(abspath ../../../battery.c) \
@@ -64,6 +65,8 @@ $(abspath ../../../lights.c) \
 $(abspath ../../../ws2812b-nrf51.c) \
 $(abspath ../../../ble_car.c) \
 $(abspath ../../../ultrasound.c) \
+$(abspath ../../../timeslot.c) \
+$(abspath ../../../car_esb.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_advdata.c) \
 $(abspath $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_conn_params.c) \
@@ -84,6 +87,7 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/util)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/pstorage)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/gcc)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain)
+INC_PATHS += -I$(abspath ../../../components/properitary_rf/esb)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/CMSIS/Include)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/ble/common)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/common)
@@ -126,7 +130,7 @@ CFLAGS += -DBLE_STACK_SUPPORT_REQD
 CFLAGS += -DSWI_DISABLE0
 CFLAGS += -mcpu=cortex-m0
 CFLAGS += -mthumb -mabi=aapcs --std=gnu99
-CFLAGS += -Wall -Werror -Og
+CFLAGS += -Wall -Og
 CFLAGS += -g
 CFLAGS += -mfloat-abi=soft
 # keep every function in separate section. This will allow linker to dump unused functions
