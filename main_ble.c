@@ -27,6 +27,7 @@
 #include "lights.h"
 #include "battery.h"
 #include "ultrasound.h"
+#include "timeslot.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -425,6 +426,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 static void sys_evt_dispatch(uint32_t sys_evt)
 {
     ble_advertising_on_sys_evt(sys_evt);
+    timeslot_on_sys_evt(sys_evt);
 }
 
 
@@ -535,7 +537,7 @@ void ble_on_radio_active_evt(bool radio_active)
 {
     if(radio_active)
     {
-        nrf_gpio_pin_toggle(Pin_LED1);
+        //nrf_gpio_pin_toggle(Pin_LED1);
         LightTick();
         UltraSoundTick();
         if (!RemoteFail())
@@ -559,11 +561,15 @@ void ble_start()
 	services_init();
 	conn_params_init();
 
-	err_code = ble_radio_notification_init(APP_IRQ_PRIORITY_HIGH, NRF_RADIO_NOTIFICATION_DISTANCE_4560US, ble_on_radio_active_evt);
-    APP_ERROR_CHECK(err_code);
+	//err_code = ble_radio_notification_init(APP_IRQ_PRIORITY_HIGH, NRF_RADIO_NOTIFICATION_DISTANCE_4560US, ble_on_radio_active_evt);
+    //APP_ERROR_CHECK(err_code);
     
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
 	APP_ERROR_CHECK(err_code);
+    
+    timeslot_init();
+    err_code = timeslot_start();
+    APP_ERROR_CHECK(err_code);
 }
 
 void ble_stop()

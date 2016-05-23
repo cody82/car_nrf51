@@ -9,6 +9,7 @@
 #include "app_error.h"
 
 #include "car_esb.h"
+#include "nrf_gpio.h"
 
 #define TIMESLOT_BEGIN_IRQn             LPCOMP_IRQn
 #define TIMESLOT_BEGIN_IRQHandler       LPCOMP_IRQHandler
@@ -323,6 +324,7 @@ uint32_t timeslot_start()
  */
 void timeslot_on_sys_evt(uint32_t sys_evt)
 {
+    nrf_gpio_pin_toggle(6);
     switch(sys_evt)
     {
         case NRF_EVT_FLASH_OPERATION_SUCCESS:
