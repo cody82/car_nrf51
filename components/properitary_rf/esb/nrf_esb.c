@@ -1050,7 +1050,7 @@ uint32_t nrf_esb_stop_rx(void)
         on_radio_disabled = NULL;
         NRF_RADIO->EVENTS_DISABLED = 0;
         NRF_RADIO->TASKS_DISABLE = 1;
-        while (NRF_RADIO->EVENTS_DISABLED == 0);
+        //while (NRF_RADIO->EVENTS_DISABLED == 0);
         m_nrf_esb_mainstate = NRF_ESB_STATE_IDLE;
 
         return NRF_SUCCESS;

@@ -78,15 +78,16 @@ void TIMESLOT_END_IRQHandler(void)
 {
     uint32_t err_code;
     
+    nrf_gpio_pin_set(10);
     err_code = nrf_esb_stop_rx();
     
-    NRF_TIMER0->TASKS_CAPTURE[3]= 1;
+    //NRF_TIMER0->TASKS_CAPTURE[3]= 1;
 
-    if (!nrf_esb_is_idle() && NRF_TIMER0->CC[3] <= (TS_LEN_US - TS_REQ_AND_END_MARGIN_US))
+    //if (!nrf_esb_is_idle() && NRF_TIMER0->CC[3] <= (TS_LEN_US - TS_REQ_AND_END_MARGIN_US))
     {
         // Try again in 150 us
-        NRF_TIMER0->CC[0] += 150;
-        return;
+        //NRF_TIMER0->CC[0] += 150;
+        //return;
     }
     
     err_code = nrf_esb_flush_rx();
@@ -108,11 +109,9 @@ void TIMESLOT_BEGIN_IRQHandler(void)
     
 //    DEBUG_PRINT("G");
     
-    if (m_ut_state == UT_STATE_IDLE)
-    {
+	nrf_gpio_pin_clear(10);
         err_code = InitEsb();
         APP_ERROR_CHECK(err_code);
-    }
     
         err_code = nrf_esb_start_rx();
 }
@@ -162,7 +161,7 @@ static nrf_radio_signal_callback_return_param_t * radio_callback (uint8_t signal
     {
     case NRF_RADIO_CALLBACK_SIGNAL_TYPE_START:
         // TIMER0 is pre-configured for 1Mhz.
-        NRF_TIMER0->TASKS_STOP          = 1;
+        /*NRF_TIMER0->TASKS_STOP          = 1;
         NRF_TIMER0->TASKS_CLEAR         = 1;
         NRF_TIMER0->MODE                = (TIMER_MODE_MODE_Timer << TIMER_MODE_MODE_Pos);
         NRF_TIMER0->EVENTS_COMPARE[0]   = 0;
@@ -177,7 +176,23 @@ static nrf_radio_signal_callback_return_param_t * radio_callback (uint8_t signal
 
         NRF_RADIO->POWER                = (RADIO_POWER_POWER_Enabled << RADIO_POWER_POWER_Pos);
 
-        NVIC_EnableIRQ(TIMER0_IRQn);
+        NVIC_EnableIRQ(TIMER0_IRQn);*/
+      NRF_TIMER0->TASKS_STOP          = 1;
+        NRF_TIMER0->TASKS_CLEAR         = 1;
+        NRF_TIMER0->MODE                = (TIMER_MODE_MODE_Timer << TIMER_MODE_MODE_Pos);
+
+        
+        NRF_TIMER0->INTENSET = TIMER_INTENSET_COMPARE0_Msk;
+        NRF_TIMER0->CC[0] = TS_LEN_US - 1000;
+        
+                NRF_TIMER0->BITMODE             = (TIMER_BITMODE_BITMODE_24Bit << TIMER_BITMODE_BITMODE_Pos);
+        NRF_TIMER0->TASKS_START         = 1;
+
+        NRF_RADIO->POWER                = (RADIO_POWER_POWER_Enabled << RADIO_POWER_POWER_Pos);
+
+        
+        NVIC_EnableIRQ(TIMER0_IRQn);   
+        
     
         // UESB packet receiption and transmission are synchronized at the beginning of timeslot extensions. 
         // Ideally we would also transmit at the beginning of the initial timeslot, not only extensions,
@@ -186,49 +201,8 @@ static nrf_radio_signal_callback_return_param_t * radio_callback (uint8_t signal
         break;
     
     case NRF_RADIO_CALLBACK_SIGNAL_TYPE_TIMER0:
-        if (NRF_TIMER0->EVENTS_COMPARE[0] &&
-           (NRF_TIMER0->INTENSET & (TIMER_INTENSET_COMPARE0_Enabled << TIMER_INTENCLR_COMPARE0_Pos)))
-        {
-            NRF_TIMER0->EVENTS_COMPARE[0] = 0;
-            
-            // This is the "timeslot is about to end" timeout
-
-            // Disabling UESB is done in a lower interrupt priority 
-            NVIC_SetPendingIRQ(TIMESLOT_END_IRQn);
-         
-            // Return with no action request. request_and_end is sent later
-            return (nrf_radio_signal_callback_return_param_t*) &m_rsc_return_no_action;
-        }
-
-        if (NRF_TIMER0->EVENTS_COMPARE[1] &&
-           (NRF_TIMER0->INTENSET & (TIMER_INTENSET_COMPARE1_Enabled << TIMER_INTENCLR_COMPARE1_Pos)))
-        {
-            NRF_TIMER0->EVENTS_COMPARE[1] = 0;
-            
-            // This is the "try to extend timeslot" timeout
-            
-            if (m_total_timeslot_length < (128000000UL - 1UL - TX_LEN_EXTENSION_US))
-            {
-                // Request timeslot extension if total length does not exceed 128 seconds
-                return (nrf_radio_signal_callback_return_param_t*) &m_rsc_extend;
-            }
-            else
-            {
-                // Return with no action request
-                return (nrf_radio_signal_callback_return_param_t*) &m_rsc_return_no_action;
-            }
-        }
-        
-        if (NRF_TIMER0->EVENTS_COMPARE[2] &&
-           (NRF_TIMER0->INTENSET & (TIMER_INTENSET_COMPARE2_Enabled << TIMER_INTENCLR_COMPARE2_Pos)))
-        {
-            // Schedule next timeslot
-            return (nrf_radio_signal_callback_return_param_t*) &m_rsc_return_sched_next;
-        }
-        
-        break;
-        
-        
+        NVIC_SetPendingIRQ(TIMESLOT_END_IRQn);
+        return (nrf_radio_signal_callback_return_param_t*) &m_rsc_return_sched_next;
         
     case NRF_RADIO_CALLBACK_SIGNAL_TYPE_RADIO:
         // Call the uesb IRQHandler
@@ -240,22 +214,6 @@ static nrf_radio_signal_callback_return_param_t * radio_callback (uint8_t signal
         break;
     
     case NRF_RADIO_CALLBACK_SIGNAL_TYPE_EXTEND_SUCCEEDED:
-        // Extension succeeded: update timer
-        NRF_TIMER0->TASKS_STOP          = 1;
-        NRF_TIMER0->EVENTS_COMPARE[0]   = 0;
-        NRF_TIMER0->EVENTS_COMPARE[1]   = 0;
-        NRF_TIMER0->CC[0]               += (TX_LEN_EXTENSION_US - 25);
-        NRF_TIMER0->CC[1]               += (TX_LEN_EXTENSION_US - 25);
-        NRF_TIMER0->CC[2]               += (TX_LEN_EXTENSION_US - 25);
-        NRF_TIMER0->TASKS_START         = 1;
-    
-        // Keep track of total length
-        m_total_timeslot_length += TX_LEN_EXTENSION_US;
-    
-        // UESB packet receiption and transmission are synchronized at the beginning of timeslot extensions. 
-        // Ideally we would also transmit at the beginning of the initial timeslot, not only extensions,
-        // but this is to simplify a bit. 
-        NVIC_SetPendingIRQ(TIMESLOT_BEGIN_IRQn);
         break;
     
     default:
@@ -316,7 +274,18 @@ uint32_t timeslot_start()
     
     return err_code;
 }
+   
+uint32_t timeslot_stop()
+{
+    uint32_t err_code;
+    err_code = sd_radio_session_close();
+    if (err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
 
+        return err_code;
+}
 
 /**@brief Function for handling the Application's system events.
  *

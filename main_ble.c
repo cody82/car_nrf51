@@ -180,7 +180,6 @@ void loop()
 	BlinkerTick();
 
 	tick++;
-	nrf_gpio_pin_toggle(Pin_LED2);
 }
 
 static ble_uuid_t m_adv_uuids[] = {{BLE_UUID_DEVICE_INFORMATION_SERVICE, BLE_UUID_TYPE_BLE}}; /**< Universally unique service identifiers. */
@@ -387,10 +386,13 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         //err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
         //APP_ERROR_CHECK(err_code);
         m_conn_handle = p_ble_evt->evt.gap_evt.conn_handle;
+        timeslot_stop();
         break;
 
     case BLE_GAP_EVT_DISCONNECTED:
         m_conn_handle = BLE_CONN_HANDLE_INVALID;
+        timeslot_init();
+        timeslot_start();
         break;
 
     default:
@@ -426,7 +428,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 static void sys_evt_dispatch(uint32_t sys_evt)
 {
     ble_advertising_on_sys_evt(sys_evt);
-    timeslot_on_sys_evt(sys_evt);
+    //timeslot_on_sys_evt(sys_evt);
 }
 
 
