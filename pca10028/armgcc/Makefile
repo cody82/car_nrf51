@@ -6,6 +6,11 @@ MAKEFILE_NAME := $(MAKEFILE_LIST)
 MAKEFILE_DIR := $(dir $(MAKEFILE_NAME) )
 
 SDK_ROOT := /c/Users/cody/Documents/nRF5_SDK_11.0.0_89a8197/
+RUST_SRC_PATH := /c/Users/cody/Documents/rust
+
+
+OBJECT_DIRECTORY = _build
+LIBCORE := $(OBJECT_DIRECTORY)/sysroot/lib/rustlib/thumbv6m-none-eabi/lib/libcore.rlib
 
 #TEMPLATE_PATH = ../../../../../../components/toolchain/gcc
 TEMPLATE_PATH = $(SDK_ROOT)/components/toolchain/gcc
@@ -65,7 +70,7 @@ $(abspath ../../components/properitary_rf/esb/nrf_esb.c) \
 #assembly files common to all targets
 ASM_SOURCE_FILES  = $(abspath $(SDK_ROOT)/components/toolchain/gcc/gcc_startup_nrf51.s)
 
-LIBS  = -lm
+LIBS  = -lm -lrust_src
 
 #includes common to all targets
 INC_PATHS  = -I$(abspath ../../config)
@@ -95,7 +100,6 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/toolchain/gcc)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/rtc)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/clock)
 
-OBJECT_DIRECTORY = _build
 LISTING_DIRECTORY = $(OBJECT_DIRECTORY)
 OUTPUT_BINARY_DIRECTORY = $(OBJECT_DIRECTORY)
 
@@ -124,6 +128,7 @@ LDFLAGS += -mcpu=cortex-m0
 LDFLAGS += -Wl,--gc-sections
 # use newlib in nano version
 LDFLAGS += --specs=nano.specs -lc -lnosys
+LDFLAGS += -L../../rust_src/target/thumbv6m-none-eabi/debug
 
 # Assembler flags
 ASMFLAGS += -x assembler-with-cpp
@@ -164,6 +169,15 @@ car_nrf51_esb: $(BUILD_DIRECTORIES) $(OBJECTS)
 	@echo Linking target: $(OUTPUT_FILENAME).out
 	$(NO_ECHO)$(CC) $(LDFLAGS) $(OBJECTS) $(LIBS) -o $(OUTPUT_BINARY_DIRECTORY)/$(OUTPUT_FILENAME).out
 	$(NO_ECHO)$(MAKE) -f $(MAKEFILE_NAME) -C $(MAKEFILE_DIR) -e finalize
+
+
+#$(LIBCORE):
+#	mkdir -p $(OBJECT_DIRECTORY)/sysroot/lib/rustlib/thumbv7m-none-eabi/lib
+#	rustc --target thumbv7m-none-eabi $(RUST_SRC_PATH)/src/libcore/lib.rs --out-dir $(OBJECT_DIRECTORY)/sysroot/lib/rustlib/thumbv7m-none-eabi/lib/
+
+#build-rust: $(LIBCORE)
+build-rust:
+	cargo build --target thumbv6m-none-eabi --manifest-path ../../rust_src/Cargo.toml
 
 ## Create build directories
 $(BUILD_DIRECTORIES):

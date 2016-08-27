@@ -1,0 +1,19 @@
+[package]
+name = "rust_src"
+version = "0.1.0"
+authors = ["Job Vranish <job.vranish@gmail.com>"]
+
+[lib]
+crate-type = ["staticlib"]
+
+
+[dependencies.core]
+path = "../../rust/src/libcore"
+
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+

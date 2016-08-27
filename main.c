@@ -148,6 +148,10 @@ void loop()
 	nrf_gpio_pin_toggle(Pin_LED2);
 }
 
+extern int32_t rust_main();
+
+	int32_t i;
+	
 int main()
 {
 	ret_code_t err_code;
@@ -184,6 +188,8 @@ int main()
 	InitUltraSound(NRF_RTC1);
 
 	InitEsb();
+
+	i = rust_main();
 
 	while (1)
 	{
