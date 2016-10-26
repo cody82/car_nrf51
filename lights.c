@@ -58,12 +58,46 @@ void SetFrontLights(uint8_t red, uint8_t green, uint8_t blue)
 
 void SetBackLight(int8_t on)
 {
-	SET_LIGHTS_WHITE(back_lights, on ? 200 : 0);
+	SET_LIGHTS_WHITE(back_lights, on ? 150 : 0);
 }
 
 void InitLights()
 {
 	ws2812b_init(Pin_LED);
+}
+
+int32_t break_throttle = 0;
+void BreakLightTick(int16_t throttle)
+{
+	uint8_t power;
+	
+	if(break_throttle < throttle)
+	{
+		break_throttle += 200;
+		if(break_throttle > throttle)
+			break_throttle = throttle;
+	}
+	else if(break_throttle > throttle)
+	{
+		break_throttle -= 200;
+		if(break_throttle < throttle)
+			break_throttle = throttle;
+	}
+
+	if(break_throttle > throttle && break_throttle > 1000)
+	{
+		power = ((int32_t)break_throttle - (int32_t)throttle) * 200 / 65536;
+		SET_LIGHTS(break_lights, 10 + power, 0, 0);
+	}
+	else if(break_throttle < throttle && break_throttle < -1000)
+	{
+		power = ((int32_t)throttle - (int32_t)break_throttle) * 200 / 65536;
+		SET_LIGHTS(break_lights, 10 + power, 0, 0);
+	}
+	else
+	{
+		SET_LIGHTS(break_lights, 0, 0, 0);
+	}
 }
 
 static float top_time = 0.0f;

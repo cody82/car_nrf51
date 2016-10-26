@@ -83,7 +83,7 @@ void CalcLights()
 	{
 		TopLights(packet.top_light);
 		SetFrontLights(packet.front_light, packet.front_light, packet.front_light);
-		SetBackLight(packet.throttle < 0);
+		SetBackLight(packet.throttle < -1000);
 	}
 }
 
@@ -99,6 +99,8 @@ void loop()
 	bool blocked_back = (UltraSoundBackDist() >= 0) && (UltraSoundBackDist() < 20);
 
 	CalcLights();
+	
+	BreakLightTick(packet.throttle);
 
 	//nrf_esb_disable();
     __disable_irq();

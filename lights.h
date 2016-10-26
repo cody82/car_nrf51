@@ -23,5 +23,6 @@ void BlinkerTick();
 void BlinkLeft(int8_t on);
 void BlinkRight(int8_t on);
 void BlinkWarner();
+void BreakLightTick(int16_t throttle);
 
 #endif
