@@ -27,6 +27,7 @@
 #include "lights.h"
 #include "battery.h"
 #include "ultrasound.h"
+#include "switch.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -70,13 +71,13 @@ static ble_car_t                        ble_car;                                
 
 APP_TIMER_DEF(m_app_timer_id);
 
-const uint32_t Pin_Servo = 13;
-const uint32_t Pin_Beep = 14;
-const uint32_t Pin_LED1 = 6;
-const uint32_t Pin_LED2 = 10;
+static const uint32_t Pin_Servo = 13;
+static const uint32_t Pin_Beep = 14;
+static const uint32_t Pin_LED1 = 6;
+static const uint32_t Pin_LED2 = 10;
 
-void ble_start();
-void ble_stop();
+static void ble_start();
+//static void ble_stop();
 
 typedef enum
 {
@@ -88,7 +89,7 @@ typedef enum
 
 CarRemoteMode CurrentMode;
 
-void SetServo(int16_t steering)
+static void SetServo(int16_t steering)
 {
 	steering /= 66;
 	nrf_gpio_pin_set(Pin_Servo);
@@ -97,12 +98,12 @@ void SetServo(int16_t steering)
 }
 
 static volatile uint32_t rc_timeout = 0;
-bool RemoteFail()
+static bool RemoteFail()
 {
     return (m_conn_handle == BLE_CONN_HANDLE_INVALID) || (LowVoltage > 100) || (rc_timeout > 100);
 }
 
-void CalcLights()
+static void CalcLights()
 {
 	if (RemoteFail())
 	{
@@ -121,17 +122,17 @@ void CalcLights()
 static uint32_t tick = 0;
 static uint32_t mode_tick = 0;
 
-bool blocked_front()
+static bool blocked_front()
 {
 	return (UltraSoundFrontDist() >= 0) && (UltraSoundFrontDist() < 15);
 }
 
-bool blocked_back()
+static bool blocked_back()
 {
 	return (UltraSoundBackDist() >= 0) && (UltraSoundBackDist() < 15);
 }
 
-void loop()
+static void loop()
 {
 	mode_tick++;
 
@@ -260,7 +261,7 @@ static void gap_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-void car_data_handler(ble_car_t * p_car, uint8_t * p_data, uint16_t length)
+static void car_data_handler(ble_car_t * p_car, uint8_t * p_data, uint16_t length)
 {
 	rc_timeout = 0;
 }
@@ -488,16 +489,13 @@ static void advertising_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-/**@brief Function for the Power manager.
- */
 static void power_manage(void)
 {
     uint32_t err_code = sd_app_evt_wait();
     APP_ERROR_CHECK(err_code);
 }
 
-
-void car_init()
+static void car_init()
 {
 	ret_code_t err_code;
 
@@ -531,7 +529,7 @@ void car_init()
     InitUltraSound();
 }
 
-void ble_on_radio_active_evt(bool radio_active)
+static void ble_on_radio_active_evt(bool radio_active)
 {
     if(radio_active)
     {
@@ -549,7 +547,7 @@ void ble_on_radio_active_evt(bool radio_active)
     }
 }
 
-void ble_start()
+static void ble_start()
 {
     uint32_t err_code;
 	ble_stack_init();
@@ -566,7 +564,7 @@ void ble_start()
 	APP_ERROR_CHECK(err_code);
 }
 
-void ble_stop()
+/*static void ble_stop()
 {
     uint32_t err_code;
 
@@ -588,12 +586,18 @@ void ble_stop()
 
     err_code = softdevice_handler_sd_disable();
     APP_ERROR_CHECK(err_code);
-}
+}*/
 
-/**@brief Function for application main entry.
- */
+extern int esb_main();
+
 int main(void)
 {
+    if(Switch() == SwitchESB)
+    {
+        esb_main();
+        return 0;
+    }
+    
     timers_init();
 
     car_init();

@@ -4,7 +4,7 @@
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "nrf_drv_gpiote.h"
-#include "nrf_drv_rtc.h"
+//#include "nrf_drv_rtc.h"
 #include "app_error.h"
 #include "nrf_drv_clock.h"
 #include "motors.h"
@@ -14,13 +14,14 @@
 #include "car_esb.h"
 #include "nrf_esb.h"
 
-const nrf_drv_rtc_t rtc = //NRF_DRV_RTC_INSTANCE(0); /**< Declaring an instance of nrf_drv_rtc for RTC0. */
+/*
+const nrf_drv_rtc_t rtc =
 {
  .p_reg = NRF_RTC1,
  .irq = RTC1_IRQn,
  .instance_id = 1
 };
-
+*/
 static void lfclk_config(void)
 {
 	ret_code_t err_code = nrf_drv_clock_init();
@@ -36,7 +37,7 @@ void clocks_start( void )
 
     while (NRF_CLOCK->EVENTS_HFCLKSTARTED == 0);
 }
-
+/*
 static void rtc_handler(nrf_drv_rtc_int_type_t int_type)
 {
 }
@@ -50,7 +51,7 @@ static void rtc_config(void)
 
 	nrf_drv_rtc_enable(&rtc);
 }
-
+*/
 const uint32_t Pin_Servo = 13;
 const uint32_t Pin_Beep = 14;
 const uint32_t Pin_LED1 = 6;
@@ -150,14 +151,14 @@ void loop()
 	nrf_gpio_pin_toggle(Pin_LED2);
 }
 
-int main()
+int esb_main()
 {
 	ret_code_t err_code;
 
 	clocks_start();
 	lfclk_config();
 
-	rtc_config();
+//	rtc_config();
 
 	err_code = nrf_drv_gpiote_init();
 	APP_ERROR_CHECK(err_code);
@@ -183,7 +184,7 @@ int main()
 	nrf_gpio_cfg_output(Pin_Servo);
 	nrf_gpio_pin_clear(Pin_Servo);
 
-	InitUltraSound(NRF_RTC1);
+	//InitUltraSound(NRF_RTC1);
 
 	InitEsb();
 
