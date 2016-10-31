@@ -34,7 +34,7 @@ int32_t blink_right = 0;
 
 void LeftBlinkerOn()
 {
-	SET_LIGHTS(left_blinkers, 150, 150, 0);
+	SET_LIGHTS(left_blinkers, 100, 100, 0);
 }
 
 void LeftBlinkerOff()
@@ -43,7 +43,7 @@ void LeftBlinkerOff()
 }
 void RightBlinkerOn()
 {
-	SET_LIGHTS(right_blinkers, 150, 150, 0);
+	SET_LIGHTS(right_blinkers, 100, 100, 0);
 }
 
 void RightBlinkerOff()
@@ -58,7 +58,7 @@ void SetFrontLights(uint8_t red, uint8_t green, uint8_t blue)
 
 void SetBackLight(int8_t on)
 {
-	SET_LIGHTS_WHITE(back_lights, on ? 150 : 0);
+	SET_LIGHTS_WHITE(back_lights, on ? 100 : 0);
 }
 
 void InitLights()
