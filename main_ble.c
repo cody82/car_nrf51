@@ -28,6 +28,7 @@
 #include "lights.h"
 #include "battery.h"
 #include "servo.h"
+#include "beep.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -71,7 +72,6 @@ static ble_car_t                        ble_car;                                
 
 APP_TIMER_DEF(m_app_timer_id);
 
-static const uint32_t Pin_Beep = 14;
 static const uint32_t Pin_LED1 = 6;
 static const uint32_t Pin_LED2 = 10;
 
@@ -144,11 +144,11 @@ static void loop()
 
 	if (!RemoteFail() && ble_car.packet.beep)
 	{
-		nrf_gpio_pin_set(Pin_Beep);
+        BeepOn();
 	}
 	else
 	{
-		nrf_gpio_pin_clear(Pin_Beep);
+        BeepOff();
 	}
 
 	BlinkerTick();
@@ -490,9 +490,7 @@ static void car_init()
     //init lights
     InitLights();
 
-    // init beeper
-    nrf_gpio_cfg_output(Pin_Beep);
-    nrf_gpio_pin_clear(Pin_Beep);
+    BeepInit();
 
     InitMotor();
 

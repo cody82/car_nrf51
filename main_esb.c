@@ -14,6 +14,7 @@
 #include "car_esb.h"
 #include "nrf_esb.h"
 #include "servo.h"
+#include "beep.h"
 
 /*
 const nrf_drv_rtc_t rtc =
@@ -53,7 +54,6 @@ static void rtc_config(void)
 	nrf_drv_rtc_enable(&rtc);
 }
 */
-const uint32_t Pin_Beep = 14;
 const uint32_t Pin_LED1 = 6;
 const uint32_t Pin_LED2 = 10;
 
@@ -117,11 +117,11 @@ void loop()
 
 	if (!RemoteFail() && packet.beep)
 	{
-		nrf_gpio_pin_set(Pin_Beep);
+		BeepOn();
 	}
 	else
 	{
-		nrf_gpio_pin_clear(Pin_Beep);
+		BeepOff();
 	}
 
 	if ((tick % 3) == 0)
@@ -159,9 +159,7 @@ void main_esb()
 	//init lights
 	InitLights();
 
-	// init beeper
-	nrf_gpio_cfg_output(Pin_Beep);
-	nrf_gpio_pin_clear(Pin_Beep);
+	BeepInit();
 
 	InitMotor();
 

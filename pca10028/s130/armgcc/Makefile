@@ -62,6 +62,7 @@ $(abspath ../../../main_esb.c) \
 $(abspath ../../../main.c) \
 $(abspath ../../../servo.c) \
 $(abspath ../../../motors.c) \
+$(abspath ../../../beep.c) \
 $(abspath ../../../battery.c) \
 $(abspath ../../../lights.c) \
 $(abspath ../../../ws2812b-nrf51.c) \
