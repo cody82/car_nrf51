@@ -15,6 +15,7 @@
 #include "nrf_esb.h"
 #include "servo.h"
 #include "beep.h"
+#include "led.h"
 
 /*
 const nrf_drv_rtc_t rtc =
@@ -54,8 +55,6 @@ static void rtc_config(void)
 	nrf_drv_rtc_enable(&rtc);
 }
 */
-const uint32_t Pin_LED1 = 6;
-const uint32_t Pin_LED2 = 10;
 
 bool RemoteFail()
 {
@@ -133,7 +132,7 @@ void loop()
 
 	nrf_delay_ms(10);
 	tick++;
-	nrf_gpio_pin_toggle(Pin_LED2);
+	Led2Toggle();
 }
 
 void main_esb()
@@ -150,13 +149,8 @@ void main_esb()
 
 	InitBattery();
 
-	//init LEDs
-	nrf_gpio_cfg_output(Pin_LED1);
-	nrf_gpio_cfg_output(Pin_LED2);
-	nrf_gpio_pin_set(Pin_LED1);
-	nrf_gpio_pin_set(Pin_LED2);
+	LedInit();
 
-	//init lights
 	InitLights();
 
 	BeepInit();

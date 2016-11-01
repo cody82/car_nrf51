@@ -62,6 +62,7 @@ $(abspath ../../../main_esb.c) \
 $(abspath ../../../main.c) \
 $(abspath ../../../servo.c) \
 $(abspath ../../../motors.c) \
+$(abspath ../../../led.c) \
 $(abspath ../../../beep.c) \
 $(abspath ../../../battery.c) \
 $(abspath ../../../lights.c) \
