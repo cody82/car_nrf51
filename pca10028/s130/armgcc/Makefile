@@ -60,6 +60,7 @@ $(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
 $(abspath ../../../main_ble.c) \
 $(abspath ../../../main_esb.c) \
 $(abspath ../../../main.c) \
+$(abspath ../../../servo.c) \
 $(abspath ../../../motors.c) \
 $(abspath ../../../battery.c) \
 $(abspath ../../../lights.c) \

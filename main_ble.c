@@ -27,6 +27,7 @@
 #include "motors.h"
 #include "lights.h"
 #include "battery.h"
+#include "servo.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -70,7 +71,6 @@ static ble_car_t                        ble_car;                                
 
 APP_TIMER_DEF(m_app_timer_id);
 
-static const uint32_t Pin_Servo = 13;
 static const uint32_t Pin_Beep = 14;
 static const uint32_t Pin_LED1 = 6;
 static const uint32_t Pin_LED2 = 10;
@@ -87,14 +87,6 @@ typedef enum
 } CarRemoteMode;
 
 CarRemoteMode CurrentMode;
-
-static void SetServo(int16_t steering)
-{
-	steering /= 66;
-	nrf_gpio_pin_set(Pin_Servo);
-	nrf_delay_us(1500 - steering);
-	nrf_gpio_pin_clear(Pin_Servo);
-}
 
 static volatile uint32_t rc_timeout = 0;
 static bool RemoteFail()
@@ -505,8 +497,7 @@ static void car_init()
     InitMotor();
 
     // init servo
-    nrf_gpio_cfg_output(Pin_Servo);
-    nrf_gpio_pin_clear(Pin_Servo);
+    InitServo();
 }
 
 static void ble_on_radio_active_evt(bool radio_active)

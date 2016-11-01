@@ -13,6 +13,7 @@
 #include "battery.h"
 #include "car_esb.h"
 #include "nrf_esb.h"
+#include "servo.h"
 
 /*
 const nrf_drv_rtc_t rtc =
@@ -52,20 +53,9 @@ static void rtc_config(void)
 	nrf_drv_rtc_enable(&rtc);
 }
 */
-const uint32_t Pin_Servo = 13;
 const uint32_t Pin_Beep = 14;
 const uint32_t Pin_LED1 = 6;
 const uint32_t Pin_LED2 = 10;
-
-void SetServo(int16_t steering)
-{
-	steering /= 66;
-    __disable_irq();
-	nrf_gpio_pin_set(Pin_Servo);
-	nrf_delay_us(1500 - steering);
-	nrf_gpio_pin_clear(Pin_Servo);
-	__enable_irq();
-}
 
 bool RemoteFail()
 {
@@ -175,11 +165,7 @@ void main_esb()
 
 	InitMotor();
 
-	// init servo
-	nrf_gpio_cfg_output(Pin_Servo);
-	nrf_gpio_pin_clear(Pin_Servo);
-
-	//InitUltraSound(NRF_RTC1);
+	InitServo();
 
 	InitEsb();
 
