@@ -70,6 +70,7 @@ $(abspath ../../../ws2812b-nrf51.c) \
 $(abspath ../../../ble_car.c) \
 $(abspath ../../../car_esb.c) \
 $(abspath ../../../switch.c) \
+$(abspath ../../../car.c) \
 $(abspath ../../../components/properitary_rf/esb/nrf_esb.c) \
 $(abspath $(SDK_ROOT)/components/ble/common/ble_advdata.c) \
 $(abspath $(SDK_ROOT)/components/ble/ble_advertising/ble_advertising.c) \

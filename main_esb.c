@@ -16,6 +16,7 @@
 #include "servo.h"
 #include "beep.h"
 #include "led.h"
+#include "car.h"
 
 /*
 const nrf_drv_rtc_t rtc =
@@ -137,27 +138,12 @@ void loop()
 
 void main_esb()
 {
-	ret_code_t err_code;
-
 	clocks_start();
 	lfclk_config();
 
 //	rtc_config();
 
-	err_code = nrf_drv_gpiote_init();
-	APP_ERROR_CHECK(err_code);
-
-	InitBattery();
-
-	LedInit();
-
-	InitLights();
-
-	BeepInit();
-
-	InitMotor();
-
-	InitServo();
+    CarInit();
 
 	InitEsb();
 

@@ -30,6 +30,7 @@
 #include "servo.h"
 #include "beep.h"
 #include "led.h"
+#include "car.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -468,29 +469,6 @@ static void power_manage(void)
     APP_ERROR_CHECK(err_code);
 }
 
-static void car_init()
-{
-	ret_code_t err_code;
-
-    err_code = nrf_drv_gpiote_init();
-    APP_ERROR_CHECK(err_code);
-
-    err_code = nrf_drv_ppi_init();
-	APP_ERROR_CHECK(err_code);
-
-	InitBattery();
-
-    LedInit();
-
-    InitLights();
-
-    BeepInit();
-
-    InitMotor();
-
-    InitServo();
-}
-
 static void ble_on_radio_active_evt(bool radio_active)
 {
     if(radio_active)
@@ -553,7 +531,7 @@ void main_ble(void)
 {
     timers_init();
 
-    car_init();
+    CarInit();
 
     ble_start();
 
