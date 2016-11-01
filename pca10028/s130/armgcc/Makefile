@@ -58,6 +58,7 @@ $(abspath $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c) \
 $(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
 $(abspath ../../../main_ble.c) \
+$(abspath ../../../main_esb.c) \
 $(abspath ../../../main.c) \
 $(abspath ../../../motors.c) \
 $(abspath ../../../battery.c) \

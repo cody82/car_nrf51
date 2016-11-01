@@ -1,3 +1,4 @@
+#include "main_ble.h"
 #include <stdint.h>
 #include <string.h>
 #include "nordic_common.h"
@@ -27,7 +28,6 @@
 #include "lights.h"
 #include "battery.h"
 #include "ultrasound.h"
-#include "switch.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -588,16 +588,8 @@ static void ble_start()
     APP_ERROR_CHECK(err_code);
 }*/
 
-extern int esb_main();
-
-int main(void)
+void main_ble(void)
 {
-    if(Switch() == SwitchESB)
-    {
-        esb_main();
-        return 0;
-    }
-    
     timers_init();
 
     car_init();
