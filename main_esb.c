@@ -9,7 +9,6 @@
 #include "app_error.h"
 #include "nrf_drv_clock.h"
 #include "motors.h"
-#include "ultrasound.h"
 #include "lights.h"
 #include "battery.h"
 #include "car_esb.h"
@@ -97,9 +96,6 @@ void loop()
 
 	rc_timeout++;
 
-	bool blocked_front = (UltraSoundFrontDist() >= 0) && (UltraSoundFrontDist() < 20);
-	bool blocked_back = (UltraSoundBackDist() >= 0) && (UltraSoundBackDist() < 20);
-
 	CalcLights();
 	
 	BreakLightTick(packet.throttle);
@@ -110,7 +106,7 @@ void loop()
 	__enable_irq();
 	//nrf_esb_enable();
 
-	if (!RemoteFail() && ((!blocked_front && packet.throttle >= 0) || (!blocked_back && packet.throttle <= 0)))
+	if (!RemoteFail())
 	{
 		SetMotor(packet.throttle);
 	}
@@ -137,8 +133,6 @@ void loop()
 	{
 		nrf_gpio_pin_clear(Pin_Beep);
 	}
-
-	UltraSoundTick();
 
 	if ((tick % 3) == 0)
 	{

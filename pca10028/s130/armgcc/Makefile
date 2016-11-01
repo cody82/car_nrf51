@@ -65,7 +65,6 @@ $(abspath ../../../battery.c) \
 $(abspath ../../../lights.c) \
 $(abspath ../../../ws2812b-nrf51.c) \
 $(abspath ../../../ble_car.c) \
-$(abspath ../../../ultrasound.c) \
 $(abspath ../../../car_esb.c) \
 $(abspath ../../../switch.c) \
 $(abspath ../../../components/properitary_rf/esb/nrf_esb.c) \

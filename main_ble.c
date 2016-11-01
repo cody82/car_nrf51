@@ -27,7 +27,6 @@
 #include "motors.h"
 #include "lights.h"
 #include "battery.h"
-#include "ultrasound.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -122,22 +121,12 @@ static void CalcLights()
 static uint32_t tick = 0;
 static uint32_t mode_tick = 0;
 
-static bool blocked_front()
-{
-	return (UltraSoundFrontDist() >= 0) && (UltraSoundFrontDist() < 15);
-}
-
-static bool blocked_back()
-{
-	return (UltraSoundBackDist() >= 0) && (UltraSoundBackDist() < 15);
-}
-
 static void loop()
 {
 	mode_tick++;
 
 	BatteryTick();
-	ble_car_set_telemetry(&ble_car, BatteryVoltage, UltraSoundFrontDist(), UltraSoundBackDist());
+	ble_car_set_telemetry(&ble_car, BatteryVoltage, -1, -1);
 
 	rc_timeout++;
 
@@ -158,14 +147,7 @@ static void loop()
 		BlinkRight(ble_car.packet.blink_right);
 		BlinkLeft(ble_car.packet.blink_left);
 
-		if ((!blocked_front() && ble_car.packet.throttle >= 0) || (!blocked_back() && ble_car.packet.throttle <= 0))
-		{
-			SetMotor(ble_car.packet.throttle * 256);
-		}
-		else
-		{
-			SetMotor(0);
-		}
+		SetMotor(ble_car.packet.throttle * 256);
 	}
 
 	if (!RemoteFail() && ble_car.packet.beep)
@@ -525,8 +507,6 @@ static void car_init()
     // init servo
     nrf_gpio_cfg_output(Pin_Servo);
     nrf_gpio_pin_clear(Pin_Servo);
-
-    InitUltraSound();
 }
 
 static void ble_on_radio_active_evt(bool radio_active)
@@ -535,7 +515,6 @@ static void ble_on_radio_active_evt(bool radio_active)
     {
         nrf_gpio_pin_toggle(Pin_LED1);
         LightTick();
-        UltraSoundTick();
         if (!RemoteFail())
         {
             SetServo(ble_car.packet.steering * 256);
