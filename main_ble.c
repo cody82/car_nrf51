@@ -18,7 +18,6 @@
 #include "nrf_drv_gpiote.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
-#include "nrf_rtc.h"
 #include "nrf_drv_ppi.h"
 #include "app_util_platform.h"
 
@@ -118,6 +117,8 @@ static void loop()
 	mode_tick++;
 
 	BatteryTick();
+	BreakLightTick(ble_car.packet.throttle * 256);
+
 	ble_car_set_telemetry(&ble_car, BatteryVoltage, -1, -1);
 
 	rc_timeout++;
