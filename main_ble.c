@@ -112,7 +112,8 @@ static void loop()
 
 	rc_timeout++;
 
-	if(rc_timeout > 60 * 50 && m_conn_handle != BLE_CONN_HANDLE_INVALID)
+    // Disconnect BLE after 2 minutes without control input
+	if(rc_timeout > 120 * 50 && m_conn_handle != BLE_CONN_HANDLE_INVALID)
 	{
 		sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
 	}
