@@ -15,12 +15,14 @@
 #include "nordic_common.h"
 #include "ble_srv_common.h"
 
-#define BLE_UUID_CAR_CONTROL_CHARACTERISTIC 0xA010                      /**< The UUID of the RX Characteristic. */
-#define BLE_UUID_CAR_TOP_CHARACTERISTIC 0xA005                      /**< The UUID of the RX Characteristic. */
+#include "settings.h"
+
+#define BLE_UUID_CAR_CONTROL_CHARACTERISTIC 0xA010
+#define BLE_UUID_CAR_SETTINGS_CHARACTERISTIC 0xA005
 #define BLE_UUID_CAR_BATTERY_CHARACTERISTIC 0xA001
 
 #define BLE_CAR_MAX_CONTROL_CHAR_LEN        (sizeof(Packet)) //7
-#define BLE_CAR_MAX_TOP_CHAR_LEN        1
+#define BLE_CAR_MAX_SETTINGS_CHAR_LEN        (sizeof(Settings))
 #define BLE_CAR_MAX_BATTERY_CHAR_LEN        (sizeof(Telemetry))
 
 #define CAR_BASE_UUID                  {{0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}} /**< Used vendor specific UUID. */
@@ -57,22 +59,29 @@ static void on_disconnect(ble_car_t * p_car, ble_evt_t * p_ble_evt)
 static void on_write(ble_car_t * p_car, ble_evt_t * p_ble_evt)
 {
     ble_gatts_evt_write_t * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
+    uint32_t len = p_evt_write->len;
+    uint8_t *data = p_evt_write->data;
 
     p_car->data_handler(p_car, p_evt_write->data, p_evt_write->len);
 
+
     if (p_evt_write->handle == p_car->control_handles.value_handle)
     {
-      uint32_t len = p_evt_write->len;
-      uint8_t *data = p_evt_write->data;
       if(len > sizeof(Packet))
       {
         len = sizeof(Packet);
       }
       memcpy(&p_car->packet, data, len);
     }
-    else if (p_evt_write->handle == p_car->top_handles.value_handle)
+    else if (p_evt_write->handle == p_car->settings_handles.value_handle)
     {
-      p_car->packet.top_light = p_evt_write->data[0];
+      //p_car->packet.top_light = p_evt_write->data[0];
+      if(len > sizeof(Settings))
+      {
+        len = sizeof(Settings);
+      }
+      memcpy(&SettingsData, data, len);
+      SettingsSave();
     }
 }
 
@@ -143,6 +152,23 @@ uint32_t ble_car_set_telemetry(ble_car_t * p_car, uint16_t mv, uint8_t front_dis
                                       &gatts_value);
 }
 
+uint32_t ble_car_set_settings(ble_car_t * p_car)
+{
+    ble_gatts_value_t gatts_value;
+
+    // Initialize value struct.
+    memset(&gatts_value, 0, sizeof(gatts_value));
+
+    gatts_value.len     = sizeof(Settings);
+    gatts_value.offset  = 0;
+    gatts_value.p_value = (uint8_t*)&SettingsData;
+
+    // Update database.
+    return sd_ble_gatts_value_set(p_car->conn_handle,
+                                      p_car->settings_handles.value_handle,
+                                      &gatts_value);
+}
+
 static uint32_t battery_char_add(ble_car_t * p_car, const ble_car_init_t * p_car_init)
 {
     ble_gatts_char_md_t char_md;
@@ -186,7 +212,7 @@ static uint32_t battery_char_add(ble_car_t * p_car, const ble_car_init_t * p_car
                                            &p_car->battery_handles);
 }
 
-static uint32_t top_char_add(ble_car_t * p_car, const ble_car_init_t * p_car_init)
+static uint32_t settings_char_add(ble_car_t * p_car, const ble_car_init_t * p_car_init)
 {
    ble_gatts_char_md_t char_md;
    ble_gatts_attr_t    attr_char_value;
@@ -197,6 +223,7 @@ static uint32_t top_char_add(ble_car_t * p_car, const ble_car_init_t * p_car_ini
 
    char_md.char_props.write         = 1;
    char_md.char_props.write_wo_resp = 1;
+   char_md.char_props.read          = 1;
    char_md.p_char_user_desc         = NULL;
    char_md.p_char_pf                = NULL;
    char_md.p_user_desc_md           = NULL;
@@ -204,7 +231,7 @@ static uint32_t top_char_add(ble_car_t * p_car, const ble_car_init_t * p_car_ini
    char_md.p_sccd_md                = NULL;
 
    ble_uuid.type = p_car->uuid_type;
-   ble_uuid.uuid = BLE_UUID_CAR_TOP_CHARACTERISTIC;
+   ble_uuid.uuid = BLE_UUID_CAR_SETTINGS_CHARACTERISTIC;
 
    memset(&attr_md, 0, sizeof(attr_md));
 
@@ -214,20 +241,20 @@ static uint32_t top_char_add(ble_car_t * p_car, const ble_car_init_t * p_car_ini
    attr_md.vloc    = BLE_GATTS_VLOC_STACK;
    attr_md.rd_auth = 0;
    attr_md.wr_auth = 0;
-   attr_md.vlen    = 1;
+   attr_md.vlen    = 0;
 
    memset(&attr_char_value, 0, sizeof(attr_char_value));
 
    attr_char_value.p_uuid    = &ble_uuid;
    attr_char_value.p_attr_md = &attr_md;
-   attr_char_value.init_len  = 1;
+   attr_char_value.init_len  = BLE_CAR_MAX_SETTINGS_CHAR_LEN;
    attr_char_value.init_offs = 0;
-   attr_char_value.max_len   = BLE_CAR_MAX_TOP_CHAR_LEN;
+   attr_char_value.max_len   = BLE_CAR_MAX_SETTINGS_CHAR_LEN;
 
    return sd_ble_gatts_characteristic_add(p_car->service_handle,
                                           &char_md,
                                           &attr_char_value,
-                                          &p_car->top_handles);
+                                          &p_car->settings_handles);
 }
 
 
@@ -302,7 +329,7 @@ uint32_t ble_car_init(ble_car_t * p_car, const ble_car_init_t * p_car_init)
         return err_code;
     }
 
-    err_code = top_char_add(p_car, p_car_init);
+    err_code = settings_char_add(p_car, p_car_init);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
@@ -313,6 +340,8 @@ uint32_t ble_car_init(ble_car_t * p_car, const ble_car_init_t * p_car_init)
     {
         return err_code;
     }
+
+    ble_car_set_settings(p_car);
 
     return NRF_SUCCESS;
 }

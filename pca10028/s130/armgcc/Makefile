@@ -47,6 +47,7 @@ $(abspath $(SDK_ROOT)/components/libraries/uart/retarget.c) \
 $(abspath $(SDK_ROOT)/components/libraries/uart/app_uart.c) \
 $(abspath $(SDK_ROOT)/components/libraries/pwm/app_pwm.c) \
 $(abspath $(SDK_ROOT)/components/libraries/fstorage/fstorage.c) \
+$(abspath $(SDK_ROOT)/components/libraries/fds/fds.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/delay/nrf_delay.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/common/nrf_drv_common.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote/nrf_drv_gpiote.c) \
@@ -57,6 +58,7 @@ $(abspath $(SDK_ROOT)/components/drivers_nrf/ppi/nrf_drv_ppi.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c) \
 $(abspath $(SDK_ROOT)/components/drivers_nrf/clock/nrf_drv_clock.c) \
 $(abspath $(SDK_ROOT)/components/libraries/timer/app_timer.c) \
+$(abspath ../../../settings.c) \
 $(abspath ../../../main_ble.c) \
 $(abspath ../../../main_esb.c) \
 $(abspath ../../../main.c) \
@@ -102,6 +104,8 @@ INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/trace)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/pwm)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/fstorage)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/fds)
+INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/fds/config)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/libraries/experimental_section_vars)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/gpiote)
 INC_PATHS += -I$(abspath $(SDK_ROOT)/components/drivers_nrf/uart)
@@ -136,7 +140,8 @@ CFLAGS += -DBLE_STACK_SUPPORT_REQD
 CFLAGS += -DSWI_DISABLE0
 CFLAGS += -mcpu=cortex-m0
 CFLAGS += -mthumb -mabi=aapcs --std=gnu99
-CFLAGS += -Wall -Werror -Og
+#CFLAGS += -Wall -Werror -Og
+CFLAGS += -Wall -Og
 CFLAGS += -g
 CFLAGS += -mfloat-abi=soft
 # keep every function in separate section. This will allow linker to dump unused functions

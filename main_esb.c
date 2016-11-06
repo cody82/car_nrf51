@@ -20,6 +20,7 @@
 
 #include "app_timer.h"
 #include "app_util_platform.h"
+#include "settings.h"
 
 #define APP_TIMER_PRESCALER              15                                          /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE          4                                          /**< Size of timer operation queues. */
@@ -37,19 +38,13 @@ static void timer_timeout_handler(void * p_context)
 
 static void timers_init(void)
 {
-    // Initialize timer module.
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
 
-    // Create timers.
-
-    /* YOUR_JOB: Create any timers to be used by the application.
-                 Below is an example of how to create a timer.
-                 For every new timer needed, increase the value of the macro APP_TIMER_MAX_TIMERS by
-                 one.*/
     uint32_t err_code;
     err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
     APP_ERROR_CHECK(err_code);
 }
+
 static void application_timers_start(void)
 {
     /* YOUR_JOB: Start your timers. below is an example of how to start a timer.*/
@@ -155,7 +150,21 @@ void loop()
 
 	if (!RemoteFail())
 	{
-		SetMotor(packet.throttle);
+		int32_t t;
+		if(packet.throttle > 0)
+		{
+			t = SettingsData.MaxForwardSpeed;
+		}
+		else
+		{
+			t = SettingsData.MaxBackwardSpeed;
+		}
+		if(t > 100)
+			t = 100;
+			
+		t = t * packet.throttle / 100;
+
+		SetMotor(t);
 	}
 	else
 	{
@@ -198,6 +207,8 @@ void loop()
 static volatile uint32_t loop_tick = 0;
 void main_esb()
 {
+    SettingsInit();
+
 	clocks_start();
 	lfclk_config();
 	timers_init();

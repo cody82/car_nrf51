@@ -20,6 +20,7 @@
 #include "nrf_delay.h"
 #include "nrf_drv_ppi.h"
 #include "app_util_platform.h"
+#include "fstorage.h"
 
 #include "ble_car.h"
 
@@ -30,6 +31,7 @@
 #include "beep.h"
 #include "led.h"
 #include "car.h"
+#include "settings.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -77,16 +79,6 @@ APP_TIMER_DEF(m_app_timer_id);
 static void ble_start();
 //static void ble_stop();
 
-typedef enum
-{
-	BleWait,
-	EsbWait,
-	Ble,
-	Esb
-} CarRemoteMode;
-
-CarRemoteMode CurrentMode;
-
 static volatile uint32_t rc_timeout = 0;
 static bool RemoteFail()
 {
@@ -110,12 +102,9 @@ static void CalcLights()
 }
 
 static uint32_t tick = 0;
-static uint32_t mode_tick = 0;
 
 static void loop()
 {
-	mode_tick++;
-
 	BatteryTick();
 	BreakLightTick(ble_car.packet.throttle * 256);
 
@@ -123,7 +112,7 @@ static void loop()
 
 	rc_timeout++;
 
-	if(rc_timeout > 100 && m_conn_handle != BLE_CONN_HANDLE_INVALID)
+	if(rc_timeout > 60 * 50 && m_conn_handle != BLE_CONN_HANDLE_INVALID)
 	{
 		sd_ble_gap_disconnect(m_conn_handle, BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
 	}
@@ -140,7 +129,21 @@ static void loop()
 		BlinkRight(ble_car.packet.blink_right);
 		BlinkLeft(ble_car.packet.blink_left);
 
-		SetMotor(ble_car.packet.throttle * 256);
+		int32_t t;
+		if(ble_car.packet.throttle > 0)
+		{
+			t = SettingsData.MaxForwardSpeed;
+		}
+		else
+		{
+			t = SettingsData.MaxBackwardSpeed;
+		}
+		if(t > 100)
+			t = 100;
+			
+		t = t * ble_car.packet.throttle * 256 / 100;
+
+		SetMotor(t);
 	}
 
 	if (!RemoteFail() && ble_car.packet.beep)
@@ -400,6 +403,7 @@ static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
  */
 static void sys_evt_dispatch(uint32_t sys_evt)
 {
+    fs_sys_event_handler(sys_evt);
     ble_advertising_on_sys_evt(sys_evt);
 }
 
@@ -534,45 +538,15 @@ void main_ble(void)
 
     CarInit();
 
+    SettingsInit();
+
     ble_start();
 
-    CurrentMode = BleWait;
-
-    // Start execution.
     application_timers_start();
     
     
-    // Enter main loop.
     for (;;)
     {
         power_manage();
-/*
-								if(CurrentMode == BleWait)
-								{
-									if(mode_tick > 10 * 50)
-									{
-										ble_stop();
-										CurrentMode = EsbWait;
-										mode_tick = 0;
-									}
-									else
-									{
-
-									}
-								}
-								else if(CurrentMode == EsbWait)
-								{
-									if(mode_tick > 10 * 50)
-									{
-										ble_start();
-										CurrentMode = BleWait;
-										mode_tick = 0;
-									}
-									else
-									{
-
-									}
-								}*/
-
     }
 }
