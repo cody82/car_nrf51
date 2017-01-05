@@ -266,3 +266,6 @@ flash_softdevice:
 	@echo Flashing: s130_nrf51_1.0.0_softdevice.hex
 	nrfjprog --program $(SDK_ROOT)/components/softdevice/s130/hex/s130_nrf51_1.0.0_softdevice.hex -f nrf51 --chiperase
 	nrfjprog --reset
+
+genpkg:
+	nrfutil pkg generate --debug-mode --application _build/nrf51422_xxac_s130.hex --application-version 1 --hw-version 1 --sd-req 0x87 --key-file ../../../ota-key.pem car-app-ota-v1.zip
