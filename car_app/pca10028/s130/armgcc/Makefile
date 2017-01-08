@@ -2,7 +2,7 @@ PROJECT_NAME     := ble_app_template_pca10028_s130
 TARGETS          := nrf51422_xxac
 OUTPUT_DIRECTORY := _build
 
-SDK_ROOT := ../../../../nRF5_SDK_12.1.0_0d23e2a
+SDK_ROOT := ../../../../../nRF5_SDK_12.1.0_0d23e2a
 PROJ_DIR := ../../..
 
 $(OUTPUT_DIRECTORY)/nrf51422_xxac.out: \
