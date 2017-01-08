@@ -3,6 +3,7 @@
 #include "app_pwm.h"
 #include "nrf_gpio.h"
 #include "app_error.h"
+#include "nrf_drv_config.h"
 #include <math.h>
 
 const uint32_t Pin_AIN1 = 9;

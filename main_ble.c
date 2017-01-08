@@ -13,7 +13,6 @@
 #include "ble_radio_notification.h"
 #include "softdevice_handler.h"
 #include "app_timer.h"
-#include "app_trace.h"
 #include "nrf_drv_clock.h"
 #include "nrf_drv_gpiote.h"
 #include "nrf_gpio.h"
@@ -461,7 +460,7 @@ static void advertising_init(void)
     advdata.uuids_complete.p_uuids  = m_adv_uuids;
 
     ble_adv_modes_config_t options = {0};
-    options.ble_adv_fast_enabled  = BLE_ADV_FAST_ENABLED;
+    options.ble_adv_fast_enabled  = 1;
     options.ble_adv_fast_interval = APP_ADV_INTERVAL;
     options.ble_adv_fast_timeout  = APP_ADV_TIMEOUT_IN_SECONDS;
 

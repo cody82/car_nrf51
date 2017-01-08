@@ -1,7 +1,6 @@
 #include "main_esb.h"
 #include <stdint.h>
 #include "nrf.h"
-#include "nrf_drv_config.h"
 #include "nrf_gpio.h"
 #include "nrf_delay.h"
 #include "nrf_drv_gpiote.h"
@@ -67,19 +66,10 @@ static void lfclk_start_no_softdevice(void)
     nrf_clock_task_trigger(NRF_CLOCK_TASK_LFCLKSTART);
 }
 
-ret_code_t nrf_drv_clock_init_no_softdevice(void)
-{
-    nrf_clock_xtalfreq_set(CLOCK_CONFIG_XTAL_FREQ);
-    nrf_clock_lf_src_set((nrf_clock_lfclk_t)CLOCK_CONFIG_LF_SRC);
-    //nrf_drv_common_irq_enable(POWER_CLOCK_IRQn, CLOCK_CONFIG_IRQ_PRIORITY);
-
-	return NRF_SUCCESS;
-}
-
 
 static void lfclk_config(void)
 {
-	ret_code_t err_code = nrf_drv_clock_init_no_softdevice();
+	ret_code_t err_code = nrf_drv_clock_init();
 	APP_ERROR_CHECK(err_code);
 
 	lfclk_start_no_softdevice();

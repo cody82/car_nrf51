@@ -341,6 +341,6 @@
 #endif
 
 
-#include "nrf_drv_config_validation.h"
+//#include "nrf_drv_config_validation.h"
 
 #endif // NRF_DRV_CONFIG_H
