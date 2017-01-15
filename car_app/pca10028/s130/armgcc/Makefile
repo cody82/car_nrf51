@@ -33,7 +33,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/drivers_nrf/uart/nrf_drv_uart.c \
   $(SDK_ROOT)/components/drivers_nrf/ppi/nrf_drv_ppi.c \
   $(SDK_ROOT)/components/drivers_nrf/timer/nrf_drv_timer.c \
-  $(SDK_ROOT)/components/drivers_nrf/adc/nrf_drv_adc.c \
+  $(SDK_ROOT)/components/drivers_nrf/hal/nrf_adc.c \
   $(PROJ_DIR)/main.c \
   $(PROJ_DIR)/settings.c \
   $(PROJ_DIR)/main_ble.c \
