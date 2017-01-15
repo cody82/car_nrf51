@@ -16,15 +16,22 @@
 #include "ble_db_discovery.h"
 #include "app_timer.h"
 #include "app_util.h"
-#include "bsp.h"
-#include "bsp_btn_ble.h"
-#include "boards.h"
 #include "ble.h"
 #include "ble_gap.h"
 #include "ble_hci.h"
 #include "softdevice_handler.h"
 #include "ble_advdata.h"
-#include "ble_nus_c.h"
+#include "ble_car_c.h"
+
+// Low frequency clock source to be used by the SoftDevice
+#ifdef S210
+#define NRF_CLOCK_LFCLKSRC      NRF_CLOCK_LFCLKSRC_XTAL_20_PPM
+#else
+#define NRF_CLOCK_LFCLKSRC      {.source        = NRF_CLOCK_LF_SRC_XTAL,            \
+                                 .rc_ctiv       = 0,                                \
+                                 .rc_temp_ctiv  = 0,                                \
+                                 .xtal_accuracy = NRF_CLOCK_LF_XTAL_ACCURACY_20_PPM}
+#endif
 
 #define CENTRAL_LINK_COUNT      1                               /**< Number of central links used by the application. When changing this number remember to adjust the RAM settings*/
 #define PERIPHERAL_LINK_COUNT   0                               /**< Number of peripheral links used by the application. When changing this number remember to adjust the RAM settings*/
@@ -33,10 +40,7 @@
 #define NRF_BLE_MAX_MTU_SIZE    GATT_MTU_SIZE_DEFAULT           /**< MTU size used in the softdevice enabling and to reply to a BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST event. */
 #endif
 
-#define UART_TX_BUF_SIZE        256                             /**< UART TX buffer size. */
-#define UART_RX_BUF_SIZE        256                             /**< UART RX buffer size. */
-
-#define NUS_SERVICE_UUID_TYPE   BLE_UUID_TYPE_VENDOR_BEGIN      /**< UUID type for the Nordic UART Service (vendor specific). */
+#define CAR_SERVICE_UUID_TYPE   BLE_UUID_TYPE_VENDOR_BEGIN      /**< UUID type for the Nordic UART Service (vendor specific). */
 
 #define APP_TIMER_PRESCALER     0                               /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE 2                               /**< Size of timer operation queues. */
@@ -56,7 +60,7 @@
 #define UUID32_SIZE             4                               /**< Size of 32 bit UUID */
 #define UUID128_SIZE            16                              /**< Size of 128 bit UUID */
 
-static ble_nus_c_t              m_ble_nus_c;                    /**< Instance of NUS service. Must be passed to all NUS_C API calls. */
+static ble_car_c_t              m_ble_car_c;                    /**< Instance of Car service. Must be passed to all Car_C API calls. */
 static ble_db_discovery_t       m_ble_db_discovery;             /**< Instance of database discovery module. Must be passed to all db_discovert API calls */
 
 /**
@@ -89,12 +93,12 @@ static const ble_gap_scan_params_t m_scan_params =
 };
 
 /**
- * @brief NUS uuid
+ * @brief Car uuid
  */
-static const ble_uuid_t m_nus_uuid =
+static const ble_uuid_t m_car_uuid =
   {
-    .uuid = BLE_UUID_NUS_SERVICE,
-    .type = NUS_SERVICE_UUID_TYPE
+    .uuid = BLE_UUID_CAR_SERVICE,
+    .type = CAR_SERVICE_UUID_TYPE
   };
 
 /**@brief Function for asserts in the SoftDevice.
@@ -123,8 +127,8 @@ static void scan_start(void)
     ret = sd_ble_gap_scan_start(&m_scan_params);
     APP_ERROR_CHECK(ret);
 
-    ret = bsp_indication_set(BSP_INDICATE_SCANNING);
-    APP_ERROR_CHECK(ret);
+    //ret = bsp_indication_set(BSP_INDICATE_SCANNING);
+    //APP_ERROR_CHECK(ret);
 }
 
 
@@ -139,107 +143,40 @@ static void scan_start(void)
  */
 static void db_disc_handler(ble_db_discovery_evt_t * p_evt)
 {
-    ble_nus_c_on_db_disc_evt(&m_ble_nus_c, p_evt);
+    ble_car_c_on_db_disc_evt(&m_ble_car_c, p_evt);
 }
 
-
-/**@brief   Function for handling app_uart events.
+/**@brief Callback handling Car Client events.
  *
- * @details This function will receive a single character from the app_uart module and append it to
- *          a string. The string will be be sent over BLE when the last character received was a
- *          'new line' i.e '\r\n' (hex 0x0D) or if the string has reached a length of
- *          @ref NUS_MAX_DATA_LENGTH.
- */
-void uart_event_handle(app_uart_evt_t * p_event)
-{
-    static uint8_t data_array[BLE_NUS_MAX_DATA_LEN];
-    static uint8_t index = 0;
-
-    switch (p_event->evt_type)
-    {
-        /**@snippet [Handling data from UART] */
-        case APP_UART_DATA_READY:
-            UNUSED_VARIABLE(app_uart_get(&data_array[index]));
-            index++;
-
-            if ((data_array[index - 1] == '\n') || (index >= (BLE_NUS_MAX_DATA_LEN)))
-            {
-                while (ble_nus_c_string_send(&m_ble_nus_c, data_array, index) != NRF_SUCCESS)
-                {
-                    // repeat until sent.
-                }
-                index = 0;
-            }
-            break;
-        /**@snippet [Handling data from UART] */
-        case APP_UART_COMMUNICATION_ERROR:
-            APP_ERROR_HANDLER(p_event->data.error_communication);
-            break;
-
-        case APP_UART_FIFO_ERROR:
-            APP_ERROR_HANDLER(p_event->data.error_code);
-            break;
-
-        default:
-            break;
-    }
-}
-
-
-/**@brief Callback handling NUS Client events.
+ * @details This function is called to notify the application of Car client events.
  *
- * @details This function is called to notify the application of NUS client events.
- *
- * @param[in]   p_ble_nus_c   NUS Client Handle. This identifies the NUS client
- * @param[in]   p_ble_nus_evt Pointer to the NUS Client event.
+ * @param[in]   p_ble_car_c   Car Client Handle. This identifies the Car client
+ * @param[in]   p_ble_car_evt Pointer to the Car Client event.
  */
 
-/**@snippet [Handling events from the ble_nus_c module] */
-static void ble_nus_c_evt_handler(ble_nus_c_t * p_ble_nus_c, const ble_nus_c_evt_t * p_ble_nus_evt)
+/**@snippet [Handling events from the ble_car_c module] */
+static void ble_car_c_evt_handler(ble_car_c_t * p_ble_car_c, const ble_car_c_evt_t * p_ble_car_evt)
 {
     uint32_t err_code;
-    switch (p_ble_nus_evt->evt_type)
+    switch (p_ble_car_evt->evt_type)
     {
-        case BLE_NUS_C_EVT_DISCOVERY_COMPLETE:
-            err_code = ble_nus_c_handles_assign(p_ble_nus_c, p_ble_nus_evt->conn_handle, &p_ble_nus_evt->handles);
+        case BLE_CAR_C_EVT_DISCOVERY_COMPLETE:
+            err_code = ble_car_c_handles_assign(p_ble_car_c, p_ble_car_evt->conn_handle, &p_ble_car_evt->handles);
             APP_ERROR_CHECK(err_code);
 
-            err_code = ble_nus_c_rx_notif_enable(p_ble_nus_c);
+            err_code = ble_car_c_rx_notif_enable(p_ble_car_c);
             APP_ERROR_CHECK(err_code);
-            printf("The device has the Nordic UART Service\r\n");
+            printf("The device has the Car Service\r\n");
             break;
 
-        case BLE_NUS_C_EVT_NUS_RX_EVT:
-            for (uint32_t i = 0; i < p_ble_nus_evt->data_len; i++)
-            {
-                while (app_uart_put( p_ble_nus_evt->p_data[i]) != NRF_SUCCESS);
-            }
+        case BLE_CAR_C_EVT_CAR_RX_EVT:
             break;
 
-        case BLE_NUS_C_EVT_DISCONNECTED:
+        case BLE_CAR_C_EVT_DISCONNECTED:
             printf("Disconnected\r\n");
             scan_start();
             break;
     }
-}
-/**@snippet [Handling events from the ble_nus_c module] */
-
-/**@brief Function for putting the chip into sleep mode.
- *
- * @note This function will not return.
- */
-static void sleep_mode_enter(void)
-{
-    uint32_t err_code = bsp_indication_set(BSP_INDICATE_IDLE);
-    APP_ERROR_CHECK(err_code);
-
-    // Prepare wakeup buttons.
-    err_code = bsp_btn_ble_sleep_mode_prepare();
-    APP_ERROR_CHECK(err_code);
-
-    // Go to system-off mode (this function will not return; wakeup will cause a reset).
-    err_code = sd_power_system_off();
-    APP_ERROR_CHECK(err_code);
 }
 
 /**@brief Reads an advertising report and checks if a uuid is present in the service list.
@@ -342,7 +279,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
         {
             const ble_gap_evt_adv_report_t * p_adv_report = &p_gap_evt->params.adv_report;
 
-            if (is_uuid_present(&m_nus_uuid, p_adv_report))
+            if (is_uuid_present(&m_car_uuid, p_adv_report))
             {
 
                 err_code = sd_ble_gap_connect(&p_adv_report->peer_addr,
@@ -352,8 +289,8 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
                 if (err_code == NRF_SUCCESS)
                 {
                     // scan is automatically stopped by the connect
-                    err_code = bsp_indication_set(BSP_INDICATE_IDLE);
-                    APP_ERROR_CHECK(err_code);
+                    //err_code = bsp_indication_set(BSP_INDICATE_IDLE);
+                    //APP_ERROR_CHECK(err_code);
                     printf("Connecting to target %02x%02x%02x%02x%02x%02x\r\n",
                              p_adv_report->peer_addr.addr[0],
                              p_adv_report->peer_addr.addr[1],
@@ -368,10 +305,10 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 
         case BLE_GAP_EVT_CONNECTED:
             //NRF_LOG_DEBUG("Connected to target\r\n");
-            err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
-            APP_ERROR_CHECK(err_code);
+            //err_code = bsp_indication_set(BSP_INDICATE_CONNECTED);
+            //APP_ERROR_CHECK(err_code);
 
-            // start discovery of services. The NUS Client waits for a discovery result
+            // start discovery of services. The Car Client waits for a discovery result
             err_code = ble_db_discovery_start(&m_ble_db_discovery, p_ble_evt->evt.gap_evt.conn_handle);
             APP_ERROR_CHECK(err_code);
             break; // BLE_GAP_EVT_CONNECTED
@@ -440,9 +377,9 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
 static void ble_evt_dispatch(ble_evt_t * p_ble_evt)
 {
     on_ble_evt(p_ble_evt);
-    bsp_btn_ble_on_ble_evt(p_ble_evt);
+    //bsp_btn_ble_on_ble_evt(p_ble_evt);
     ble_db_discovery_on_ble_evt(&m_ble_db_discovery, p_ble_evt);
-    ble_nus_c_on_ble_evt(&m_ble_nus_c,p_ble_evt);
+    ble_car_c_on_ble_evt(&m_ble_car_c,p_ble_evt);
 }
 
 /**@brief Function for initializing the BLE stack.
@@ -479,70 +416,16 @@ static void ble_stack_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-/**@brief Function for handling events from the BSP module.
- *
- * @param[in] event  Event generated by button press.
+/**@brief Function for initializing the Car Client.
  */
-void bsp_event_handler(bsp_event_t event)
-{
-    uint32_t err_code;
-    switch (event)
-    {
-        case BSP_EVENT_SLEEP:
-            sleep_mode_enter();
-            break;
-
-        case BSP_EVENT_DISCONNECT:
-            err_code = sd_ble_gap_disconnect(m_ble_nus_c.conn_handle,
-                                             BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
-            if (err_code != NRF_ERROR_INVALID_STATE)
-            {
-                APP_ERROR_CHECK(err_code);
-            }
-            break;
-
-        default:
-            break;
-    }
-}
-
-/**@brief Function for initializing the UART.
- */
-static void uart_init(void)
-{
-    uint32_t err_code;
-
-    const app_uart_comm_params_t comm_params =
-      {
-        .rx_pin_no    = RX_PIN_NUMBER,
-        .tx_pin_no    = TX_PIN_NUMBER,
-        .rts_pin_no   = RTS_PIN_NUMBER,
-        .cts_pin_no   = CTS_PIN_NUMBER,
-        .flow_control = APP_UART_FLOW_CONTROL_ENABLED,
-        .use_parity   = false,
-        .baud_rate    = UART_BAUDRATE_BAUDRATE_Baud115200
-      };
-
-    APP_UART_FIFO_INIT(&comm_params,
-                        UART_RX_BUF_SIZE,
-                        UART_TX_BUF_SIZE,
-                        uart_event_handle,
-                        APP_IRQ_PRIORITY_LOW,
-                        err_code);
-
-    APP_ERROR_CHECK(err_code);
-}
-
-/**@brief Function for initializing the NUS Client.
- */
-static void nus_c_init(void)
+static void car_c_init(void)
 {
     uint32_t         err_code;
-    ble_nus_c_init_t nus_c_init_t;
+    ble_car_c_init_t car_c_init_t;
 
-    nus_c_init_t.evt_handler = ble_nus_c_evt_handler;
+    car_c_init_t.evt_handler = ble_car_c_evt_handler;
 
-    err_code = ble_nus_c_init(&m_ble_nus_c, &nus_c_init_t);
+    err_code = ble_car_c_init(&m_ble_car_c, &car_c_init_t);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -550,15 +433,6 @@ static void nus_c_init(void)
  */
 static void buttons_leds_init(void)
 {
-    bsp_event_t startup_event;
-
-    uint32_t err_code = bsp_init(BSP_INIT_LED,
-                                 APP_TIMER_TICKS(100, APP_TIMER_PRESCALER),
-                                 bsp_event_handler);
-    APP_ERROR_CHECK(err_code);
-
-    err_code = bsp_btn_ble_init(NULL, &startup_event);
-    APP_ERROR_CHECK(err_code);
 }
 
 
@@ -581,18 +455,16 @@ static void power_manage(void)
 
 int main(void)
 {
-
     APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
 
-    uart_init();
     buttons_leds_init();
     db_discovery_init();
     ble_stack_init();
-    nus_c_init();
+    car_c_init();
 
     // Start scanning for peripherals and initiate connection
-    // with devices that advertise NUS UUID.
-    printf("Uart_c Scan started\r\n");
+    // with devices that advertise Car UUID.
+    printf("Car Scan started\r\n");
     scan_start();
 
     for (;;)
