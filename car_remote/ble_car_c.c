@@ -28,15 +28,15 @@ void ble_car_c_on_db_disc_evt(ble_car_c_t * p_ble_car_c, ble_db_discovery_evt_t 
         {
             switch (p_chars[i].characteristic.uuid.uuid)
             {
-                case BLE_UUID_CAR_TX_CHARACTERISTIC:
-                    car_c_evt.handles.car_tx_handle = p_chars[i].characteristic.handle_value;
+                case BLE_UUID_CAR_CONTROL_CHARACTERISTIC:
+                    car_c_evt.handles.car_control_handle = p_chars[i].characteristic.handle_value;
                     break;
 
-                case BLE_UUID_CAR_RX_CHARACTERISTIC:
+                /*case BLE_UUID_CAR_RX_CHARACTERISTIC:
                     car_c_evt.handles.car_rx_handle = p_chars[i].characteristic.handle_value;
                     car_c_evt.handles.car_rx_cccd_handle = p_chars[i].cccd_handle;
                     break;
-
+*/
                 default:
                     break;
             }
@@ -63,7 +63,7 @@ void ble_car_c_on_db_disc_evt(ble_car_c_t * p_ble_car_c, ble_db_discovery_evt_t 
 static void on_hvx(ble_car_c_t * p_ble_car_c, const ble_evt_t * p_ble_evt)
 {
     // HVX can only occur from client sending.
-    if ( (p_ble_car_c->handles.car_rx_handle != BLE_GATT_HANDLE_INVALID)
+    /*if ( (p_ble_car_c->handles.car_rx_handle != BLE_GATT_HANDLE_INVALID)
             && (p_ble_evt->evt.gattc_evt.params.hvx.handle == p_ble_car_c->handles.car_rx_handle)
             && (p_ble_car_c->evt_handler != NULL)
         )
@@ -75,7 +75,7 @@ static void on_hvx(ble_car_c_t * p_ble_car_c, const ble_evt_t * p_ble_evt)
         ble_car_c_evt.data_len = p_ble_evt->evt.gattc_evt.params.hvx.len;
 
         p_ble_car_c->evt_handler(p_ble_car_c, &ble_car_c_evt);
-    }
+    }*/
 }
 
 uint32_t ble_car_c_init(ble_car_c_t * p_ble_car_c, ble_car_c_init_t * p_ble_car_c_init)
@@ -95,7 +95,7 @@ uint32_t ble_car_c_init(ble_car_c_t * p_ble_car_c, ble_car_c_init_t * p_ble_car_
 
     p_ble_car_c->conn_handle           = BLE_CONN_HANDLE_INVALID;
     p_ble_car_c->evt_handler           = p_ble_car_c_init->evt_handler;
-    p_ble_car_c->handles.car_rx_handle = BLE_GATT_HANDLE_INVALID;
+    p_ble_car_c->handles.car_control_handle = BLE_GATT_HANDLE_INVALID;
     p_ble_car_c->handles.car_tx_handle = BLE_GATT_HANDLE_INVALID;
 
     return ble_db_discovery_evt_register(&uart_uuid);
@@ -136,48 +136,10 @@ void ble_car_c_on_ble_evt(ble_car_c_t * p_ble_car_c, const ble_evt_t * p_ble_evt
     }
 }
 
-/**@brief Function for creating a message for writing to the CCCD.
- */
-static uint32_t cccd_configure(uint16_t conn_handle, uint16_t cccd_handle, bool enable)
-{
-    uint8_t buf[BLE_CCCD_VALUE_LEN];
-
-    buf[0] = enable ? BLE_GATT_HVX_NOTIFICATION : 0;
-    buf[1] = 0;
-
-    const ble_gattc_write_params_t write_params = {
-        .write_op = BLE_GATT_OP_WRITE_REQ,
-        .flags    = BLE_GATT_EXEC_WRITE_FLAG_PREPARED_WRITE,
-        .handle   = cccd_handle,
-        .offset   = 0,
-        .len      = sizeof(buf),
-        .p_value  = buf
-    };
-
-    return sd_ble_gattc_write(conn_handle, &write_params);
-}
-
-uint32_t ble_car_c_rx_notif_enable(ble_car_c_t * p_ble_car_c)
+uint32_t ble_car_c_control_send(ble_car_c_t * p_ble_car_c, Packet* p_string)
 {
     VERIFY_PARAM_NOT_NULL(p_ble_car_c);
 
-    if ( (p_ble_car_c->conn_handle == BLE_CONN_HANDLE_INVALID)
-       ||(p_ble_car_c->handles.car_rx_cccd_handle == BLE_GATT_HANDLE_INVALID)
-       )
-    {
-        return NRF_ERROR_INVALID_STATE;
-    }
-    return cccd_configure(p_ble_car_c->conn_handle,p_ble_car_c->handles.car_rx_cccd_handle, true);
-}
-
-uint32_t ble_car_c_string_send(ble_car_c_t * p_ble_car_c, uint8_t * p_string, uint16_t length)
-{
-    VERIFY_PARAM_NOT_NULL(p_ble_car_c);
-
-    if (length > BLE_CAR_MAX_DATA_LEN)
-    {
-        return NRF_ERROR_INVALID_PARAM;
-    }
     if ( p_ble_car_c->conn_handle == BLE_CONN_HANDLE_INVALID)
     {
         return NRF_ERROR_INVALID_STATE;
@@ -186,10 +148,10 @@ uint32_t ble_car_c_string_send(ble_car_c_t * p_ble_car_c, uint8_t * p_string, ui
     const ble_gattc_write_params_t write_params = {
         .write_op = BLE_GATT_OP_WRITE_CMD,
         .flags    = BLE_GATT_EXEC_WRITE_FLAG_PREPARED_WRITE,
-        .handle   = p_ble_car_c->handles.car_tx_handle,
+        .handle   = p_ble_car_c->handles.car_control_handle,
         .offset   = 0,
-        .len      = length,
-        .p_value  = p_string
+        .len      = sizeof(*p_string),
+        .p_value  = (uint8_t*)p_string
     };
 
     return sd_ble_gattc_write(p_ble_car_c->conn_handle, &write_params);
@@ -206,7 +168,7 @@ uint32_t ble_car_c_handles_assign(ble_car_c_t * p_ble_car,
     if (p_peer_handles != NULL)
     {
         p_ble_car->handles.car_rx_cccd_handle = p_peer_handles->car_rx_cccd_handle;
-        p_ble_car->handles.car_rx_handle      = p_peer_handles->car_rx_handle;
+        p_ble_car->handles.car_control_handle      = p_peer_handles->car_control_handle;
         p_ble_car->handles.car_tx_handle      = p_peer_handles->car_tx_handle;
     }
     return NRF_SUCCESS;

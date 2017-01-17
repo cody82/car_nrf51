@@ -37,10 +37,33 @@
 extern "C" {
 #endif
 
-#define CAR_BASE_UUID                  {{0x9E, 0xCA, 0xDC, 0x24, 0x0E, 0xE5, 0xA9, 0xE0, 0x93, 0xF3, 0xA3, 0xB5, 0x00, 0x00, 0x40, 0x6E}} /**< Used vendor specific UUID. */
-#define BLE_UUID_CAR_SERVICE           0x0001                      /**< The UUID of the Nordic UART Service. */
-#define BLE_UUID_CAR_TX_CHARACTERISTIC 0x0002                      /**< The UUID of the TX Characteristic. */
-#define BLE_UUID_CAR_RX_CHARACTERISTIC 0x0003                      /**< The UUID of the RX Characteristic. */
+#define CAR_BASE_UUID                  {{0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}} /**< Used vendor specific UUID. */
+#define BLE_UUID_CAR_SERVICE           0xA000
+#define BLE_UUID_CAR_CONTROL_CHARACTERISTIC 0xA010
+#define BLE_UUID_CAR_SETTINGS_CHARACTERISTIC 0xA005
+#define BLE_UUID_CAR_BATTERY_CHARACTERISTIC 0xA001
+
+typedef struct
+{
+    int8_t steering;
+    int8_t throttle;
+    uint8_t front_light;
+    bool top_light;
+    bool blink_left;
+    bool blink_right;
+    bool beep;
+} Packet;
+
+typedef struct
+{
+  uint16_t voltage;
+  uint8_t front_dist;
+  uint8_t back_dist;
+} Telemetry;
+
+#define BLE_CAR_MAX_CONTROL_CHAR_LEN        (sizeof(Packet)) //7
+#define BLE_CAR_MAX_SETTINGS_CHAR_LEN        (sizeof(Settings))
+#define BLE_CAR_MAX_BATTERY_CHAR_LEN        (sizeof(Telemetry))
 
 #define BLE_CAR_MAX_DATA_LEN           (GATT_MTU_SIZE_DEFAULT - 3) /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
 
@@ -57,7 +80,7 @@ typedef enum
 /**@brief Handles on the connected peer device needed to interact with it.
 */
 typedef struct {
-    uint16_t                car_rx_handle;      /**< Handle of the CAR RX characteristic as provided by a discovery. */
+    uint16_t                car_control_handle;      /**< Handle of the CAR RX characteristic as provided by a discovery. */
     uint16_t                car_rx_cccd_handle; /**< Handle of the CCCD of the CAR RX characteristic as provided by a discovery. */
     uint16_t                car_tx_handle;      /**< Handle of the CAR TX characteristic as provided by a discovery. */
 } ble_car_c_handles_t;
@@ -145,30 +168,7 @@ uint32_t ble_car_c_init(ble_car_c_t * p_ble_car_c, ble_car_c_init_t * p_ble_car_
  */
 void ble_car_c_on_ble_evt(ble_car_c_t * p_ble_car_c, const ble_evt_t * p_ble_evt);
 
-/**@brief   Function for requesting the peer to start sending notification of RX characteristic.
- *
- * @details This function enables notifications of the CAR RX characteristic at the peer
- *          by writing to the CCCD of the CAR RX characteristic.
- *
- * @param   p_ble_car_c Pointer to the CAR client structure.
- *
- * @retval  NRF_SUCCESS If the SoftDevice has been requested to write to the CCCD of the peer.
- *                      Otherwise, an error code is returned. This function propagates the error
- *                      code returned by the SoftDevice API @ref sd_ble_gattc_write.
- */
-uint32_t ble_car_c_rx_notif_enable(ble_car_c_t * p_ble_car_c);
-
-/**@brief Function for sending a string to the server.
- *
- * @details This function writes the TX characteristic of the server.
- *
- * @param[in] p_ble_car_c Pointer to the CAR client structure.
- * @param[in] p_string    String to be sent.
- * @param[in] length      Length of the string.
- *
- * @retval NRF_SUCCESS If the string was sent successfully. Otherwise, an error code is returned.
- */
-uint32_t ble_car_c_string_send(ble_car_c_t * p_ble_car_c, uint8_t * p_string, uint16_t length);
+uint32_t ble_car_c_control_send(ble_car_c_t * p_ble_car_c, Packet* p_string);
 
 
 /**@brief Function for assigning handles to a this instance of car_c.

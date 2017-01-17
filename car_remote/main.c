@@ -12,7 +12,6 @@
 #include <stdbool.h>
 #include "nordic_common.h"
 #include "app_error.h"
-#include "app_uart.h"
 #include "ble_db_discovery.h"
 #include "app_timer.h"
 #include "app_util.h"
@@ -42,8 +41,11 @@
 
 #define CAR_SERVICE_UUID_TYPE   BLE_UUID_TYPE_VENDOR_BEGIN      /**< UUID type for the Nordic UART Service (vendor specific). */
 
-#define APP_TIMER_PRESCALER     0                               /**< Value of the RTC1 PRESCALER register. */
-#define APP_TIMER_OP_QUEUE_SIZE 2                               /**< Size of timer operation queues. */
+#define APP_TIMER_PRESCALER              15                                          /**< Value of the RTC1 PRESCALER register. */
+#define APP_TIMER_OP_QUEUE_SIZE          4                                          /**< Size of timer operation queues. */
+#define TIMER_INTERVAL         APP_TIMER_TICKS(100, APP_TIMER_PRESCALER)
+
+APP_TIMER_DEF(m_app_timer_id);
 
 #define SCAN_INTERVAL           0x00A0                          /**< Determines scan interval in units of 0.625 millisecond. */
 #define SCAN_WINDOW             0x0050                          /**< Determines scan window in units of 0.625 millisecond. */
@@ -117,6 +119,35 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
     app_error_handler(0xDEADBEEF, line_num, p_file_name);
 }
 
+Packet p =
+{
+    0,0,100,0,0,0,0
+};
+
+static void timer_timeout_handler(void * p_context)
+{
+    UNUSED_PARAMETER(p_context);
+    
+    ble_car_c_control_send(&m_ble_car_c, &p);
+    p.front_light = (p.front_light > 0) ? 0 : 100;
+}
+
+static void timers_init(void)
+{
+    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, false);
+
+    uint32_t err_code;
+    err_code = app_timer_create(&m_app_timer_id, APP_TIMER_MODE_REPEATED, timer_timeout_handler);
+    APP_ERROR_CHECK(err_code);
+}
+
+static void application_timers_start(void)
+{
+    /* YOUR_JOB: Start your timers. below is an example of how to start a timer.*/
+    uint32_t err_code;
+    err_code = app_timer_start(m_app_timer_id, TIMER_INTERVAL, NULL);
+    APP_ERROR_CHECK(err_code);
+}
 
 /**@brief Function to start scanning.
  */
@@ -164,8 +195,8 @@ static void ble_car_c_evt_handler(ble_car_c_t * p_ble_car_c, const ble_car_c_evt
             err_code = ble_car_c_handles_assign(p_ble_car_c, p_ble_car_evt->conn_handle, &p_ble_car_evt->handles);
             APP_ERROR_CHECK(err_code);
 
-            err_code = ble_car_c_rx_notif_enable(p_ble_car_c);
-            APP_ERROR_CHECK(err_code);
+            //err_code = ble_car_c_rx_notif_enable(p_ble_car_c);
+            //APP_ERROR_CHECK(err_code);
             printf("The device has the Car Service\r\n");
             break;
 
@@ -193,7 +224,8 @@ static void ble_car_c_evt_handler(ble_car_c_t * p_ble_car_c, const ble_car_c_evt
 static bool is_uuid_present(const ble_uuid_t *p_target_uuid,
                             const ble_gap_evt_adv_report_t *p_adv_report)
 {
-    uint32_t err_code;
+    return true;
+    /*uint32_t err_code;
     uint32_t index = 0;
     uint8_t *p_data = (uint8_t *)p_adv_report->data;
     ble_uuid_t extracted_uuid;
@@ -261,7 +293,7 @@ static bool is_uuid_present(const ble_uuid_t *p_target_uuid,
         }
         index += field_length + 1;
     }
-    return false;
+    return false;*/
 }
 
 /**@brief Function for handling the Application's BLE Stack events.
@@ -455,12 +487,15 @@ static void power_manage(void)
 
 int main(void)
 {
-    APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
+    //APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
 
     buttons_leds_init();
     db_discovery_init();
     ble_stack_init();
     car_c_init();
+
+	timers_init();
+	application_timers_start();
 
     // Start scanning for peripherals and initiate connection
     // with devices that advertise Car UUID.
