@@ -539,6 +539,9 @@ static void ble_start()
 
 void main_ble(void)
 {
+    car_uuid.uuid128[12] = (uint8_t)(BLE_UUID_CAR_SERVICE & 0xFF);
+    car_uuid.uuid128[13] = (uint8_t)((BLE_UUID_CAR_SERVICE>>8) & 0xFF);
+
     timers_init();
 
     CarInit();
