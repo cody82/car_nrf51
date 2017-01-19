@@ -25,7 +25,6 @@
 #define BLE_CAR_MAX_SETTINGS_CHAR_LEN        (sizeof(Settings))
 #define BLE_CAR_MAX_BATTERY_CHAR_LEN        (sizeof(Telemetry))
 
-#define CAR_BASE_UUID                  {{0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}} /**< Used vendor specific UUID. */
 
 /**@brief Function for handling the @ref BLE_GAP_EVT_CONNECTED event from the S110 SoftDevice.
  *

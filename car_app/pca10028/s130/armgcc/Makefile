@@ -49,6 +49,7 @@ SRC_FILES += \
   $(PROJ_DIR)/car_esb.c \
   $(PROJ_DIR)/switch.c \
   $(PROJ_DIR)/car.c \
+  $(PROJ_DIR)/car_advertising.c \
   $(SDK_ROOT)/external/segger_rtt/RTT_Syscalls_GCC.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \

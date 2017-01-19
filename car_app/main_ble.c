@@ -22,6 +22,7 @@
 #include "fstorage.h"
 
 #include "ble_car.h"
+#include "car_advertising.h"
 
 #include "motors.h"
 #include "lights.h"
@@ -74,6 +75,7 @@ static ble_car_t                        ble_car;                                
 
 APP_TIMER_DEF(m_app_timer_id);
 
+ble_uuid128_t car_uuid = CAR_BASE_UUID;
 
 static void ble_start();
 //static void ble_stop();
@@ -466,6 +468,8 @@ static void advertising_init(void)
 
     err_code = ble_advertising_init(&advdata, NULL, &options, on_adv_evt, NULL);
     APP_ERROR_CHECK(err_code);
+
+    car_adv_data_set(&car_uuid);
 }
 
 static void power_manage(void)
@@ -506,6 +510,7 @@ static void ble_start()
     
     err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
 	APP_ERROR_CHECK(err_code);
+    car_adv_data_set(&car_uuid);
 }
 
 /*static void ble_stop()

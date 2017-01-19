@@ -40,6 +40,8 @@
 #define BLE_UUID_CAR_SERVICE 0xA000                      /**< The UUID of the Nordic UART Service. */
 #define BLE_CAR_MAX_DATA_LEN (GATT_MTU_SIZE_DEFAULT - 3) /**< Maximum length of data (in bytes) that can be transmitted to the peer by the Nordic UART service module. */
 
+#define CAR_BASE_UUID                  {{0xFB, 0x34, 0x9B, 0x5F, 0x80, 0x00, 0x00, 0x80, 0x00, 0x10, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}} /**< Used vendor specific UUID. */
+
 /* Forward declaration of the ble_car_t type. */
 typedef struct ble_car_s ble_car_t;
 
