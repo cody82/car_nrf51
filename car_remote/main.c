@@ -21,6 +21,7 @@
 #include "softdevice_handler.h"
 #include "ble_advdata.h"
 #include "ble_car_c.h"
+#include "input.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -43,7 +44,7 @@
 
 #define APP_TIMER_PRESCALER              15                                          /**< Value of the RTC1 PRESCALER register. */
 #define APP_TIMER_OP_QUEUE_SIZE          4                                          /**< Size of timer operation queues. */
-#define TIMER_INTERVAL         APP_TIMER_TICKS(100, APP_TIMER_PRESCALER)
+#define TIMER_INTERVAL         APP_TIMER_TICKS(50, APP_TIMER_PRESCALER)
 
 APP_TIMER_DEF(m_app_timer_id);
 
@@ -130,8 +131,10 @@ static void timer_timeout_handler(void * p_context)
 {
     UNUSED_PARAMETER(p_context);
     
+    InputTick();
     ble_car_c_control_send(&m_ble_car_c, &p);
     p.front_light = (p.front_light > 0) ? 0 : 100;
+    p.steering = (BatteryVoltage - (3300 / 2)) * 127 / (3300 / 2);
 }
 
 static void timers_init(void)
@@ -442,6 +445,7 @@ int main(void)
     car_uuid.uuid128[13] = (uint8_t)((BLE_UUID_CAR_SERVICE>>8) & 0xFF);
     //APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
 
+    InputInit();
     buttons_leds_init();
     db_discovery_init();
     ble_stack_init();
