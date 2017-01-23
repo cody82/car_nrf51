@@ -134,7 +134,8 @@ static void timer_timeout_handler(void * p_context)
     InputTick();
     ble_car_c_control_send(&m_ble_car_c, &p);
     p.front_light = (p.front_light > 0) ? 0 : 100;
-    p.steering = (BatteryVoltage - (3300 / 2)) * 127 / (3300 / 2);
+    p.steering = InputGetSteering();
+    p.throttle = InputGetThrottle();
 }
 
 static void timers_init(void)

@@ -3,9 +3,12 @@
 
 #include <stdint.h>
 
-extern volatile int32_t BatteryVoltage;
+//extern volatile int32_t BatteryVoltage;
 
 void InputInit();
 void InputTick();
+
+int8_t InputGetSteering();
+int8_t InputGetThrottle();
 
 #endif
