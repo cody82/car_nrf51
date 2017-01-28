@@ -22,6 +22,7 @@
 #include "ble_advdata.h"
 #include "ble_car_c.h"
 #include "input.h"
+#include "leds.h"
 
 // Low frequency clock source to be used by the SoftDevice
 #ifdef S210
@@ -65,6 +66,8 @@ APP_TIMER_DEF(m_app_timer_id);
 
 static ble_car_c_t              m_ble_car_c;                    /**< Instance of Car service. Must be passed to all Car_C API calls. */
 static ble_db_discovery_t       m_ble_db_discovery;             /**< Instance of database discovery module. Must be passed to all db_discovert API calls */
+
+static volatile uint8_t connected;
 
 /**
  * @brief Connection parameters requested for connection.
@@ -136,6 +139,8 @@ static void timer_timeout_handler(void * p_context)
     p.front_light = (p.front_light > 0) ? 0 : 100;
     p.steering = InputGetSteering();
     p.throttle = InputGetThrottle();
+
+    LedsTick(connected, 0, 0);
 }
 
 static void timers_init(void)
@@ -298,7 +303,12 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             // start discovery of services. The Car Client waits for a discovery result
             err_code = ble_db_discovery_start(&m_ble_db_discovery, p_ble_evt->evt.gap_evt.conn_handle);
             APP_ERROR_CHECK(err_code);
+            connected = true;
             break; // BLE_GAP_EVT_CONNECTED
+
+        case BLE_GAP_EVT_DISCONNECTED:
+            connected = false;
+            break;
 
         case BLE_GAP_EVT_TIMEOUT:
             if (p_gap_evt->params.timeout.src == BLE_GAP_TIMEOUT_SRC_SCAN)
@@ -310,6 +320,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             {
                 printf("Connection Request timed out.\r\n");
             }
+            connected = false;
             break; // BLE_GAP_EVT_TIMEOUT
 
         case BLE_GAP_EVT_SEC_PARAMS_REQUEST:
@@ -331,6 +342,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             err_code = sd_ble_gap_disconnect(p_ble_evt->evt.gattc_evt.conn_handle,
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
             APP_ERROR_CHECK(err_code);
+            connected = false;
             break; // BLE_GATTC_EVT_TIMEOUT
 
         case BLE_GATTS_EVT_TIMEOUT:
@@ -339,6 +351,7 @@ static void on_ble_evt(ble_evt_t * p_ble_evt)
             err_code = sd_ble_gap_disconnect(p_ble_evt->evt.gatts_evt.conn_handle,
                                              BLE_HCI_REMOTE_USER_TERMINATED_CONNECTION);
             APP_ERROR_CHECK(err_code);
+            connected = false;
             break; // BLE_GATTS_EVT_TIMEOUT
 
 #if (NRF_SD_BLE_API_VERSION == 3)
@@ -447,6 +460,7 @@ int main(void)
     //APP_TIMER_INIT(APP_TIMER_PRESCALER, APP_TIMER_OP_QUEUE_SIZE, NULL);
 
     InputInit();
+    LedsInit();
     buttons_leds_init();
     db_discovery_init();
     ble_stack_init();
