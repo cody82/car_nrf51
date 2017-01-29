@@ -127,7 +127,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
 
 Packet p =
 {
-    0,0,100,0,0,0,0
+    0,0,0,0,0,0,0
 };
 
 static void timer_timeout_handler(void * p_context)
@@ -136,9 +136,13 @@ static void timer_timeout_handler(void * p_context)
     
     InputTick();
     ble_car_c_control_send(&m_ble_car_c, &p);
-    p.front_light = (p.front_light > 0) ? 0 : 100;
+    p.front_light = InputGetFrontLight() ? 200 : 0;
     p.steering = InputGetSteering();
     p.throttle = InputGetThrottle();
+    p.top_light = InputGetBlueLight();
+    p.blink_left = InputGetBlinkLeft();
+    p.blink_right = InputGetBlinkRight();
+    p.beep = 0;
 
     LedsTick(connected, 0, 0);
 }

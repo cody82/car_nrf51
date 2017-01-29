@@ -1,6 +1,7 @@
 #include "input.h"
 #include "nrf_adc.h"
 #include "app_error.h"
+#include "nrf_gpio.h"
 
 /*
 volatile int32_t BatteryVoltage = 0;//mV
@@ -31,11 +32,16 @@ static void adc_config(void)
 }
 */
 
+
 int32_t InputAdcChannels[8];
 
 void InputInit()
 {
-	//adc_config();
+    nrf_gpio_cfg_input(INPUT_PIN_BLINK_LEFT, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(INPUT_PIN_BLINK_RIGHT, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(INPUT_PIN_BLUE_LIGHT, NRF_GPIO_PIN_PULLUP);
+    nrf_gpio_cfg_input(INPUT_PIN_FRONT_LIGHT, NRF_GPIO_PIN_PULLUP);
+
 	const nrf_adc_config_t nrf_adc_config = {NRF_ADC_CONFIG_RES_10BIT, NRF_ADC_CONFIG_SCALING_INPUT_ONE_THIRD, NRF_ADC_CONFIG_REF_SUPPLY_ONE_THIRD};
 
 	nrf_adc_configure((nrf_adc_config_t *)&nrf_adc_config);
@@ -65,4 +71,24 @@ int8_t InputGetSteering()
 int8_t InputGetThrottle()
 {
 	return ((InputAdcChannels[3]) - (3300 / 2)) * 127 / (3300 / 2);
+}
+
+uint8_t InputGetBlinkLeft()
+{
+	return !nrf_gpio_pin_read(INPUT_PIN_BLINK_LEFT);
+}
+
+uint8_t InputGetBlinkRight()
+{
+	return !nrf_gpio_pin_read(INPUT_PIN_BLINK_RIGHT);
+}
+
+uint8_t InputGetBlueLight()
+{
+	return !nrf_gpio_pin_read(INPUT_PIN_BLUE_LIGHT);
+}
+
+uint8_t InputGetFrontLight()
+{
+	return !nrf_gpio_pin_read(INPUT_PIN_FRONT_LIGHT);
 }
