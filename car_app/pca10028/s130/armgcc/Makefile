@@ -249,4 +249,4 @@ flash_softdevice:
 	nrfjprog --reset -f nrf51
 
 genpkg:
-	nrfutil pkg generate --debug-mode --application _build/nrf51422_xxac.hex --application-version 5 --hw-version 1 --sd-req 0x87 --key-file ../../../ota-key.pem car-app-ota-v5.zip
+	nrfutil pkg generate --debug-mode --application _build/nrf51422_xxac.hex --application-version 6 --hw-version 1 --sd-req 0x87 --key-file ../../../ota-key.pem car-app-ota-v6.zip
