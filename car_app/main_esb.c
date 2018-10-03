@@ -149,7 +149,7 @@ void loop()
 		{
 			t = SettingsData.MaxBackwardSpeed;
 		}
-		if(t > 100)
+		if(t > 100 || t == 0)
 			t = 100;
 			
 		t = t * packet.throttle / 100;
