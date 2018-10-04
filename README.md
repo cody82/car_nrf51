@@ -7,12 +7,16 @@
 * Execute make
 
 # BLE firmware update
-* Install NRF Connect
-
-TODO
+1. Install NRF Connect
+2. Connect DFU boot pins
+3. Connect to DFUTARG
+4. Select DFU
 
 # Boot pin configuration
-TODO
+1. BLE DFU mode
+![DFU](pictures/pins-dfu-config.jpg)
+2. RC mode
+![RC](pictures/pins-rc-config.jpg)
 
 # Pictures
 ![Fagus Unimog](pictures/unimog.jpg)
