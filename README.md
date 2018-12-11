@@ -18,6 +18,9 @@
 2. RC mode
 ![RC](pictures/pins-rc-config.jpg)
 
+# Debug pins (SWD)
+![SWD](pictures/pins-debug.png)
+
 # Pictures
 ![Fagus Unimog](pictures/unimog.jpg)
 
